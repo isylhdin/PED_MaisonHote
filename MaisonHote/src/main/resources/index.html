@@ -9,8 +9,10 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-
-        <link rel="stylesheet" href="css/bootstrap.min.css">
+		
+		<link rel='stylesheet' href='css/fullcalendar.css'/>
+		<link rel='stylesheet' href='css/jquery-ui-1.10.0.custom.min.css'/>
+        <link rel='stylesheet' href="css/bootstrap.min.css">
         <style>
             body {
                 padding-top: 60px;
@@ -37,24 +39,11 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="#">Project name</a>
+                    <a class="brand" href="#">Gestion de maison d'hotes</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav">
-                            <li class="active"><a href="#">Home</a></li>
-                            <li><a href="#about">About</a></li>
-                            <li><a href="#contact">Contact</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Action</a></li>
-                                    <li><a href="#">Another action</a></li>
-                                    <li><a href="#">Something else here</a></li>
-                                    <li class="divider"></li>
-                                    <li class="nav-header">Nav header</li>
-                                    <li><a href="#">Separated link</a></li>
-                                    <li><a href="#">One more separated link</a></li>
-                                </ul>
-                            </li>
+                            <li class="active"><a href="#">Accueil</a></li>
+                            <li><a href="#resa">Réservations</a></li>
                         </ul>
                         <form class="navbar-form pull-right">
                             <input class="span2" type="text" placeholder="Email">
@@ -97,6 +86,23 @@
 			<!-- <iframe src="https://www.google.com/calendar/embed?src=yoann.guerin33%40gmail.com&ctz=Europe/Paris" 
 			style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe> -->
 
+			<div id='calendar'></div>
+			
+			 <div id='eventDialog' class='dialog ui-helper-hidden'>
+	            <form>
+	                <div>
+	                    <label>Title:</label>
+	                    <input id='title' class="field" type="text"></input>
+               		</div>
+	                <div>
+                    <label>Color:</label>
+	                    <input id='color' class="field" type="text"></input>
+               		</div>
+	            </form>
+	        </div> 
+	        
+
+			
             <hr>
 
             <footer>
@@ -105,15 +111,25 @@
 
         </div> <!-- /container -->
 
+		<!-- Libraries (l'ordre compte) -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-
-        <script src="js/vendor/bootstrap.min.js"></script>
         
+		<script src='js/vendor/fullcalendar.min.js'></script>
+		<script src='js/vendor/jquery-ui-1.10.0.custom.min.js'></script>
+		
+		<script src="js/vendor/bootstrap.min.js"></script>
+		
         <script src="js/vendor/underscore-min.js"></script>
         <script src="js/vendor/backbone-min.js"></script>
 
-        <script src="js/main.js"></script>
+		<!-- Base de l'application Backbone JS -->
+        <script src="js/app.js"></script>
+        
+         <!-- Les modules de l'application -->
+        <script src="js/view/calendar.js"></script> 
+        <script src="js/router/router.js"></script> 
+        <script src="js/model/models.js"></script> 
 
         <script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
