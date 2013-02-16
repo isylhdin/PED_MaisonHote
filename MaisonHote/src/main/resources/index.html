@@ -9,14 +9,30 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-		
-		<link rel='stylesheet' href='css/fullcalendar.css'/>
-		<link rel='stylesheet' href='css/jquery-ui-1.10.0.custom.min.css'/>
-        <link rel='stylesheet' href="css/bootstrap.min.css">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
         <style>
             body {
                 padding-top: 60px;
                 padding-bottom: 40px;
+            }
+            
+            .form-signin{
+            	width: 300px;
+            	padding: 19px 29px 29px;
+            	margin: 0 auto 20px;
+            	background-color: #fff;
+            	border: 1px solid #e5e5e5;
+            	-webkit-border-radius: 5px;
+            		-moz-border-radius: 5px:
+            			border-radius: 5px;
+            	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            		-moz-box-shadow: 0 1px 2px rgba(0,0,0,.05):
+            			box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            }
+            
+            .form-signin-heading{
+            	color: #000000;	
             }
         </style>
         <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
@@ -30,57 +46,42 @@
         <![endif]-->
 
         <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
-
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="#">Gestion de maison d'hotes</a>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav">
-                            <li class="active"><a href="#">Accueil</a></li>
-                            <li><a href="#resa">Réservations</a></li>
-                        </ul>
-                        <form class="navbar-form pull-right">
-                            <input class="span2" type="text" placeholder="Email">
-                            <input class="span2" type="password" placeholder="Password">
-                            <button type="submit" class="btn">Sign in</button>
-                        </form>
-                    </div><!--/.nav-collapse -->
-                </div>
-            </div>
+		<div class="navbar navbaccccr-inverse navbar-fixed-top">
+       	  <div class="navbar-inner">
+            <div class="container">
+              <a class="brand" href="#">My Guest House</a>
+                <div class="nav-collapse collapse">
+                   <ul class="nav">
+                     <li class="disabled"><a href="#">Accueil</a></li>
+                     <li class="disabled"><a href="#">Informations maison d'hôte</a></li>
+                     <li class="disabled"><a href="#resa">Réservations</a></li>
+                   </ul>
+                 </div><!--/.nav-collapse -->
+             </div>
+          </div>
         </div>
-
         <div class="container">
 
             <!-- Main hero unit for a primary marketing message or call to action -->
             <div class="hero-unit">
-                <h1>Hello, world!</h1>
-                <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-                <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+                <h1>Bienvenue !</h1>
+                <p>Bienvenue sur My Guest House, vous pouvez dès à présent gérer votre maison d'hôte en toute simplicité. Vous n'avez plus qu'a vous connecter !</p>
             </div>
+            <form class="form-signin">
+            	<h2 class="form-signin-heading">Please sign in</h2>
+                  <select>
+				    <option>Google Drive</option>
+				  	<option>Dropbox</option>
+			      </select>
+                  <input class="input-block-level" type="text" placeholder="Login">
+                  <input class="input-block-level" type="password" placeholder="Password">
+                  <button type="submit" class="btn">Sign in</button>
+            </form>
 
-			<div id='calendar'></div>
-			
-			 <div id='eventDialog' class='dialog ui-helper-hidden'>
-	            <form>
-	                <div>
-	                    <label>Title:</label>
-	                    <input id='title' class="field" type="text"></input>
-               		</div>
-	                <div>
-                    <label>Color:</label>
-	                    <input id='color' class="field" type="text"></input>
-               		</div>
-	            </form>
-	        </div> 
-	        
 
-			
+			<!-- <iframe src="https://www.google.com/calendar/embed?src=yoann.guerin33%40gmail.com&ctz=Europe/Paris" 
+			style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe> -->
+
             <hr>
 
             <footer>
@@ -89,25 +90,15 @@
 
         </div> <!-- /container -->
 
-		<!-- Libraries (l'ordre compte) -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+
+        <script src="js/vendor/bootstrap.min.js"></script>
         
-		<script src='js/vendor/fullcalendar.min.js'></script>
-		<script src='js/vendor/jquery-ui-1.10.0.custom.min.js'></script>
-		
-		<script src="js/vendor/bootstrap.min.js"></script>
-		
         <script src="js/vendor/underscore-min.js"></script>
         <script src="js/vendor/backbone-min.js"></script>
 
-		<!-- Base de l'application Backbone JS -->
-        <script src="js/app.js"></script>
-        
-         <!-- Les modules de l'application -->
-        <script src="js/view/calendar.js"></script> 
-        <script src="js/router/router.js"></script> 
-        <script src="js/model/models.js"></script> 
+        <script src="js/main.js"></script>
 
         <script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
