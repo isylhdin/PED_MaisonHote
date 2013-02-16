@@ -3,55 +3,32 @@
 app.Router = Backbone.Router.extend({
 
 	routes: {
-		"":	 "home" //index.html
+		"":	 		"home", //index.html
+		"resa":  	"resa"	//index.html#resa
 	},
 
 
 	initialize: function () {
-//		this.createAppView();
-//		this.renderAppView();
-		//console.log("Welcome back home!");
+		console.log("Initialize router !");
 		app.views.calendar = new app.Views.calendar();
-		$('body').append(app.views.calendar.render().el);
+	},
+
+	// cette route sera appelée à chaque fois qu'une route est inexistante ainsi qu'au lancement de l'application
+	home: function () {
+		console.log("Welcome back home!");
+		$("#content").replaceWith("<div id='calendar'></div>");	
+		app.calendar.render();
+		app.events.fetch();
+		
+	},
+
+	resa: function () {	
+		$("#calendar").replaceWith("<div id='content'></div>");
+		console.log("Welcome back resa!");
 	}
-//	,
-
-//	createAppView: function(){
-//	// On instancie la vue principale
-//	app.views.calendar = new app.Views.calendar();
-//	},
-
-//	// insert into the DOM, views that need to be rendered in the whole application.
-//	renderAppView: function(){
-//	$('body').append(app.view.calendar.render().el);
-//	},
-
-//	// cette route sera appelée à chaque fois qu'une route est inexistante ainsi qu'au lancement de l'application
-//	home: function () {
-//	console.log("Welcome back home!");
-//	}
-//	,
-
-
-//	// cette route est appelé à chaque fois qu'une route existante est appelée
-//	displayPage: function (route) {
-//	// On cherche dans la collection si la route existe dans une de nos pages
-
-//	// Si la page existe, on appelle la fonction de notre vue afin de l'afficher 
-
-//	// Sinon on appelle la route "root" afin d'afficher la page de base
-//	else if () {
-//	this.root();
-//	}
-//	},
-
-//	// cette fonction est appelé quand on clic sur un onglet du menu afin de changer sa classe
-//	selectMenu: function (route) {
-//	$('a.linkTab').removeClass('active');
-//	$('a.linkTab[href="#'+route+'"]').addClass('active');
-//	}
 });
 
+//Important
 $(function(){
 	// Initialisation du router, c'est lui qui va instancier notre vue de départ
 	app.router = new app.Router();
