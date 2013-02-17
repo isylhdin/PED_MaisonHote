@@ -1,7 +1,8 @@
-app.Views.calendar = Backbone.View.extend({
+window.CalendarView = Backbone.View.extend({
 	initialize: function () {
 		// initialisation de la vue
 		console.log('Main view initialized !'); 
+		$(this.el).html(_.template(tpl.get('CalendarView')));
 	}
 });
 
@@ -13,7 +14,7 @@ var Events = Backbone.Collection.extend({
 	url: 'events'
 }); 
 
-var EventsView = Backbone.View.extend({
+window.EventsView = Backbone.View.extend({
 	initialize: function(){
 		_.bindAll(this); 
 
@@ -74,7 +75,7 @@ var EventsView = Backbone.View.extend({
 	}        
 });
 
-var EventView = Backbone.View.extend({
+window.EventView = Backbone.View.extend({
 	el: $('#eventDialog'),
 	initialize: function() {
 		_.bindAll(this);           
@@ -120,9 +121,10 @@ var EventView = Backbone.View.extend({
 });
 
 
-//Reservations
-app.events = new Events();
-//Un calendrier possède un ensemble de réservations
-app.calendar = new EventsView({el: $("#calendar"), collection: app.events})/*.render()*/;
+////Reservations
+//events = new Events();
+////Un calendrier possède un ensemble de réservations
+//calendar = new EventsView({el: $("#calendar"), collection: events}).render();
+//events.fetch();
 
 
