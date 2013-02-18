@@ -7,5 +7,5 @@ window.HeaderView = Backbone.View.extend({
     render: function () {
         $(this.el).html(_.template(tpl.get('HeaderView')));
         return this;
-    },
+    }
 });

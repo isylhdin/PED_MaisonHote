@@ -10,6 +10,9 @@ var appRouter = Backbone.Router.extend({
 
 	initialize: function () {
 		console.log("Initialize router !");
+		this.connexionView = new ConnexionView();
+		$('#content').html(this.connexionView.el);
+
 		//Charge le menu
 		this.headerView = new HeaderView();
 		$('.header').html(this.headerView.el);
@@ -17,6 +20,7 @@ var appRouter = Backbone.Router.extend({
 
 	// cette route sera appelée à chaque fois qu'une route est inexistante ainsi qu'au lancement de l'application
 	home: function () {
+
 		console.log("Welcome back home!");
 	},
 
@@ -30,13 +34,13 @@ var appRouter = Backbone.Router.extend({
 		calendar = new EventsView({el: $("#calendar"), collection: events}).render();
 		events.fetch();
 	},
-	
+
 	maison: function () {	
 		console.log("Welcome back config!");
 		this.configMaisonView = new ConfigMaisonView();
 		$('#content').html(this.configMaisonView.el);
 	}
-	
+
 
 });
 
@@ -76,7 +80,7 @@ tpl = {
 };
 
 
-tpl.loadTemplates(['HeaderView', 'CalendarView', 'ConfigMaisonView'], function() {
+tpl.loadTemplates(['HeaderView', 'CalendarView', 'ConfigMaisonView', 'ConnexionView'], function() {
 	app = new appRouter();
 	Backbone.history.start();
 });
