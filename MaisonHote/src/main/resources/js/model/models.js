@@ -1,3 +1,8 @@
+var GoogleToken = Backbone.Model.extend({
+	 localStorage: new Backbone.LocalStorage("token-backbone"),
+});
+
+
 var Reservation = Backbone.Model.extend({
 	 defaults: {
          date_start: function(){ return new Date(); },
