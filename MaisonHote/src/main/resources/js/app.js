@@ -12,23 +12,23 @@ var appRouter = Backbone.Router.extend({
 		console.log("Initialize router !");
 		this.connexion();
 	},
-	
+
 	// cette route sera appelée à chaque fois qu'une route est inexistante ainsi qu'au lancement de l'application
 	home: function () {
 		console.log("Welcome back home!");
 	},
-	
+
 	connexion: function () {
 		console.log("Welcome back connexion!");
 		this.connexionView = new ConnexionView();
-		$('#content').html(this.connexionView.el);
+		$('#content').html(this.connexionView.el);		
 	},
-		
+
 	resa: function () {	
 		console.log("Welcome back resa!");
 		this.calendarView = new CalendarView();
 		$('#content').html(this.calendarView.el);
-		
+
 		//---------------  Code qui charge mal le calendrier ----------------//
 		//Reservations
 		events = new Events();

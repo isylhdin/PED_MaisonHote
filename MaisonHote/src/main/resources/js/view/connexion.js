@@ -20,37 +20,40 @@ window.ConnexionView = Backbone.View.extend({
 				'scope': 'https://www.googleapis.com/auth/drive'
 		};
 
-		 gapi.auth.authorize(config, handleAuthResult);
 
-		
+		gapi.auth.authorize(config, handleAuthResult);
+
+
 		function handleAuthResult(authResult) {
-	      
-			//si connexion réussie + token récupéré
-	        if (authResult && !authResult.error) {
-	        	console.log(authResult);
-	        	this.googleToken = new GoogleToken();
-	        	this.googleToken.set({"access_token":authResult}).save();
-	        	
-//	        	this.test = new GoogleToken();
-//	        	this.test = test.fetch();
-	        	
-	        	//on charge le menu
-	    		this.headerView = new HeaderView();
-	    		$('.header').html(this.headerView.el);
-	        	//et on va sur la page des réservations
-	    		app.resa();
-	        	
-	        } 
-	        else{
-	        	console.log("Récupération de token : FAIL");
-	        }
-	      }
 
-		
-		
+			//si connexion réussie + token récupéré
+			if (authResult && !authResult.error) {
+				window.localStorage.clear();
+
+				this.googleToken = new GoogleToken();
+				this.googleToken.save({"data":authResult});
+				console.log(googleToken);
+				
+				var showdata=localStorage.getItem('token-backbone-0');
+			    console.log(showdata);
+
+				//on charge le menu
+				this.headerView = new HeaderView();
+				$('.header').html(this.headerView.el);
+				//et on redirige sur la page des réservations
+				app.resa();
+
+			} 
+			else{
+				console.log("Récupération de token : FAIL");
+			}
+		}
+
+
+
 //		gapi.auth.authorize(config, function() {
-//			console.log('login complete');
-//			console.log(gapi.auth.getToken());
+//		console.log('login complete');
+//		console.log(gapi.auth.getToken());
 //		});
 	}
 
