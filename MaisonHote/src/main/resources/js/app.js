@@ -41,7 +41,7 @@ var appRouter = Backbone.Router.extend({
 		console.log("Welcome back config!");
 		this.configMaisonView = new ConfigMaisonView();
 		$('#content').html(this.configMaisonView.el);
-	}
+	},
 	
 		ficheSejour: function () {	
 		console.log("Welcome back config!");
