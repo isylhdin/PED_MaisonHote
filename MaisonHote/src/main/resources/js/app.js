@@ -4,7 +4,8 @@ var appRouter = Backbone.Router.extend({
 	routes: {
 		"":	 			"home",  //index.html
 		"resa":  		"resa",	 //index.html#resa
-		"maison":  		"maison" //index.html#maison
+		"maison":  		"maison", //index.html#maison
+		"ficheSejour":  "ficheSejour" //index.html#ficheSejour
 	},
 
 
@@ -41,8 +42,14 @@ var appRouter = Backbone.Router.extend({
 		console.log("Welcome back config!");
 		this.selectMaisonView = new SelectMaisonView();
 		$('#content').html(this.selectMaisonView.el);
-	}
 
+	},
+	
+	ficheSejour: function () {	
+		console.log("Welcome back config!");
+		this.ficheSejourView = new ficheSejourView();
+		$('#content').html(this.ficheSejourView.el);
+	}
 
 });
 
@@ -151,7 +158,9 @@ tpl = {
 };
 
 
-tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectMaisonView', 'MaisonView', 'ConnexionView'], function() {
+
+tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectMaisonView', 'MaisonView', 'ConnexionView', 'ficheSejourView'], function() {
+
 	app = new appRouter();
 	Backbone.history.start();
 });

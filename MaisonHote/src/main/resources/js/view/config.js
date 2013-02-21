@@ -24,24 +24,28 @@ window.SelectMaisonView = Backbone.View.extend({
 	},
 
 	deux : function(event){
+		$('#maison').empty();
 		for(i=0;i<2;i++){
 			$('#maison').append(_.template(tpl.get('MaisonView')));
 		}
 	},
 	
 	trois : function(event){
+		$('#maison').empty();
 		for(i=0;i<3;i++){
 			$('#maison').append(_.template(tpl.get('MaisonView')));
 		}
 	},
 	
 	quatre : function(event){
+		$('#maison').empty();
 		for(i=0;i<4;i++){
 			$('#maison').append(_.template(tpl.get('MaisonView')));
 		}
 	},
 	
 	cinq : function(event){
+		$('#maison').empty();
 		for(i=0;i<5;i++){
 			$('#maison').append(_.template(tpl.get('MaisonView')));
 		}
