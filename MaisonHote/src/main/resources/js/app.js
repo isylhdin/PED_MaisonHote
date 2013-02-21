@@ -39,8 +39,8 @@ var appRouter = Backbone.Router.extend({
 
 	maison: function () {	
 		console.log("Welcome back config!");
-		this.configMaisonView = new ConfigMaisonView();
-		$('#content').html(this.configMaisonView.el);
+		this.selectMaisonView = new SelectMaisonView();
+		$('#content').html(this.selectMaisonView.el);
 	}
 
 
@@ -151,7 +151,7 @@ tpl = {
 };
 
 
-tpl.loadTemplates(['HeaderView', 'CalendarView', 'ConfigMaisonView', 'ConnexionView'], function() {
+tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectMaisonView', 'MaisonView', 'ConnexionView'], function() {
 	app = new appRouter();
 	Backbone.history.start();
 });

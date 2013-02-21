@@ -38,8 +38,8 @@ window.ConnexionView = Backbone.View.extend({
 			    console.log(showdata);
 			    
 			    tpl.retrieveFile('1nu9s1o5Jryn230NaWKsBosQw8-ICvSmG9--IMkwql-o');
-			    tpl.retrieveFile('2'); // doit retourner une erreur
-			    tpl.listAllFiles(tpl.test);
+			    //tpl.retrieveFile('2'); // doit retourner une erreur
+			    //tpl.listAllFiles(tpl.test);
 		   
 			    
 				//on charge le menu
