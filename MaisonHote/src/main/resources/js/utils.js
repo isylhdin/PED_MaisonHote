@@ -1,35 +1,36 @@
-//tpl = {
+//utils = {
 //
-//    // Map of preloaded templates for the app
-//    templates: {},
+//		
+//		/** Print a file's metadata. **/
+//		printFile: function (fileId) {
+//			var request = gapi.client.drive.files.get({
+//				'fileId': fileId
+//			});
+//			request.execute(function(resp) {
+//				console.log('Title: ' + resp.title);
+//				console.log('Description: ' + resp.description);
+//				console.log('MIME type: ' + resp.mimeType);
+//			});
+//		},
 //
-//    // Recursively pre-load all the templates for the app.
-//    // This implementation should be changed in a production environment. A build script should concatenate
-//    // all the template files in a single file.
-//    loadTemplates: function(names, callback) {
+//		
+//		/** Download a file's content **/
+//		downloadFile :function (file, callback) {
+//			if (file.downloadUrl) {
+//				var accessToken = gapi.auth.getToken().access_token;
+//				var xhr = new XMLHttpRequest();
+//				xhr.open('GET', file.downloadUrl);
+//				xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+//				xhr.onload = function() {
+//					callback(xhr.responseText);
+//				};
+//				xhr.onerror = function() {
+//					callback(null);
+//				};
+//				xhr.send();
+//			} else {
+//				callback(null);
+//			}
+//		}
 //
-//        var that = this;
-//
-//        var loadTemplate = function(index) {
-//            var name = names[index];
-//            console.log('Loading template: ' + name);
-//            $.get('template/' + name + '.html', function(data) {
-//                that.templates[name] = data;
-//                index++;
-//                if (index < names.length) {
-//                    loadTemplate(index);
-//                } else {
-//                    callback();
-//                }
-//            }, 'text');
-//        }
-//
-//        loadTemplate(0);
-//    },
-//
-//    // Get template by name from map of preloaded templates
-//    get: function(name) {
-//        return this.templates[name];
-//    }
-//
-//};
+//}

@@ -77,6 +77,75 @@ tpl = {
 		// Get template by name from map of preloaded templates
 		get: function(name) {
 			return this.templates[name];
+		},
+
+
+		/** Retrieve and print a file's metadata. **/
+		retrieveFile: function (fileId) {
+
+			console.log(fileId);
+			var request = gapi.client.request({
+				'path': '/drive/v2/files/'+fileId,
+				'method': 'GET'
+			});
+
+
+			request.execute(function(resp) {
+				console.log('Title: ' + resp.title);
+				console.log('Description: ' + resp.description);
+				console.log('MIME type: ' + resp.mimeType);
+			});
+		},
+
+		listAllFiles :function (callback) {
+			var retrievePageOfFiles = function(request, result) {
+				request.execute(function(resp) {
+					result = result.concat(resp.items);
+					var nextPageToken = resp.nextPageToken;
+					if (nextPageToken) {
+						request = gapi.client.request({
+							'path': '/drive/v2/files',
+							'method': 'GET',
+							'pageToken': nextPageToken
+						});
+						retrievePageOfFiles(request, result);
+					} else {
+						callback(result);
+					}
+				});
+			}
+
+			var initialRequest = gapi.client.request({
+				'path': '/drive/v2/files',
+				'method': 'GET'
+			});
+			retrievePageOfFiles(initialRequest, []);
+		},
+
+
+		/** Download a file's content **/
+//		downloadFile :function (file, callback) {
+//		if (file.downloadUrl) {
+//		var accessToken = gapi.auth.getToken().access_token;
+//		console.log(accessToken);
+//		var xhr = new XMLHttpRequest();
+//		xhr.open('GET', file.downloadUrl);
+//		xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+//		xhr.onload = function() {
+//		callback(xhr.responseText);
+//		};
+//		xhr.onerror = function() {
+//		callback(null);
+//		};
+//		xhr.send();
+//		} else {
+//		console.log("pas marché");
+//		callback(null);
+//		}
+//		},
+
+		test : function (fileContent) {
+			console.log(fileContent);
 		}
 
 };
