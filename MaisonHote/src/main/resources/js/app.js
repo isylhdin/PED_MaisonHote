@@ -156,7 +156,7 @@ tpl = {
 };
 
 
-tpl.loadTemplates(['HeaderView', 'CalendarView', 'ConfigMaisonView', 'ConnexionView'], function() {
+tpl.loadTemplates(['HeaderView', 'CalendarView', 'ConfigMaisonView', 'ConnexionView', 'ficheSejourView'], function() {
 	app = new appRouter();
 	Backbone.history.start();
 });
