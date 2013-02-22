@@ -1,0 +1,109 @@
+<html>
+  <head>
+  </head>
+  
+  <body>
+     <button id="authorize-button" onclick="handleClientLoad()">Connect to my drive</button>
+     <button id="send-file" onclick="createNewFile()">Create new file on my drive</button>
+     <button id="listFiles-button" onclick='retrieveConfigFile()'>Get my config file</button>
+     <div id="content"></div>
+     
+     <script type="text/javascript">
+	     var clientId = '966416489314.apps.googleusercontent.com';   
+	     var apiKey = 'AIzaSyD3fH3jABy0nRlFWbHqbHeh0nalgh10GzI';
+	     var scopes = 'https://www.googleapis.com/auth/drive';
+
+	 		 	
+	     function handleClientLoad() {
+	       gapi.client.setApiKey(apiKey);
+	       // asks authorization do user to connect to his "google drive"
+	      gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, handleAuthResult); 
+	     }
+		
+	     function handleAuthResult(authResult) {
+	         var authorizeButton = document.getElementById('authorize-button');
+	         if (authResult && !authResult.error) {
+	           authorizeButton.style.visibility = 'hidden';	           
+	         } else {
+	           authorizeButton.style.visibility = '';
+	           authorizeButton.onclick = handleAuthClick;
+	         }
+	       }
+	
+	       function handleAuthClick(event) {
+	         gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+	         return false;
+	       }
+	
+	       // Load the API and create the file
+	       function loadApi() {
+	         gapi.client.load('drive', 'v2');
+	       }
+		
+	      function createNewFile(  ) {
+		    loadApi();
+	     	var request = gapi.client.request({
+	     	        'path': '/drive/v2/files',
+	     	        'method': 'POST',
+	     	        'body':{
+	     	            "title" : "house_config.json",
+	     	            "mimeType" : "application/json",
+	     	            "description" : "Some Text FIle created from nowhere"	     	          
+	     	         }
+	     	     });
+	
+	     	   request.execute(function(resp) { console.log(resp); });	     	  
+	     }
+
+	       function retrieveConfigFile(callback) {
+	    	   loadApi();
+	    	   // version 1
+	    	   /*var initialRequest = gapi.client.drive.files.list();
+		       initialRequest.execute( function(resp) { console.log(resp); } );*/
+
+		       // version 2
+	    	   var request = gapi.client.request({
+	     	        'path': '/drive/v2/files',
+	     	        'method': 'GET',
+	     	        'params': {
+	     	          q : "title= 'house_config.json'"
+	     	        }	        
+	     	     });	
+			   console.log("Config file :")
+	     	   request.execute(function(resp) { console.log(resp); });
+	     	  
+	    	 }
+
+	    	 /*function gd_updateFile(fileId, folderId, text, callback) {
+
+    const boundary = '-------314159265358979323846';
+    const delimiter = "\r\n--" + boundary + "\r\n";
+    const close_delim = "\r\n--" + boundary + "--";
+
+    var contentType = "text/html";
+    var metadata = {'mimeType': contentType,};
+
+    var multipartRequestBody =
+        delimiter +  'Content-Type: application/json\r\n\r\n' +
+        JSON.stringify(metadata) +
+        delimiter + 'Content-Type: ' + contentType + '\r\n' + '\r\n' +
+        text +
+        close_delim;
+
+    if (!callback) { callback = function(file) { console.log("Update Complete ",file) }; }
+
+    gapi.client.request({
+        'path': '/upload/drive/v2/files/'+folderId+"?fileId="+fileId+"&uploadType=multipart",
+        'method': 'PUT',
+        'params': {'fileId': fileId, 'uploadType': 'multipart'},
+        'headers': {'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'},
+        'body': multipartRequestBody,
+        callback:callback,
+    });
+  }*/
+	    	 
+	     </script>
+	     <!-- <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script> -->
+	     <script src="https://apis.google.com/js/client.js"></script>
+  </body>
+</html>
