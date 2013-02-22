@@ -12,6 +12,7 @@ window.ConnexionView = Backbone.View.extend({
 		$(this.el).html(_.template(tpl.get('ConnexionView')));
 		return this;
 	},
+	
 
 	buttonClickHandler : function(event){
 
@@ -20,11 +21,9 @@ window.ConnexionView = Backbone.View.extend({
 				'scope': 'https://www.googleapis.com/auth/drive'
 		};
 
-
 		gapi.auth.authorize(config, handleAuthResult);
 
-
-		function handleAuthResult(authResult) {
+		function handleAuthResult (authResult) {
 
 			//si connexion réussie + token récupéré
 			if (authResult && !authResult.error) {
@@ -33,25 +32,35 @@ window.ConnexionView = Backbone.View.extend({
 				this.googleToken = new GoogleToken();
 				this.googleToken.save({"data":authResult});
 				console.log(googleToken);
-				
+
 				var showdata=localStorage.getItem('token-backbone-0');
-			    console.log(showdata);
-			    
-			    tpl.retrieveFile('1nu9s1o5Jryn230NaWKsBosQw8-ICvSmG9--IMkwql-o');
-			    //tpl.retrieveFile('2'); // doit retourner une erreur
-			    //tpl.listAllFiles(tpl.test);
-		   
-			    
+				console.log(showdata);
+
+				tpl.retrieveFile(/*'1nu9s1o5Jryn230NaWKsBosQw8-ICvSmG9--IMkwql-o'*/'2', function(reponse){
+					if(reponse.error){
+						alert("PREMIERE UTILISATION");
+						app.maison();
+					}
+//					else{
+//						//on charge le menu
+//						this.headerView = new HeaderView();
+//						$('.header').html(this.headerView.el);
+//						//et on redirige sur la page des réservations
+//						app.resa();
+//					}
+				} );
+
 				//on charge le menu
 				this.headerView = new HeaderView();
 				$('.header').html(this.headerView.el);
 				//et on redirige sur la page des réservations
 				app.resa();
+				
 
 			} 
 			else{
 				console.log("Récupération de token : FAIL");
-			}
+			}	
 		}
 
 
@@ -61,6 +70,10 @@ window.ConnexionView = Backbone.View.extend({
 //		console.log(gapi.auth.getToken());
 //		});
 	}
+	
+	
+
+
 
 
 });

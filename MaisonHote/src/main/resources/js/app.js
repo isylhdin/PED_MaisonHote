@@ -86,21 +86,22 @@ tpl = {
 			return this.templates[name];
 		},
 
-
 		/** Retrieve and print a file's metadata. **/
-		retrieveFile: function (fileId) {
-
+		retrieveFile: function (fileId, callback) {
+			
 			console.log(fileId);
 			var request = gapi.client.request({
 				'path': '/drive/v2/files/'+fileId,
-				'method': 'GET'
+				'method': 'GET',
+				'async' : false
 			});
 
-
+			
 			request.execute(function(resp) {
 				console.log('Title: ' + resp.title);
 				console.log('Description: ' + resp.description);
-				console.log('MIME type: ' + resp.mimeType);
+				console.log('MIME type: ' + resp.mimeType);	
+				callback(resp);
 			});
 		},
 
@@ -127,8 +128,8 @@ tpl = {
 				'method': 'GET'
 			});
 			retrievePageOfFiles(initialRequest, []);
-		},
-
+		}
+		
 
 		/** Download a file's content **/
 //		downloadFile :function (file, callback) {
@@ -151,9 +152,7 @@ tpl = {
 //		}
 //		},
 
-		test : function (fileContent) {
-			console.log(fileContent);
-		}
+		
 
 };
 

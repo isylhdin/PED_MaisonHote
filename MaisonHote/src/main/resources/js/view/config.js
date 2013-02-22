@@ -17,10 +17,15 @@ window.SelectMaisonView = Backbone.View.extend({
 		$(this.el).append("<div id='maison'></div>");
 		return this;
 	},
+	
+	submit : function(){
+		$('#maison').append("<div class='row'><button type='submit' class='btn'>Enregistrer</button></div>");
+	},
 
 	un : function(event){
 		$('#maison').empty();
 		$('#maison').append(_.template(tpl.get('MaisonView')));
+		this.submit();
 	},
 
 	deux : function(event){
@@ -28,6 +33,7 @@ window.SelectMaisonView = Backbone.View.extend({
 		for(i=0;i<2;i++){
 			$('#maison').append(_.template(tpl.get('MaisonView')));
 		}
+		this.submit();
 	},
 	
 	trois : function(event){
@@ -35,6 +41,7 @@ window.SelectMaisonView = Backbone.View.extend({
 		for(i=0;i<3;i++){
 			$('#maison').append(_.template(tpl.get('MaisonView')));
 		}
+		this.submit();
 	},
 	
 	quatre : function(event){
@@ -42,6 +49,7 @@ window.SelectMaisonView = Backbone.View.extend({
 		for(i=0;i<4;i++){
 			$('#maison').append(_.template(tpl.get('MaisonView')));
 		}
+		this.submit();
 	},
 	
 	cinq : function(event){
@@ -49,6 +57,7 @@ window.SelectMaisonView = Backbone.View.extend({
 		for(i=0;i<5;i++){
 			$('#maison').append(_.template(tpl.get('MaisonView')));
 		}
+		this.submit();
 	}
 
 
