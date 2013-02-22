@@ -4,30 +4,33 @@ var appRouter = Backbone.Router.extend({
 	routes: {
 		"":	 			"home",  //index.html
 		"resa":  		"resa",	 //index.html#resa
-		"maison":  		"maison" //index.html#config
+		"maison":  		"maison", //index.html#maison
+		"ficheSejour":  "ficheSejour" //index.html#ficheSejour
 	},
 
 
 	initialize: function () {
 		console.log("Initialize router !");
-		this.connexionView = new ConnexionView();
-		$('#content').html(this.connexionView.el);
-
-		//Charge le menu
-		this.headerView = new HeaderView();
-		$('.header').html(this.headerView.el);
+		this.connexion();
 	},
 
 	// cette route sera appelée à chaque fois qu'une route est inexistante ainsi qu'au lancement de l'application
 	home: function () {
-
 		console.log("Welcome back home!");
+	},
+
+	connexion: function () {
+		console.log("Welcome back connexion!");
+		this.connexionView = new ConnexionView();
+		$('#content').html(this.connexionView.el);		
 	},
 
 	resa: function () {	
 		console.log("Welcome back resa!");
 		this.calendarView = new CalendarView();
 		$('#content').html(this.calendarView.el);
+
+		//---------------  Code qui charge mal le calendrier ----------------//
 		//Reservations
 		events = new Events();
 		//Un calendrier possède un ensemble de réservations
@@ -37,10 +40,16 @@ var appRouter = Backbone.Router.extend({
 
 	maison: function () {	
 		console.log("Welcome back config!");
-		this.configMaisonView = new ConfigMaisonView();
-		$('#content').html(this.configMaisonView.el);
-	}
+		this.selectMaisonView = new SelectMaisonView();
+		$('#content').html(this.selectMaisonView.el);
 
+	},
+	
+	ficheSejour: function () {	
+		console.log("Welcome back config!");
+		this.ficheSejourView = new ficheSejourView();
+		$('#content').html(this.ficheSejourView.el);
+	}
 
 });
 
@@ -75,12 +84,82 @@ tpl = {
 		// Get template by name from map of preloaded templates
 		get: function(name) {
 			return this.templates[name];
+		},
+
+		/** Retrieve and print a file's metadata. **/
+		retrieveFile: function (fileId, callback) {
+			
+			console.log(fileId);
+			var request = gapi.client.request({
+				'path': '/drive/v2/files/'+fileId,
+				'method': 'GET',
+				'async' : false
+			});
+
+			
+			request.execute(function(resp) {
+				console.log('Title: ' + resp.title);
+				console.log('Description: ' + resp.description);
+				console.log('MIME type: ' + resp.mimeType);	
+				callback(resp);
+			});
+		},
+
+		listAllFiles :function (callback) {
+			var retrievePageOfFiles = function(request, result) {
+				request.execute(function(resp) {
+					result = result.concat(resp.items);
+					var nextPageToken = resp.nextPageToken;
+					if (nextPageToken) {
+						request = gapi.client.request({
+							'path': '/drive/v2/files',
+							'method': 'GET',
+							'pageToken': nextPageToken
+						});
+						retrievePageOfFiles(request, result);
+					} else {
+						callback(result);
+					}
+				});
+			}
+
+			var initialRequest = gapi.client.request({
+				'path': '/drive/v2/files',
+				'method': 'GET'
+			});
+			retrievePageOfFiles(initialRequest, []);
 		}
+		
+
+		/** Download a file's content **/
+//		downloadFile :function (file, callback) {
+//		if (file.downloadUrl) {
+//		var accessToken = gapi.auth.getToken().access_token;
+//		console.log(accessToken);
+//		var xhr = new XMLHttpRequest();
+//		xhr.open('GET', file.downloadUrl);
+//		xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+//		xhr.onload = function() {
+//		callback(xhr.responseText);
+//		};
+//		xhr.onerror = function() {
+//		callback(null);
+//		};
+//		xhr.send();
+//		} else {
+//		console.log("pas marché");
+//		callback(null);
+//		}
+//		},
+
+		
 
 };
 
 
-tpl.loadTemplates(['HeaderView', 'CalendarView', 'ConfigMaisonView', 'ConnexionView'], function() {
+
+tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectMaisonView', 'MaisonView', 'ConnexionView', 'ficheSejourView'], function() {
+
 	app = new appRouter();
 	Backbone.history.start();
 });

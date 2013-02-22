@@ -23,7 +23,7 @@ window.EventsView = Backbone.View.extend({
 		this.collection.bind('change', this.change);            
 		this.collection.bind('destroy', this.destroy);
 
-		this.eventView = new EventView();  
+		this.eventView = new EventView({el: $('#eventDialog')});  
 	},
 	render: function() {
 		$(this.el).fullCalendar({
@@ -31,7 +31,7 @@ window.EventsView = Backbone.View.extend({
 //				left: 'prev,next today',
 				left: 'prev,next',
 				center: 'title',
-				right: 'month'
+				right: 'basicWeek,month'
 //					right: 'month,basicWeek,basicDay'
 			},
 			selectable: true,
@@ -76,7 +76,6 @@ window.EventsView = Backbone.View.extend({
 });
 
 window.EventView = Backbone.View.extend({
-	el: $('#eventDialog'),
 	initialize: function() {
 		_.bindAll(this);           
 	},
