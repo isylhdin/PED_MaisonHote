@@ -2,10 +2,10 @@
 var appRouter = Backbone.Router.extend({
 
 	routes: {
-		"":	 			"home",  //index.html
-		"resa":  		"resa",	 //index.html#resa
-		"maison":  		"maison", //index.html#maison
-		"ficheSejour":  "ficheSejour" //index.html#ficheSejour
+		"":	 				"home",  //index.html
+		"resa":  			"resa",	 //index.html#resa
+		"chambre":  		"chambre", //index.html#chambre
+		"ficheSejour":  	"ficheSejour" //index.html#ficheSejour
 	},
 
 
@@ -38,10 +38,10 @@ var appRouter = Backbone.Router.extend({
 		events.fetch();
 	},
 
-	maison: function () {	
+	chambre: function () {	
 		console.log("Welcome back config!");
-		this.selectMaisonView = new SelectMaisonView();
-		$('#content').html(this.selectMaisonView.el);
+		this.selectChambreView = new SelectChambreView({model: 	Chambre});
+		$('#content').html(this.selectChambreView.el);
 
 	},
 	
@@ -92,8 +92,7 @@ tpl = {
 			console.log(fileId);
 			var request = gapi.client.request({
 				'path': '/drive/v2/files/'+fileId,
-				'method': 'GET',
-				'async' : false
+				'method': 'GET'
 			});
 
 			
@@ -158,7 +157,7 @@ tpl = {
 
 
 
-tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectMaisonView', 'MaisonView', 'ConnexionView', 'ficheSejourView'], function() {
+tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView', 'ChambreView', 'ConnexionView', 'ficheSejourView'], function() {
 
 	app = new appRouter();
 	Backbone.history.start();

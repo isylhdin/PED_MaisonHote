@@ -23,21 +23,6 @@ var Reservations = Backbone.Collection.extend({
 	//url: 'reservations'
 }); 
 
-var Chambre = Backbone.Model.extend({
-	defaults: {
-		titre: '',
-		price: 0,
-		nbLit: 0    
-	},
-	initialize: function(){
-		console.log('Chambre créée !');
-	}
-});
-
-var Chambres = Backbone.Collection.extend({
-	model: Chambre,
-	//url: 'reservations'
-}); 
 
 var Locataire = Backbone.Model.extend({
 	defaults: {

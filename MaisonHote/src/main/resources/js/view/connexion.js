@@ -36,7 +36,7 @@ window.ConnexionView = Backbone.View.extend({
 				var showdata=localStorage.getItem('token-backbone-0');
 				console.log(showdata);
 
-				tpl.retrieveFile(/*'1nu9s1o5Jryn230NaWKsBosQw8-ICvSmG9--IMkwql-o'*/'2', function(reponse){
+				tpl.retrieveFile('1nu9s1o5Jryn230NaWKsBosQw8-ICvSmG9--IMkwql-o', function(reponse){
 					if(reponse.error){
 						alert("PREMIERE UTILISATION");
 						app.maison();
@@ -48,6 +48,7 @@ window.ConnexionView = Backbone.View.extend({
 //						//et on redirige sur la page des réservations
 //						app.resa();
 //					}
+					//ust add a fulll screen, position:absolute;left:0;top:0;width:100%;height:100%;opacity:0.77;filter:Alpha(77);z-index:777777; div
 				} );
 
 				//on charge le menu
