@@ -10,6 +10,7 @@ window.SelectMaisonView = Backbone.View.extend({
 
 	initialize: function () {
 		this.render();
+		
 	},
 
 	render: function () {
@@ -50,6 +51,7 @@ window.SelectMaisonView = Backbone.View.extend({
 			$('#maison').append(_.template(tpl.get('MaisonView')));
 		}
 		this.submit();
+
 	},
 	
 	cinq : function(event){
@@ -58,7 +60,6 @@ window.SelectMaisonView = Backbone.View.extend({
 			$('#maison').append(_.template(tpl.get('MaisonView')));
 		}
 		this.submit();
+
 	}
-
-
 });
