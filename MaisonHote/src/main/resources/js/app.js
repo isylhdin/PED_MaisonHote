@@ -103,7 +103,6 @@ tpl = {
 				}	        
 			});	
 
-
 			request.execute(function(resp) {
 				console.log('Title: ' + resp.title);
 				console.log('Description: ' + resp.description);
@@ -112,31 +111,8 @@ tpl = {
 			});
 		},
 
-		listAllFiles :function (callback) {
-			var retrievePageOfFiles = function(request, result) {
-				request.execute(function(resp) {
-					result = result.concat(resp.items);
-					var nextPageToken = resp.nextPageToken;
-					if (nextPageToken) {
-						request = gapi.client.request({
-							'path': '/drive/v2/files',
-							'method': 'GET',
-							'pageToken': nextPageToken
-						});
-						retrievePageOfFiles(request, result);
-					} else {
-						callback(result);
-					}
-				});
-			}
-
-			var initialRequest = gapi.client.request({
-				'path': '/drive/v2/files',
-				'method': 'GET'
-			});
-			retrievePageOfFiles(initialRequest, []);
-		},
-
+		
+		/** Create a new file on the Drive **/
 		createNewFile: function(fileName) {
 			gapi.client.load('drive', 'v2');
 			
@@ -151,33 +127,51 @@ tpl = {
 			});
 
 			request.execute(function(resp) { console.log("File created : id = "+ resp.id); });	     	   
-		}
+		},
+		
+		
+		/** Update an existing file knowing his 'fileId' **/
+	     updateFile: function(fileId, newContent) {	    	   	    	
+	    	    gapi.client.load('drive', 'v2');
 
+	    	    var request = gapi.client.request({
+	    	         'path': '/upload/drive/v2/files/'+ fileId, 
+	    	         'method': 'PUT',
+	    	         'params': {'uploadType': 'media'},	    	        
+	    	         'body': newContent});
+	    	     
+	    	     request.execute(function(resp){
+						console.log(resp) ;
+		    	 });	    	   
+	    },
 
-
+	    
 		/** Download a file's content **/
-//		downloadFile :function (file, callback) {
-//		if (file.downloadUrl) {
-//		var accessToken = gapi.auth.getToken().access_token;
-//		console.log(accessToken);
-//		var xhr = new XMLHttpRequest();
-//		xhr.open('GET', file.downloadUrl);
-//		xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-//		xhr.onload = function() {
-//		callback(xhr.responseText);
-//		};
-//		xhr.onerror = function() {
-//		callback(null);
-//		};
-//		xhr.send();
-//		} else {
-//		console.log("pas marché");
-//		callback(null);
-//		}
-//		},
+	    getFile: function (fileName) {
+	    	gapi.client.load('drive', 'v2');
 
-
-
+    	   // on verifie dans un premier temps que le fichier est bien présent sur le drive
+    	   var request = gapi.client.request({
+     	        'path': '/drive/v2/files',
+     	        'method': 'GET',
+     	        'params': {
+     	          q : "title='"+fileName+"'"
+     	        }	        
+     	     });	
+		   request.execute(function(resp) {
+			 	// cas où le fichier n'est pas présent : on le crée
+				if (resp.items.length == 0) {
+					console.log(fileName + ' does not exist');
+					createNewFile(fileName);
+				}
+				// cas où le fichier existe, on telecharge son contenu
+     	  		 else {
+     		 		console.log(fileName + ' has been found : id = ' + resp.items[0].id );
+					// on peut donc le récupérer
+					downloadFile(resp.items[0] , printFileContent)
+	     	  	 }
+	       });
+       }
 };
 
 
