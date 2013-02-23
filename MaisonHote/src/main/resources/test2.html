@@ -4,103 +4,88 @@
   
   <body>
      <button id="authorize-button" onclick="handleClientLoad()">Connect to my drive</button>
-     <button id="send-file" onclick="createNewFile()">Create new file on my drive</button>
-     <button id="listFiles-button" onclick='retrieveConfigFile()'>Get my config file</button>
+     <button id="listFiles-button" onclick='getFile("house_config.json")'>Get my config file</button>
+     
      <div id="content"></div>
      
      <script type="text/javascript">
 	     var clientId = '966416489314.apps.googleusercontent.com';   
 	     var apiKey = 'AIzaSyD3fH3jABy0nRlFWbHqbHeh0nalgh10GzI';
 	     var scopes = 'https://www.googleapis.com/auth/drive';
-
-	 		 	
+	     	 		 	
 	     function handleClientLoad() {
 	       gapi.client.setApiKey(apiKey);
 	       // asks authorization do user to connect to his "google drive"
-	      gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, handleAuthResult); 
+	      gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, killButton); 
 	     }
 		
-	     function handleAuthResult(authResult) {
+	     function killButton() {
 	         var authorizeButton = document.getElementById('authorize-button');
-	         if (authResult && !authResult.error) {
-	           authorizeButton.style.visibility = 'hidden';	           
-	         } else {
-	           authorizeButton.style.visibility = '';
-	           authorizeButton.onclick = handleAuthClick;
-	         }
-	       }
-	
-	       function handleAuthClick(event) {
-	         gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
-	         return false;
-	       }
-	
-	       // Load the API and create the file
-	       function loadApi() {
-	         gapi.client.load('drive', 'v2');
-	       }
-		
-	      function createNewFile(  ) {
-		    loadApi();
+	         authorizeButton.style.visibility = 'hidden';          
+	     }
+			
+	     function createNewFile(fileName) {
+	    	gapi.client.load('drive', 'v2');
 	     	var request = gapi.client.request({
 	     	        'path': '/drive/v2/files',
 	     	        'method': 'POST',
 	     	        'body':{
-	     	            "title" : "house_config.json",
+	     	            "title" : fileName,
 	     	            "mimeType" : "application/json",
-	     	            "description" : "Some Text FIle created from nowhere"	     	          
+	     	            "description" : "Config file of the guest house"	     	          
 	     	         }
 	     	     });
 	
-	     	   request.execute(function(resp) { console.log(resp); });	     	  
+	     	 request.execute(function(resp) { console.log("File created : id = "+ resp.id); });	     	   
 	     }
+	
+		    function printFileContent(fileContent){
+				console.log("contenu du fichier :\n"+ fileContent);
+			}
 
-	       function retrieveConfigFile(callback) {
-	    	   loadApi();
-	    	   // version 1
-	    	   /*var initialRequest = gapi.client.drive.files.list();
-		       initialRequest.execute( function(resp) { console.log(resp); } );*/
+		    function downloadFile(file, callback) {
+		    	  if (file.downloadUrl) {
+		    	    var accessToken = gapi.auth.getToken().access_token;
+		    	    var xhr = new XMLHttpRequest();
+		    	    xhr.open('GET', file.downloadUrl);
+		    	    xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+		    	    xhr.onload = function() {
+		    	      callback(xhr.responseText);
+		    	    };
+		    	    xhr.onerror = function() {
+		    	      callback(null);
+		    	    };
+		    	    xhr.send();
+		    	  } else {
+		    	    callback(null);
+		    	  }
+		    	}
 
-		       // version 2
+	       function getFile(fileName) {
+		    	gapi.client.load('drive', 'v2');
+
+	    	   // on verifie dans un premier temps que le fichier est bien présent sur le drive
 	    	   var request = gapi.client.request({
 	     	        'path': '/drive/v2/files',
 	     	        'method': 'GET',
 	     	        'params': {
-	     	          q : "title= 'house_config.json'"
+	     	          q : "title='"+fileName+"'"
 	     	        }	        
 	     	     });	
-			   console.log("Config file :")
-	     	   request.execute(function(resp) { console.log(resp); });
-	     	  
-	    	 }
-
-	    	 /*function gd_updateFile(fileId, folderId, text, callback) {
-
-    const boundary = '-------314159265358979323846';
-    const delimiter = "\r\n--" + boundary + "\r\n";
-    const close_delim = "\r\n--" + boundary + "--";
-
-    var contentType = "text/html";
-    var metadata = {'mimeType': contentType,};
-
-    var multipartRequestBody =
-        delimiter +  'Content-Type: application/json\r\n\r\n' +
-        JSON.stringify(metadata) +
-        delimiter + 'Content-Type: ' + contentType + '\r\n' + '\r\n' +
-        text +
-        close_delim;
-
-    if (!callback) { callback = function(file) { console.log("Update Complete ",file) }; }
-
-    gapi.client.request({
-        'path': '/upload/drive/v2/files/'+folderId+"?fileId="+fileId+"&uploadType=multipart",
-        'method': 'PUT',
-        'params': {'fileId': fileId, 'uploadType': 'multipart'},
-        'headers': {'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'},
-        'body': multipartRequestBody,
-        callback:callback,
-    });
-  }*/
+			   request.execute(function(resp) {
+				 	// cas où le fichier n'est pas présent : on le crée
+					if (resp.items.length == 0) {
+						console.log(fileName + ' does not exist');
+						createNewFile(fileName);
+					}
+					// cas où le fichier existe, on telecharge son contenu
+	     	  		 else {
+	     		 		console.log(fileName + ' has been found : id = ' + resp.items[0].id );
+						// on peut donc le récupérer
+						downloadFile(resp.items[0] , printFileContent)
+		     	  	 }
+		       });
+	       }
 	    	 
 	     </script>
 	     <!-- <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script> -->
