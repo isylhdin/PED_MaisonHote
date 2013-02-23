@@ -8,16 +8,12 @@ window.SelectChambreView = Backbone.View.extend({
 		"click #5"	 	 : "cinq",
 		"click #submit"  : "onSubmit",
 		"focus input"	 : "onInputGetFocus"
-		
-
-
 	},
-	
-
 	
 
 	initialize: function () {
 		var nbChambre;
+		var chambres;
 		
 		this.render();
 		_.bindAll( this, 'onError' );
@@ -35,60 +31,50 @@ window.SelectChambreView = Backbone.View.extend({
 		$('#maison').append("<div class='row'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
 	},
 	
-	//Quand on clique sur un numéro de la liste on construit l'ui (avec les id pas encore définis). Chaque "input" doit avoir un id modifié dynamiquement
-	//marche pas encore
+	//Quand on clique sur un numéro de la liste on construit l'ui (avec les id pas encore définis).
+	//Chaque "input" doit avoir un id modifié dynamiquement
 	constructForm: function(nbChambre){
+		//pas top : quand on clique sur un autre item de la liste : la précédente collection (avec ses éléments) ne sont pas supprimés
+		//=> memory leak
+		chambres = new Chambres();
+		
 		$('#maison').empty();
-		for(i=0;i<nbChambre;i++){
-			//met tous les id des éléments comme il faut
+		for(i=1;i<=nbChambre;i++){
+			//crée une chambre juste pour set les id comme il faut dans le code html
+			window["chambre" + i] = new Chambre({'id':i});
+			//stocke les chambres crées dans une collection
+			chambres.add(window["chambre" + i]);
 			this.template = _.template(tpl.get('ChambreView'));
-			$('#maison').append(this.template(i));	
+			//injecte l'id de la chambre dans le code html
+			$('#maison').append(this.template(window["chambre" + i].toJSON()));	
 		}
+		this.submit();
 	},
 
 	un : function(event){
 		nbChambre = 1;
-		$('#maison').empty();
-		$('#maison').append(_.template(tpl.get('ChambreView')));
-		this.submit();
+		this.constructForm(nbChambre);
 	},
 	
-
 	deux : function(event){
 		nbChambre = 2;
-		$('#maison').empty();
-		for(i=0;i<2;i++){
-			$('#maison').append(_.template(tpl.get('ChambreView')));
-		}
-		this.submit();
+		this.constructForm(nbChambre);
 	},
 
 	trois : function(event){
 		nbChambre = 3;
-		$('#maison').empty();
-		for(i=0;i<3;i++){
-			$('#maison').append(_.template(tpl.get('ChambreView')));
-		}
-		this.submit();
+		this.constructForm(nbChambre);
 	},
 
 	quatre : function(event){
 		nbChambre = 4;
-		$('#maison').empty();
-		for(i=0;i<4;i++){
-			$('#maison').append(_.template(tpl.get('ChambreView')));
-		}
-		this.submit();
+		this.constructForm(nbChambre);
 
 	},
 
 	cinq : function(event){
 		nbChambre = 5;
-		$('#maison').empty();
-		for(i=0;i<5;i++){
-			$('#maison').append(_.template(tpl.get('ChambreView')));
-		}
-		this.submit();
+		this.constructForm(nbChambre);
 
 	},
 
@@ -96,28 +82,15 @@ window.SelectChambreView = Backbone.View.extend({
 
 		e.preventDefault();	
 		
-
-		for(i=0;i<nbChambre;i++){
-			var price = $('#inputPrice').val();
-			var nbLit = $('#inputNbPerson').val();
-			var superficie = $('#inputArea').val();
-			
-			var chambre = new Chambre({'prixParJour':price});
-			console.log(chambre);
+		for(i=1;i<=nbChambre;i++){
+			var price = $('#inputPrice'+i).val();
+			var nbLit = $('#inputNbPerson'+i).val();
+			var superficie = $('#inputArea'+i).val();
+					
+			chambres.get(i).set({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie});
+			console.log(chambres.get(i));
+			console.log(chambres.get(i).toJSON());
 		}
-		
-//		this.chambre.set({
-//				prixParJour:	this.$('input[name=inputPrice]').val(),
-//				nbLit:	this.$('input[name=inputNbPerson]').val()
-//				superficie : this.$('input[name=inputArea]').val()
-//			});
-//		this.model.set({
-//			prixParJour:	this.$('input[name=inputPrice]').val(),
-//			nbLit:	this.$('input[name=inputNbPerson]').val()
-//			superficie : this.$('input[name=inputArea]').val()
-//		});
-
-		alert("ok");
 	},
 
 	onInputGetFocus: function( e ) {
@@ -164,10 +137,5 @@ window.SelectChambreView = Backbone.View.extend({
 		return $field.parents('.control-group');
 
 	}
-
-
-
-
-
 
 });

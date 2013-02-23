@@ -1,6 +1,7 @@
 
 var Chambre = Backbone.Model.extend({
 	defaults: {
+		id:null
 		/*titre: '',
 		prixParJour: 0,
 		nbLit: 0,
@@ -27,4 +28,8 @@ var Chambre = Backbone.Model.extend({
 var Chambres = Backbone.Collection.extend({
 	model: Chambre,
 	//url: 'reservations'
+	
+	initialize : function() {
+        console.log('Collection de chambres crée');
+    }
 }); 
