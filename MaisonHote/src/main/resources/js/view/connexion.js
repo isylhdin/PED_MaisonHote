@@ -12,7 +12,7 @@ window.ConnexionView = Backbone.View.extend({
 		$(this.el).html(_.template(tpl.get('ConnexionView')));
 		return this;
 	},
-	
+
 
 	buttonClickHandler : function(event){
 
@@ -36,28 +36,21 @@ window.ConnexionView = Backbone.View.extend({
 				var showdata=localStorage.getItem('token-backbone-0');
 				console.log(showdata);
 
-				tpl.retrieveFile('1nu9s1o5Jryn230NaWKsBosQw8-ICvSmG9--IMkwql-o', function(reponse){
-					if(reponse.error){
+				tpl.retrieveFile(/*'1nu9s1o5Jryn230NaWKsBosQw8-ICvSmG9--IMkwql-o'*/'house_config.json', function(reponse){
+					if (reponse.items.length == 0) {
+
 						alert("PREMIERE UTILISATION");
-						app.maison();
+						app.chambre();
+					}else{
+						alert("FICHIER de configuration présent sur google drive !");
+						//on charge le menu
+						this.headerView = new HeaderView();
+						$('.header').html(this.headerView.el);
+						//et on redirige sur la page des réservations
+						app.resa();
 					}
-//					else{
-//						//on charge le menu
-//						this.headerView = new HeaderView();
-//						$('.header').html(this.headerView.el);
-//						//et on redirige sur la page des réservations
-//						app.resa();
-//					}
-					//ust add a fulll screen, position:absolute;left:0;top:0;width:100%;height:100%;opacity:0.77;filter:Alpha(77);z-index:777777; div
-				} );
 
-				//on charge le menu
-				this.headerView = new HeaderView();
-				$('.header').html(this.headerView.el);
-				//et on redirige sur la page des réservations
-				app.resa();
-				
-
+				});
 			} 
 			else{
 				console.log("Récupération de token : FAIL");
@@ -71,8 +64,8 @@ window.ConnexionView = Backbone.View.extend({
 //		console.log(gapi.auth.getToken());
 //		});
 	}
-	
-	
+
+
 
 
 

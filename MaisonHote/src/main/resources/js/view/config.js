@@ -90,7 +90,15 @@ window.SelectChambreView = Backbone.View.extend({
 			chambres.get(i).set({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie});
 			console.log(chambres.get(i));
 			console.log(chambres.get(i).toJSON());
+		
 		}
+		tpl.createNewFile('house_config.json');
+		
+		//on charge le menu
+		this.headerView = new HeaderView();
+		$('.header').html(this.headerView.el);
+		//et on redirige sur la page des réservations
+		app.resa();
 	},
 
 	onInputGetFocus: function( e ) {

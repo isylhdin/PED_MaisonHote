@@ -44,7 +44,7 @@ var appRouter = Backbone.Router.extend({
 		$('#content').html(this.selectChambreView.el);
 
 	},
-	
+
 	ficheSejour: function () {	
 		console.log("Welcome back config!");
 		this.ficheSejourView = new ficheSejourView();
@@ -87,15 +87,23 @@ tpl = {
 		},
 
 		/** Retrieve and print a file's metadata. **/
-		retrieveFile: function (fileId, callback) {
-			
-			console.log(fileId);
-			var request = gapi.client.request({
-				'path': '/drive/v2/files/'+fileId,
-				'method': 'GET'
-			});
+		retrieveFile: function (/*fileId*/fileName, callback) {
 
-			
+//			console.log(fileId);
+//			var request = gapi.client.request({
+//			'path': '/drive/v2/files/'+fileId,
+//			'method': 'GET'	      
+//			});
+
+			var request = gapi.client.request({
+				'path': '/drive/v2/files',
+				'method': 'GET',
+				'params': {
+					q : "title='"+fileName+"'"
+				}	        
+			});	
+
+
 			request.execute(function(resp) {
 				console.log('Title: ' + resp.title);
 				console.log('Description: ' + resp.description);
@@ -127,8 +135,25 @@ tpl = {
 				'method': 'GET'
 			});
 			retrievePageOfFiles(initialRequest, []);
+		},
+
+		createNewFile: function(fileName) {
+			gapi.client.load('drive', 'v2');
+			
+			var request = gapi.client.request({
+				'path': '/drive/v2/files',
+				'method': 'POST',
+				'body':{
+					"title" : fileName,
+					"mimeType" : "application/json",
+					"description" : "Config file of the guest house"	     	          
+				}
+			});
+
+			request.execute(function(resp) { console.log("File created : id = "+ resp.id); });	     	   
 		}
-		
+
+
 
 		/** Download a file's content **/
 //		downloadFile :function (file, callback) {
@@ -151,7 +176,7 @@ tpl = {
 //		}
 //		},
 
-		
+
 
 };
 
