@@ -17,7 +17,12 @@ window.SelectChambreView = Backbone.View.extend({
 		
 		this.render();
 		_.bindAll( this, 'onError' );
-		this.model.bind( 'error', this.onError );
+		
+		/** TODO : Binder les différentes chambres à l'UI de telle sorte que quand il y a une erreur à la validation des modèles,
+		 *  c'est l'UI qui récupère l'erreur
+		 */
+//		window["chambre"+i].on('error', this.onError, this);
+//		this.model.bind( 'error', this.onError );
 
 	},
 
@@ -86,19 +91,26 @@ window.SelectChambreView = Backbone.View.extend({
 			var price = $('#inputPrice'+i).val();
 			var nbLit = $('#inputNbPerson'+i).val();
 			var superficie = $('#inputArea'+i).val();
-					
-			chambres.get(i).set({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie});
-			console.log(chambres.get(i));
-			console.log(chambres.get(i).toJSON());
-		
+			
+			
+			//this.model.set({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie});		
+			//chambres.get(i).save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie});
+			window["chambre"+i].save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie});
+			//window["chambre" + i].validate({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie});
+			console.log(window["chambre" + i]);
+			
+			//console.log(chambres.get(i));
+			//console.log(chambres.toJSON());
 		}
 		tpl.createNewFile('house_config.json');
+		
+		
 		
 		//on charge le menu
 		this.headerView = new HeaderView();
 		$('.header').html(this.headerView.el);
 		//et on redirige sur la page des réservations
-		app.resa();
+		//app.resa();
 	},
 
 	onInputGetFocus: function( e ) {
@@ -112,6 +124,8 @@ window.SelectChambreView = Backbone.View.extend({
 			this.setFieldError( fieldName );
 
 		}, this );
+		
+		alert("ON PASSE DANS ONERROR");
 
 	},
 

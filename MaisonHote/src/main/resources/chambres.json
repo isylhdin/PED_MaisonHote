@@ -1,0 +1,14 @@
+[
+     {
+         "id":1,
+         "prixParJour": '40',
+		 "nbLit": '2',
+		 "superficie" :'50'
+      },
+     {
+         "id":2,
+         "prixParJour": '70',
+		 "nbLit": '3',
+		 "superficie" :'100'
+     }
+]

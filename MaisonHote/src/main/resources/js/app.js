@@ -4,7 +4,7 @@ var appRouter = Backbone.Router.extend({
 	routes: {
 		"":	 				"home",  //index.html
 		"resa":  			"resa",	 //index.html#resa
-		"chambre":  		"chambre", //index.html#chambre
+		"chambre":  		"editChambre", //index.html#chambre
 		"ficheSejour":  	"ficheSejour" //index.html#ficheSejour
 	},
 
@@ -30,7 +30,6 @@ var appRouter = Backbone.Router.extend({
 		this.calendarView = new CalendarView();
 		$('#content').html(this.calendarView.el);
 
-		//---------------  Code qui charge mal le calendrier ----------------//
 		//Reservations
 		events = new Events();
 		//Un calendrier possède un ensemble de réservations
@@ -38,11 +37,17 @@ var appRouter = Backbone.Router.extend({
 		events.fetch();
 	},
 
-	chambre: function () {	
-		console.log("Welcome back config!");
+	firstConfigChambre: function () {	
+		console.log("Welcome back firstConfig!");
 		this.selectChambreView = new SelectChambreView({model: 	Chambre});
 		$('#content').html(this.selectChambreView.el);
 
+	},
+	
+	editChambre: function () {	
+		console.log("Welcome back config!");
+		this.editChambreView = new EditChambreView();
+		$('#content').html(this.editChambreView.el);
 	},
 
 	ficheSejour: function () {	

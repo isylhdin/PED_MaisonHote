@@ -40,7 +40,7 @@ window.ConnexionView = Backbone.View.extend({
 					if (reponse.items.length == 0) {
 
 						alert("PREMIERE UTILISATION");
-						app.chambre();
+						app.firstConfigChambre();
 					}else{
 						alert("FICHIER de configuration présent sur google drive !");
 						//on charge le menu

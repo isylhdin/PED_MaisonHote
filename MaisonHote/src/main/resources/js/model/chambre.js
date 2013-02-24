@@ -1,11 +1,10 @@
 
 var Chambre = Backbone.Model.extend({
 	defaults: {
-		id:null
-		/*titre: '',
-		prixParJour: 0,
-		nbLit: 0,
-		superficie :0*/
+		id:null,
+		prixParJour: '',
+		nbLit: '',
+		superficie :''
 	},
 
 	initialize: function(){
@@ -15,21 +14,24 @@ var Chambre = Backbone.Model.extend({
 	validate: function( attrs ) {
 
 		var errors = [];
-
+		console.log(attrs);
 		if ( !attrs.prixParJour.length ) errors.push('prixParJour');
 		if ( !attrs.nbLit.length ) errors.push('nbLit');
 		if ( !attrs.superficie.length ) errors.push('superficie');
 
-		if ( errors.length ) return errors;
-
+		if ( errors.length ){
+			console.log("champ qui provoquent une erreur : "+errors);
+			return errors;
+		}
 	}
 });
 
 var Chambres = Backbone.Collection.extend({
+	url: 'chambres.json',
 	model: Chambre,
-	//url: 'reservations'
-	
+
 	initialize : function() {
-        console.log('Collection de chambres crée');
-    }
+		console.log('Collection de chambres crée');
+
+	}
 }); 
