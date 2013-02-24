@@ -5,6 +5,8 @@
   <body>
      <button id="authorize-button" onclick="handleClientLoad()">Connect to my drive</button>
      <button id="listFiles-button" onclick='getFile("house_config.json")'>Get my config file</button>
+     <button id="update-button" onclick='updateFile("0B7OTPKt6x_NhSnFGdUF3cUF2NE0" , "new contennnnnt" )'>Update file</button>
+     
      
      <div id="content"></div>
      
@@ -55,7 +57,9 @@
 		    	    xhr.onerror = function() {
 		    	      callback(null);
 		    	    };
-		    	    xhr.send();
+		    	    xhr.send(); /*'headers': {
+	    	           'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+	    	         },*/
 		    	  } else {
 		    	    callback(null);
 		    	  }
@@ -86,6 +90,21 @@
 		     	  	 }
 		       });
 	       }
+
+	       // permet de mettre à jour le fichier d'id 'fileId' avec le contenu 'newContent'
+	       function updateFile(fileId, newContent) {	    	   	    	
+	    	    gapi.client.load('drive', 'v2');
+
+	    	    var request = gapi.client.request({
+	    	         'path': '/upload/drive/v2/files/'+ fileId, 
+	    	         'method': 'PUT',
+	    	         'params': {'uploadType': 'media'},	    	        
+	    	         'body': newContent});
+	    	     
+	    	     request.execute(function(resp){
+						console.log(resp) ;
+		    	     });	    	   
+	    	 }
 	    	 
 	     </script>
 	     <!-- <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script> -->
