@@ -43,7 +43,7 @@ var appRouter = Backbone.Router.extend({
 		$('#content').html(this.selectChambreView.el);
 
 	},
-	
+
 	editChambre: function () {	
 		console.log("Welcome back config!");
 		this.editChambreView = new EditChambreView();
@@ -92,13 +92,7 @@ tpl = {
 		},
 
 		/** Retrieve and print a file's metadata. **/
-		retrieveFile: function (/*fileId*/fileName, callback) {
-
-//			console.log(fileId);
-//			var request = gapi.client.request({
-//			'path': '/drive/v2/files/'+fileId,
-//			'method': 'GET'	      
-//			});
+		retrieveFile: function (fileName, callback) {
 
 			var request = gapi.client.request({
 				'path': '/drive/v2/files',
@@ -116,11 +110,11 @@ tpl = {
 			});
 		},
 
-		
+
 		/** Create a new file on the Drive **/
-		createNewFile: function(fileName) {
+		createNewFile: function(fileName, callback) {
 			gapi.client.load('drive', 'v2');
-			
+
 			var request = gapi.client.request({
 				'path': '/drive/v2/files',
 				'method': 'POST',
@@ -131,52 +125,55 @@ tpl = {
 				}
 			});
 
-			request.execute(function(resp) { console.log("File created : id = "+ resp.id); });	     	   
+			request.execute(function(resp) { 
+				console.log("File created : id = "+ resp.id); 
+				callback(resp);
+			});	     	   
 		},
-		
-		
+
+
 		/** Update an existing file knowing his 'fileId' **/
-	     updateFile: function(fileId, newContent) {	    	   	    	
-	    	    gapi.client.load('drive', 'v2');
+		updateFile: function(fileId, newContent, callback) {	    	   	    	
+			//gapi.client.load('drive', 'v2');
 
-	    	    var request = gapi.client.request({
-	    	         'path': '/upload/drive/v2/files/'+ fileId, 
-	    	         'method': 'PUT',
-	    	         'params': {'uploadType': 'media'},	    	        
-	    	         'body': newContent});
-	    	     
-	    	     request.execute(function(resp){
-						console.log(resp) ;
-		    	 });	    	   
-	    },
+			var request = gapi.client.request({
+				'path': '/upload/drive/v2/files/'+ fileId, 
+				'method': 'PUT',
+				'params': {'uploadType': 'media'},	    	        
+				'body': newContent});
 
-	    
+			request.execute(function(resp){
+				callback(resp);
+			});	    	   
+		},
+
+
 		/** Download a file's content **/
-	    getFile: function (fileName) {
-	    	gapi.client.load('drive', 'v2');
+		getFile: function (fileName) {
+			gapi.client.load('drive', 'v2');
 
-    	   // on verifie dans un premier temps que le fichier est bien présent sur le drive
-    	   var request = gapi.client.request({
-     	        'path': '/drive/v2/files',
-     	        'method': 'GET',
-     	        'params': {
-     	          q : "title='"+fileName+"'"
-     	        }	        
-     	     });	
-		   request.execute(function(resp) {
-			 	// cas où le fichier n'est pas présent : on le crée
+			// on verifie dans un premier temps que le fichier est bien présent sur le drive
+			var request = gapi.client.request({
+				'path': '/drive/v2/files',
+				'method': 'GET',
+				'params': {
+					q : "title='"+fileName+"'"
+				}	        
+			});	
+			request.execute(function(resp) {
+				// cas où le fichier n'est pas présent : on le crée
 				if (resp.items.length == 0) {
 					console.log(fileName + ' does not exist');
 					createNewFile(fileName);
 				}
 				// cas où le fichier existe, on telecharge son contenu
-     	  		 else {
-     		 		console.log(fileName + ' has been found : id = ' + resp.items[0].id );
+				else {
+					console.log(fileName + ' has been found : id = ' + resp.items[0].id );
 					// on peut donc le récupérer
 					downloadFile(resp.items[0] , printFileContent)
-	     	  	 }
-	       });
-       }
+				}
+			});
+		}
 };
 
 

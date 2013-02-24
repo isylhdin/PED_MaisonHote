@@ -102,7 +102,13 @@ window.SelectChambreView = Backbone.View.extend({
 			//console.log(chambres.get(i));
 			//console.log(chambres.toJSON());
 		}
-		tpl.createNewFile('house_config.json');
+		var id = tpl.createNewFile('house_config.json', function(reponse){	
+			tpl.updateFile(reponse.id, chambres.toJSON(),function(reponse){	
+				console.log(reponse);	
+			});
+			
+		});
+		
 		
 		
 		

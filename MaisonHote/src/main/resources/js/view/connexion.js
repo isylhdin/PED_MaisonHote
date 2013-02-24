@@ -13,7 +13,6 @@ window.ConnexionView = Backbone.View.extend({
 		return this;
 	},
 
-
 	buttonClickHandler : function(event){
 
 		var config = {
@@ -36,9 +35,8 @@ window.ConnexionView = Backbone.View.extend({
 				var showdata=localStorage.getItem('token-backbone-0');
 				console.log(showdata);
 
-				tpl.retrieveFile(/*'1nu9s1o5Jryn230NaWKsBosQw8-ICvSmG9--IMkwql-o'*/'house_config.json', function(reponse){
+				tpl.retrieveFile('house_config.json', function(reponse){
 					if (reponse.items.length == 0) {
-
 						alert("PREMIERE UTILISATION");
 						app.firstConfigChambre();
 					}else{
@@ -56,18 +54,5 @@ window.ConnexionView = Backbone.View.extend({
 				console.log("Récupération de token : FAIL");
 			}	
 		}
-
-
-
-//		gapi.auth.authorize(config, function() {
-//		console.log('login complete');
-//		console.log(gapi.auth.getToken());
-//		});
 	}
-
-
-
-
-
-
 });
