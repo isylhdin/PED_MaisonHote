@@ -7,7 +7,8 @@ window.SelectChambreView = Backbone.View.extend({
 		"click #4"		 : "quatre",
 		"click #5"	 	 : "cinq",
 		"click #submit"  : "onSubmit",
-		"focus input"	 : "onInputGetFocus"
+		"focus input"	 : "onInputGetFocus",
+		"click #addServ" : "addServ"
 	},
 	
 
@@ -34,6 +35,10 @@ window.SelectChambreView = Backbone.View.extend({
 
 	submit : function(){
 		$('#maison').append("<div class='row'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
+	},
+	
+	addServ: function () {
+		$('#prestation').append(_.template(tpl.get('ServiceView')));
 	},
 	
 	//Quand on clique sur un numéro de la liste on construit l'ui (avec les id pas encore définis).
