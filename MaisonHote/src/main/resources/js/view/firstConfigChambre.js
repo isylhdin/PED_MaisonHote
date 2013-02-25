@@ -28,7 +28,7 @@ window.SelectChambreView = Backbone.View.extend({
 
 	render: function () {
 		$(this.el).html(_.template(tpl.get('SelectChambreView')));
-		$(this.el).append("<div id='maison'></div>");
+		// $(this.el).append("<div id='maison'></div>");
 		return this;
 	},
 
