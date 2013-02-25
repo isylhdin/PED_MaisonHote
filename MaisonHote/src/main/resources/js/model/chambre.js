@@ -27,7 +27,7 @@ var Chambre = Backbone.Model.extend({
 });
 
 var Chambres = Backbone.Collection.extend({
-	url: 'chambres.json',
+	localStorage: new Backbone.LocalStorage("chambres-backbone"),
 	model: Chambre,
 
 	initialize : function() {

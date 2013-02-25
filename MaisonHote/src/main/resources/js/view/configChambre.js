@@ -1,29 +1,22 @@
 window.EditChambreView = Backbone.View.extend({
 
 	initialize: function () {
+		this.render();
 		var chambres = new Chambres();
-		chambres.bind('reset', this.render);
-		
+		chambres.localStorage = new Backbone.LocalStorage("chambres-backbone");
 		chambres.fetch({ 
-		    success:function() {
-		        console.log(chambres.toJSON());
-		    }
-		}); //Attention c'est asynchrone
-		console.log(chambres);
-		
-		
-//		this.template = _.template(tpl.get('ChambreView'));
-//		$('#content').append("<div id='maison'></div>");
-//		chambres.each(function(Chambre){
-//			$('#maison').append(template(Chambre.toJSON()));
-//		});
-		
+			success:function() {
+				chambres.each(function(Chambre){
+					this.template = _.template(tpl.get('ChambreView'));
+					$(this.el).append(this.template(Chambre.toJSON()));
+					console.log(Chambre);
+				});
+			}
+		});	
 	},
-	
-	render: function(){
-		console.log("on est dans render");
-        console.log(chambres.toJSON());
-    }
 
-
+	render: function () {
+		$(this.el).append("<div id='chambre'></div>");
+		return this;
+	}
 });

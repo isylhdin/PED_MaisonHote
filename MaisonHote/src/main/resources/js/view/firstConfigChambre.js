@@ -100,16 +100,24 @@ window.SelectChambreView = Backbone.View.extend({
 			
 			//this.model.set({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie});		
 			//chambres.get(i).save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie});
-			window["chambre"+i].save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie});
+			window["chambre"+i].save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie}); //set les chambres dans la collection et les sauvegarde une par une dans le cache
 			//window["chambre" + i].validate({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie});
 			console.log(window["chambre" + i]);
 			
 			//console.log(chambres.get(i));
 			//console.log(chambres.toJSON());
 		}
+		
+		
+		
+		/**  Exemple de récupération des chambres dans le cache **/
+		window.ls = new Backbone.LocalStorage("chambres-backbone");
+		window.arrayChambres = ls.findAll();
+		/*********************************************************/
+		
 		var id = tpl.createNewFile('house_config.json', function(reponse){	
 			tpl.updateFile(reponse.id, chambres.toJSON(),function(reponse){	
-				console.log(reponse);	
+				console.log(reponse);
 			});
 			
 		});
@@ -121,7 +129,7 @@ window.SelectChambreView = Backbone.View.extend({
 		this.headerView = new HeaderView();
 		$('.header').html(this.headerView.el);
 		//et on redirige sur la page des réservations
-		//app.resa();
+		app.resa();
 	},
 
 	onInputGetFocus: function( e ) {
