@@ -41,6 +41,10 @@ window.ConnexionView = Backbone.View.extend({
 						app.firstConfigChambre();
 					}else{
 						alert("FICHIER de configuration présent sur google drive !");
+						
+						
+						
+						
 						//on charge le menu
 						this.headerView = new HeaderView();
 						$('.header').html(this.headerView.el);
