@@ -1,11 +1,7 @@
 window.SelectChambreView = Backbone.View.extend({
 
 	events : {
-		"click #1"		 : "un",
-		"click #2"		 : "deux",
-		"click #3"	 	 : "trois",
-		"click #4"		 : "quatre",
-		"click #5"	 	 : "cinq",
+		"click .dropdown-menu a"	: "displayRoomConfigForms",
 		"click #submit"  : "onSubmit",
 		"focus input"	 : "onInputGetFocus",
 		"click #addServ" : "addServ"
@@ -61,31 +57,9 @@ window.SelectChambreView = Backbone.View.extend({
 		this.submit();
 	},
 
-	un : function(event){
-		nbChambre = 1;
+	displayRoomConfigForms: function(event){
+		nbChambre = $(event.currentTarget).text();
 		this.constructForm(nbChambre);
-	},
-	
-	deux : function(event){
-		nbChambre = 2;
-		this.constructForm(nbChambre);
-	},
-
-	trois : function(event){
-		nbChambre = 3;
-		this.constructForm(nbChambre);
-	},
-
-	quatre : function(event){
-		nbChambre = 4;
-		this.constructForm(nbChambre);
-
-	},
-
-	cinq : function(event){
-		nbChambre = 5;
-		this.constructForm(nbChambre);
-
 	},
 
 	onSubmit: function( e ) {
