@@ -23,25 +23,35 @@ window.EventsView = Backbone.View.extend({
 		this.collection.bind('change', this.change);            
 		this.collection.bind('destroy', this.destroy);
 
-		this.eventView = new EventView({el: $('#eventDialog')});  
+		this.eventView = new EventView({el: $('#eventDialog')});
 	},
 	render: function() {
 		$(this.el).fullCalendar({
 			header: {
-//				left: 'prev,next today',
-				left: 'prev,next',
+				left: 'prev,next', // 'prev,next today',
 				center: 'title',
 				right: 'basicWeek,month'
-//					right: 'month,basicWeek,basicDay'
 			},
 			selectable: true,
-			selectHelper: true,
+			unselectCancel: ".unselectCanceled",
 			editable: true,
-			ignoreTimezone: false,                
+			ignoreTimezone: false,
+			firstDay: 1,
 			select: this.select,
 			eventClick: this.eventClick,
-			eventDrop: this.eventDropOrResize,        
-			eventResize: this.eventDropOrResize
+			eventDrop: this.eventDropOrResize,
+			eventResize: this.eventDropOrResize,
+			maxRoomsNb: 5,
+			roomsNb: 3,
+			/* impossible
+			roomNames: {first: "Chambre 1", snd: "Chambre 2", third: "Chambre 3"},
+			roomNames: ["Chambre 1", "Chambre 2", "Chambre 3"]
+			*/
+			eventRender: function(event, element, view) {
+			    if(view.name === 'basicWeek') {
+			       $(element).height($('#room0:first-child').height() - 7);
+			    }
+			}
 		});
 	},
 	addAll: function() {
@@ -56,23 +66,26 @@ window.EventsView = Backbone.View.extend({
 		this.eventView.render();            
 	},
 	eventClick: function(fcEvent) {
-		this.eventView.model = this.collection.get(fcEvent.id);
+		// utiliser l'id lorsque ce sera sauvegardé, pas firstName
+		//this.eventView.model = this.collection.get(fcEvent.id);
+		this.eventView.model = this.collection.where({firstName: fcEvent.firstName})[0];
 		this.eventView.render();
 	},
 	change: function(event) {
-//		Look up the underlying event in the calendar and update its details from the model
+		// Look up the underlying event in the calendar and update its details from the model
 		var fcEvent = $(this.el).fullCalendar('clientEvents', event.get('id'))[0];
-		fcEvent.title = event.get('title');
-		fcEvent.color = event.get('color');
+		fcEvent.title = event.get('room');
+		//fcEvent.color = event.get('color');
 		$(this.el).fullCalendar('updateEvent', fcEvent, true);           
 	},
 	eventDropOrResize: function(fcEvent) {
-//		Lookup the model that has the ID of the event and update its attributes
-//		$(this.collection).get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});            
+		// il faut utiliser l'id, pour le moment ça ne marche pas
+		// Lookup the model that has the ID of the event and update its attributes
+		//$(this.collection).get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});            
 	},
 	destroy: function(event) {
 		$(this.el).fullCalendar('removeEvents', event.id, true);         
-	}        
+	}
 });
 
 window.EventView = Backbone.View.extend({
@@ -92,15 +105,38 @@ window.EventView = Backbone.View.extend({
 			buttons: buttons,
 			open: this.open
 		});
+		$('body').addClass("unselectCanceled");
 
+		var spinner = $("#nbPersons").spinner({
+				spin: function(event, ui) {
+					if (ui.value > 10) {
+						$(this).spinner("value", 1);
+						return false;
+					} else if (ui.value < 1) {
+						$(this).spinner("value", 10);
+						return false;
+					}
+				}
+			});
 		return this;
 	},        
 	open: function() {
-		this.$('#title').val(this.model.get('title'));
-		this.$('#color').val(this.model.get('color'));            
+		this.$('#lastName').val(this.model.get('lastName'));
+		this.$('#firstName').val(this.model.get('firstName'));
+		this.$('#phone').val(this.model.get('phone'));
+		this.$('#room').val(this.model.get('room'));
+		this.$('#nbPersons').val(this.model.get('nbPersons'));
 	},        
 	save: function() {
-		this.model.set({'title': this.$('#title').val(), 'color': this.$('#color').val()});
+		var room = this.$('#room').val();
+		var lastName = this.$('#lastName').val();
+		this.model.set({
+			'title': "Chambre " + room + " | " + lastName,
+			'lastName': lastName,
+			'firstName': this.$('#firstName').val(),
+			'phone': this.$('#phone').val(),
+			'room': room,
+			'nbPersons': this.$('#nbPersons').val()});
 
 		if (this.model.isNew()) {
 			this.collection.create(this.model, {success: this.close});
@@ -108,22 +144,21 @@ window.EventView = Backbone.View.extend({
 			this.model.save({}, {success: this.close});
 		}
 
-		//a supprimer quand on aura sauvegardÃ© sur le serveur comme Ã§a ne ferme que lorsque c'est sauvegardÃ©
+		// a supprimer quand on aura sauvegardé sur le serveur
+		// comme ça ne ferme que lorsque c'est sauvegardé
 		$(this.el).dialog('close');
 	},
 	close: function() {
+		$('body').removeClass("unselectCanceled");
 		$(this.el).dialog('close');
 	},
 	destroy: function() {
 		this.model.destroy({success: this.close});
-	}        
+	}
 });
-
 
 ////Reservations
 //events = new Events();
 ////Un calendrier possÃ¨de un ensemble de rÃ©servations
 //calendar = new EventsView({el: $("#calendar"), collection: events}).render();
 //events.fetch();
-
-

@@ -300,28 +300,28 @@ function Calendar(element, options, eventSources) {
 	function elementVisible() {
 		return _element.offsetWidth !== 0;
 	}
-	
-	
+
+
 	function bodyVisible() {
 		return $('body')[0].offsetWidth !== 0;
 	}
-	
-	
-	
+
+
+
 	/* View Rendering
 	-----------------------------------------------------------------------------*/
-	
+
 	// TODO: improve view switching (still weird transition in IE, and FF has whiteout problem)
-	
+
 	function changeView(newViewName) {
 		if (!currentView || newViewName != currentView.name) {
 			ignoreWindowResize++; // because setMinHeight might change the height before render (and subsequently setSize) is reached
 
 			unselect();
-			
+
 			var oldView = currentView;
 			var newViewElement;
-				
+
 			if (oldView) {
 				(oldView.beforeHide || noop)(); // called before changing min-height. if called after, scroll state is reset (in Opera)
 				setMinHeight(content, content.height());
@@ -330,7 +330,7 @@ function Calendar(element, options, eventSources) {
 				setMinHeight(content, 1); // needs to be 1 (not 0) for IE7, or else view dimensions miscalculated
 			}
 			content.css('overflow', 'hidden');
-			
+
 			currentView = viewInstances[newViewName];
 			if (currentView) {
 				currentView.element.show();
@@ -1957,20 +1957,20 @@ fcViews.month = MonthView;
 
 function MonthView(element, calendar) {
 	var t = this;
-	
-	
+
+
 	// exports
 	t.render = render;
-	
-	
+
+
 	// imports
 	BasicView.call(t, element, calendar, 'month');
 	var opt = t.opt;
 	var renderBasic = t.renderBasic;
 	var formatDate = calendar.formatDate;
-	
-	
-	
+
+
+
 	function render(date, delta) {
 		if (delta) {
 			addMonths(date, delta);
@@ -2001,8 +2001,7 @@ function MonthView(element, calendar) {
 		t.visEnd = visEnd;
 		renderBasic(6, rowCnt, nwe ? 5 : 7, true);
 	}
-	
-	
+
 }
 
 fcViews.basicWeek = BasicWeekView;
@@ -2021,8 +2020,34 @@ function BasicWeekView(element, calendar) {
 	var renderBasic = t.renderBasic;
 	var formatDates = calendar.formatDates;
 	
-	
-	
+
+	function render(date, delta) {
+		if (delta) {
+			addDays(date, delta * 7);
+		}
+		var rowCnt = opt('roomsNb');
+		var maxRowCnt = opt('maxRoomsNb');
+		var start = addDays(cloneDate(date), -((date.getDay() - opt('firstDay') + 7) % 7));
+		var end = addDays(cloneDate(start), 7);
+		var visStart = cloneDate(start);
+		var visEnd = cloneDate(end);
+		var weekends = opt('weekends');
+		if (!weekends) {
+			skipWeekend(visStart);
+			skipWeekend(visEnd, -1, true);
+		}
+		t.title = formatDates(
+			visStart,
+			addDays(cloneDate(visEnd), -1),
+			opt('titleFormat')
+		);
+		t.start = start;
+		t.end = end;
+		t.visStart = visStart;
+		t.visEnd = visEnd;
+		renderBasic(maxRowCnt, rowCnt, weekends ? 7 : 5, false);
+	}
+/*	
 	function render(date, delta) {
 		if (delta) {
 			addDays(date, delta * 7);
@@ -2046,7 +2071,7 @@ function BasicWeekView(element, calendar) {
 		t.visStart = visStart;
 		t.visEnd = visEnd;
 		renderBasic(1, 1, weekends ? 7 : 5, false);
-	}
+	}*/
 	
 	
 }
@@ -2179,7 +2204,10 @@ function BasicView(element, calendar, viewName) {
 		updateOptions();
 		var firstTime = !body;
 		if (firstTime) {
-			buildSkeleton(maxr, showNumbers);
+			if (viewName === "basicWeek")
+				buildSkeletonBasicWeek(maxr, showNumbers);
+			else
+				buildSkeleton(maxr, showNumbers);
 		}else{
 			clearEvents();
 		}
@@ -2202,9 +2230,81 @@ function BasicView(element, calendar, viewName) {
 		tm = opt('theme') ? 'ui' : 'fc';
 		colFormat = opt('columnFormat');
 	}
-	
-	
-	
+
+
+	function buildSkeletonBasicWeek(maxRowCnt, showNumbers) {
+		var s;
+		var headerClass = tm + "-widget-header";
+		var contentClass = tm + "-widget-content";
+		var i, j;
+		var table;
+		
+		s =
+			"<table class='fc-border-separate' style='width:100%' cellspacing='0'>" +
+			"<thead>" +
+			"<tr>" +
+			"<th id='corner-th' class='room-th'></th>";
+		for (i=0; i<colCnt; i++) {
+			s +=
+				"<th class='fc- " + headerClass + "'/>"; // need fc- for setDayID
+		}
+		s +=
+			"</tr>" +
+			"</thead>" +
+			"<tbody>";
+		for (i=0; i<rowCnt; i++) {
+
+			s +=
+				"<tr class='fc-week0'>" +
+				"<th id='room" + i + "' class='room-th'>"
+				 /*opt('roomNames')[i]*/ +
+				 "<div>" +
+					"<div style='position:relative'>Chambre " + (i + 1) + "</div>" +
+				 "</div>" +
+				 "</th>";
+			for (j=0; j<colCnt; j++) {
+				s +=
+					"<td class='fc- " + contentClass + " fc-day" + j + "'>" + // need fc- for setDayID
+					"<div>" +
+					(showNumbers ?
+						"<div class='fc-day-number'/>" :
+						''
+						) +
+					"<div class='fc-day-content'>" +
+					"<div style='position:relative'>&nbsp;</div>" +
+					"</div>" +
+					"</div>" +
+					"</td>";
+			}
+			s +=
+				"</tr>";
+		}
+		s +=
+			"</tbody>" +
+			"</table>";
+		table = $(s).appendTo(element);
+		
+		head = table.find('thead');
+		headCells = head.find('th').filter(':not(.room-th)');
+		body = table.find('tbody');
+		bodyRows = body.find('tr');
+		bodyCells = body.find('td');
+		bodyFirstCells = body.find('th').filter('.room-th').filter(':first-child');
+		//bodyFirstCells = bodyCells.filter(':first-child');
+		bodyCellTopInners = bodyRows.eq(0).find('div.fc-day-content div');
+		
+		markFirstLast(head.add(head.find('tr'))); // marks first+last tr/th's
+		markFirstLast(bodyRows); // marks first+last td's
+		bodyRows.eq(0).addClass('fc-first'); // fc-last is done in updateCells
+		
+		dayBind(bodyCells);
+		
+		daySegmentContainer =
+			$("<div style='position:absolute;z-index:8;top:0;left:0'/>")
+				.appendTo(element);
+	}
+
+
 	function buildSkeleton(maxRowCnt, showNumbers) {
 		var s;
 		var headerClass = tm + "-widget-header";
@@ -2267,9 +2367,8 @@ function BasicView(element, calendar, viewName) {
 			$("<div style='position:absolute;z-index:8;top:0;left:0'/>")
 				.appendTo(element);
 	}
-	
-	
-	
+
+
 	function updateCells(firstTime) {
 		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
 		var month = t.start.getMonth();
@@ -2337,6 +2436,7 @@ function BasicView(element, calendar, viewName) {
 			rowHeight = Math.floor(bodyHeight / rowCnt);
 			rowHeightLast = bodyHeight - rowHeight * (rowCnt-1);
 		}
+
 		
 		bodyFirstCells.each(function(i, _cell) {
 			if (i < rowCnt) {
