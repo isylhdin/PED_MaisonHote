@@ -1,3 +1,13 @@
+<style>
+	.dropdown-menu {
+		min-width : 60px;
+	}
+	.btn-toolbar {
+  		margin-top: 0px;
+  		margin-bottom: 0px;
+  	}
+</style>
+
 <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
@@ -11,9 +21,22 @@
                         <ul class="nav">
                            <!-- <li><a href="#resa">Accueil</a></li>-->
                             <li><a href="#ficheSejour">Fiche séjour</a></li> <!-- juste pour tester la page-->
-                            <li><a href="#chambre">Chambres</a></li>
+                            <li><a id="room" href="#chambre">Chambres</a></li>
                         </ul>
-                        <button type="submit" class="btn pull-right" id="deconnexion">Déconnexion</button>
+                        <div class="btn-toolbar pull-right">
+                          <div class="btn-group">
+						    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#"><img src="css/img/flagFR.gif" width="20" height="13" border="0"/></a>
+					        <ul class="dropdown-menu">
+    				          <li>
+ 					            <a id="fr" href="#"><img src="css/img/flagFR.gif" width="20" height="13" border="0"/></a>
+ 				              </li>
+ 				              <li>
+ 					            <a id="en" href="#"><img src="css/img/flagEN.gif" width="20" height="13" border="0"/></a>
+ 				              </li>
+				            </ul>
+				          </div>
+				          <button type="submit" class="btn" id="deconnexion">Déconnexion</button>
+                        </div>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>
