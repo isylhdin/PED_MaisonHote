@@ -24,7 +24,7 @@ window.HeaderView = Backbone.View.extend({
     buttonLanguage : function click(id) {
       var language = 'fr';
       $.ajax({
-        url: 'language.xml',
+        url: 'languages.xml',
         success: function(xml) {
           $(xml).find('translation').each(function(){
             var id = $(this).attr('id');
