@@ -24,7 +24,7 @@ window.HeaderView = Backbone.View.extend({
     buttonLangage : function click(id) {
       var language = 'fr';
       $.ajax({
-        url: 'language.xml',
+        url: 'languages.xml',
         success: function(xml) {
           $(xml).find('translation').each(function(){
             var id = $(this).attr('id');
@@ -39,7 +39,7 @@ window.HeaderView = Backbone.View.extend({
      fr : function() {
        var language = 'fr';
        $.ajax({
-         url: 'language.xml',
+         url: 'languages.xml',
          success: function(xml) {
            $(xml).find('translation').each(function(){
              var id = $(this).attr('id');
@@ -53,7 +53,7 @@ window.HeaderView = Backbone.View.extend({
      en : function() {
        var language = 'en';
        $.ajax({
-         url: 'language.xml',
+         url: 'languages.xml',
          success: function(xml) {
            $(xml).find('translation').each(function(){
              var id = $(this).attr('id');
