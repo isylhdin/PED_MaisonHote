@@ -1,4 +1,4 @@
- 		<div class="row">
+ 		<div class="row" id="row<%= id %>">
             <!-- first span -->
               <div class="span6">
                 <h2>Chambre <%= id %></h2>
@@ -21,6 +21,7 @@
                       <input type="text" name="inputArea" id="inputArea<%= id %>" value="<%= superficie %>" placeholder="Superficie">
                     </div>
                   </div>
+                   <a class="btn btn-danger" id="<%= id %>" href="#"><i class="icon-trash icon-white"></i> Delete</a>
                  </form>
                </div>
              </div>
