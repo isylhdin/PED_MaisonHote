@@ -1,5 +1,7 @@
 
 var Chambre = Backbone.Model.extend({
+	localStorage: new Backbone.LocalStorage("chambres-backbone"),
+	
 	defaults: {
 		id:null,
 		prixParJour: '',
