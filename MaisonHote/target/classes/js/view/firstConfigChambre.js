@@ -90,6 +90,7 @@ window.SelectChambreView = Backbone.View.extend({
 		/*********************************************************/
 		
 		tpl.createNewFile('house_config.json', function(reponse){	
+			window.idHouseConfig = reponse.id;
 			tpl.updateFile(reponse.id, chambres.toJSON(),function(reponse){	
 				console.log(reponse);
 			});
