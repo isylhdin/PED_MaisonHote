@@ -14,13 +14,18 @@ window.ConnexionView = Backbone.View.extend({
 	},
 
 	buttonClickHandler : function(event){
+		
+		//ancienne clé, compte florian (à utiliser au cas ou l'autre ne fonctionne pas (trouver pourquoi !?)
+		// 966416489314.apps.googleusercontent.com
+		//nouvelle clé, compte MyGuestHouse
+		// 133252798458.apps.googleusercontent.com
 		var config = {
 				'client_id': '133252798458.apps.googleusercontent.com',
 				'scope': 'https://www.googleapis.com/auth/drive'
 		};
-
+		
 		gapi.auth.authorize(config, handleAuthResult);
-
+	
 		function handleAuthResult (authResult) {
 
 			//si connexion réussie + token récupéré
