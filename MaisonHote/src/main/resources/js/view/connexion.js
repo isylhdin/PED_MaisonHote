@@ -28,13 +28,6 @@ window.ConnexionView = Backbone.View.extend({
 			if (authResult && !authResult.error) {
 				window.localStorage.clear();
 
-				this.googleToken = new GoogleToken();
-				this.googleToken.save({"data":authResult});
-				console.log(googleToken);
-
-				var showdata=localStorage.getItem('token-backbone-0');
-				console.log(showdata);
-
 				tpl.retrieveFile('house_config.json', function(reponse){
 					if (reponse.items.length == 0) {
 						alert("PREMIERE UTILISATION");
@@ -42,14 +35,13 @@ window.ConnexionView = Backbone.View.extend({
 					}else{
 						alert("FICHIER de configuration présent sur google drive !");
 						tpl.downloadFile(reponse.items[0] , tpl.saveContentFileIntoLocalStorage)
-							
+
 						//on charge le menu
 						this.headerView = new HeaderView();
 						$('.header').html(this.headerView.el);
 						//et on redirige sur la page des réservations
 						app.resa();
 					}
-
 				});
 			} 
 			else{
