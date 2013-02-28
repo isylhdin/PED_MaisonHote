@@ -2174,6 +2174,9 @@ function BasicView(element, calendar, viewName) {
 	
 	disableTextSelection(element.addClass('fc-grid'));
 	
+	function isBasicWeek() {
+		return viewName === 'basicWeek';
+	}
 	
 	function renderBasic(maxr, r, c, showNumbers) {
 		rowCnt = r;
@@ -2181,7 +2184,7 @@ function BasicView(element, calendar, viewName) {
 		updateOptions();
 		var firstTime = !body;
 		if (firstTime) {
-			if (viewName === "basicWeek")
+			if (isBasicWeek())
 				buildSkeletonBasicWeek(maxr, showNumbers);
 			else
 				buildSkeleton(maxr, showNumbers);
@@ -2432,7 +2435,7 @@ function BasicView(element, calendar, viewName) {
 	function setWidth(width) {
 		viewWidth = width;
 		colContentPositions.clear();
-		if (viewName === "basicWeek") {
+		if (isBasicWeek()) {
 			roomColWidth = opt('roomColWidth') * viewWidth;
 			setOuterWidth([roomColCornerCell], roomColWidth);
 			colWidth = Math.floor((viewWidth - roomColWidth) / colCnt);
@@ -2591,7 +2594,7 @@ function BasicView(element, calendar, viewName) {
 	});
 	
 	
-	hoverListener = new HoverListener(coordinateGrid);
+	hoverListener = new HoverListener(coordinateGrid, isBasicWeek());
 	
 	
 	colContentPositions = new HorizontalPositionCache(function(col) {
@@ -5216,7 +5219,7 @@ function CoordinateGrid(buildFunc) {
 
 }
 
-function HoverListener(coordinateGrid) {
+function HoverListener(coordinateGrid, isBasicWeek) {
 
 
 	var t = this;
@@ -5224,7 +5227,6 @@ function HoverListener(coordinateGrid) {
 	var change;
 	var firstCell;
 	var cell;
-	
 	
 	t.start = function(_change, ev, _bindType) {
 		change = _change;
@@ -5239,6 +5241,8 @@ function HoverListener(coordinateGrid) {
 	function mouse(ev) {
 		_fixUIEvent(ev); // see below
 		var newCell = coordinateGrid.cell(ev.pageX, ev.pageY);
+		if (isBasicWeek && firstCell && (newCell.row-firstCell.row != 0))
+			return;
 		if (!newCell != !cell || newCell && (newCell.row != cell.row || newCell.col != cell.col)) {
 			if (newCell) {
 				if (!firstCell) {

@@ -48,6 +48,7 @@ var appRouter = Backbone.Router.extend({
 		console.log("Welcome back config!");
 		this.editChambreView = new EditChambreView();
 		$('#content').html(this.editChambreView.el);
+
 	},
 
 	ficheSejour: function () {	
