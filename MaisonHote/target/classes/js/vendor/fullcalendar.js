@@ -2047,33 +2047,10 @@ function BasicWeekView(element, calendar) {
 		t.visEnd = visEnd;
 		renderBasic(maxRowCnt, rowCnt, weekends ? 7 : 5, false);
 	}
-/*	
-	function render(date, delta) {
-		if (delta) {
-			addDays(date, delta * 7);
-		}
-		var start = addDays(cloneDate(date), -((date.getDay() - opt('firstDay') + 7) % 7));
-		var end = addDays(cloneDate(start), 7);
-		var visStart = cloneDate(start);
-		var visEnd = cloneDate(end);
-		var weekends = opt('weekends');
-		if (!weekends) {
-			skipWeekend(visStart);
-			skipWeekend(visEnd, -1, true);
-		}
-		t.title = formatDates(
-			visStart,
-			addDays(cloneDate(visEnd), -1),
-			opt('titleFormat')
-		);
-		t.start = start;
-		t.end = end;
-		t.visStart = visStart;
-		t.visEnd = visEnd;
-		renderBasic(1, 1, weekends ? 7 : 5, false);
-	}*/
-	
-	
+	/* Pour retrouver la fonction render originale :
+	 * enlever var rowCnt = opt('roomsNb') et var maxRowCnt = opt('maxRoomsNb') et
+	 * remplacer l'appel à renderBasic par : renderBasic(1, 1, weekends ? 7 : 5, false);
+	 */
 }
 
 fcViews.basicDay = BasicDayView;
@@ -2285,11 +2262,12 @@ function BasicView(element, calendar, viewName) {
 		table = $(s).appendTo(element);
 		
 		head = table.find('thead');
-		headCells = head.find('th').filter(':not(.room-th)');
+		headCells = head.find('th').filter(':not(#corner-th)');
+		roomColCornerCell = head.find('#corner-th');
 		body = table.find('tbody');
 		bodyRows = body.find('tr');
 		bodyCells = body.find('td');
-		bodyFirstCells = body.find('th').filter('.room-th').filter(':first-child');
+		bodyFirstCells = body.find('th').filter('.room-th:first-child');
 		//bodyFirstCells = bodyCells.filter(':first-child');
 		bodyCellTopInners = bodyRows.eq(0).find('div.fc-day-content div');
 		
@@ -2424,12 +2402,12 @@ function BasicView(element, calendar, viewName) {
 	
 	function setHeight(height) {
 		viewHeight = height;
-		
+
 		var bodyHeight = viewHeight - head.height();
 		var rowHeight;
 		var rowHeightLast;
 		var cell;
-			
+
 		if (opt('weekMode') == 'variable') {
 			rowHeight = rowHeightLast = Math.floor(bodyHeight / (rowCnt==1 ? 2 : 6));
 		}else{
@@ -2437,7 +2415,7 @@ function BasicView(element, calendar, viewName) {
 			rowHeightLast = bodyHeight - rowHeight * (rowCnt-1);
 		}
 
-		
+
 		bodyFirstCells.each(function(i, _cell) {
 			if (i < rowCnt) {
 				cell = $(_cell);
@@ -2447,14 +2425,20 @@ function BasicView(element, calendar, viewName) {
 				);
 			}
 		});
-		
+
 	}
 	
 	
 	function setWidth(width) {
 		viewWidth = width;
 		colContentPositions.clear();
-		colWidth = Math.floor(viewWidth / colCnt);
+		if (viewName === "basicWeek") {
+			roomColWidth = opt('roomColWidth') * viewWidth;
+			setOuterWidth([roomColCornerCell], roomColWidth);
+			colWidth = Math.floor((viewWidth - roomColWidth) / colCnt);
+		}
+		else
+			colWidth = Math.floor(viewWidth / colCnt);
 		setOuterWidth(headCells.slice(0, -1), colWidth);
 	}
 	

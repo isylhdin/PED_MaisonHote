@@ -2,8 +2,10 @@ window.EditChambreView = Backbone.View.extend({
 
 	events : {
 		"click .btn-danger"  : "onDelete",
-		"click .btn-success"  : "onAdd",
-		"click #submit"  : "onSubmit"
+		"click a.btn-primary" : "onAccept",
+		"click .btn-success" : "onAdd",
+		"click #submit" 	 : "onSubmit"
+
 
 	},
 
@@ -12,14 +14,16 @@ window.EditChambreView = Backbone.View.extend({
 	},
 
 	footpage : function(){
-		$(this.el).append("<div class='row' id='add'> <a class='btn btn-success' href='#'><i class='icon-plus icon-white'></i> Ajouter</a></div>");
+		$(this.el).append("<div class='row' id='add'> <a class='btn btn-success'><i class='icon-plus icon-white'></i> Ajouter</a></div>");
 		$(this.el).append("<div class='row'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
+		$(this.el).append("<div id='waitingResult' style='visibility:hidden' class='alert alert-info'>Sauvregarde en cours ... </div>");
 		$(this.el).append("<div id='goodResult' style='visibility:hidden' class='alert alert-success'>Vos données ont été sauvegardées avec succès ! </div>");
 		$(this.el).append("<div id='badResult'  style='visibility:hidden' class='alert alert-error'>Une erreur est survenue lors de la sauvegarde. Veuillez réessayer</div>");
 	},
 
 	render: function (){
 		window.nbChambres = 0;
+		window.id;
 		$(this.el).append("<div id='chambre'></div>");
 
 		var self = this;
@@ -43,16 +47,25 @@ window.EditChambreView = Backbone.View.extend({
 
 	onDelete: function(event){
 		console.log("clic delete !");
+		
 		event.preventDefault();
-		var id = $(event.currentTarget).data('id');
+		window.id = $(event.currentTarget).data('id');
+		
+		this.modal(window.id);
+	},
+	
+	onAccept: function(event){
+		console.log("clic accept !");
 		nbChambres--;
-
+		
 		//supprime la chambre de la collection
-		var chambre =  window.chambres.get(id);
+		var chambre =  window.chambres.get(window.id);
 		chambres.remove(chambre);
 
-		//supprime la vue
-		$('#row'+id).remove();	
+		$('#row'+window.id).fadeOut(1000, function() {
+			$('#row'+window.id).remove();	
+		});	
+		$("#modal").remove();
 	},
 
 	onAdd: function(event){
@@ -70,6 +83,8 @@ window.EditChambreView = Backbone.View.extend({
 	onSubmit: function(event){
 		console.log("clic submit!");
 
+	//	$('#waitingResult').css('visibility','visible');
+		
 		chambres.each(function(Chambre){
 			window.price = $('#inputPrice'+Chambre.id).val();
 			window.nbLit = $('#inputNbPerson'+Chambre.id).val();
@@ -78,26 +93,42 @@ window.EditChambreView = Backbone.View.extend({
 			Chambre.save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie}, {
 				success: function(model, response, options) {
 					if(Chambre.id == nbChambres){
+						$('#waitingResult').fadeOut('fast');
 						$('#goodResult').css('visibility','visible');
-						$('#goodResult').fadeOut(3000);
+						$('#goodResult').fadeOut(3000, function() {
+							$('#goodResult').css('visibility','hidden');
+						});	
 					}
 				},
 				error: function(){
 					if(Chambre.id == nbChambres){
+						$('#waitingResult').fadeOut('fast');
 						$('#badResult').css('visibility','visible');
-						$('#badResult').fadeOut(15000);
+						$('#badResult').fadeOut(15000, function() {
+							$('#badResult').css('visibility','hidden');
+						});	
 					}
 				}
 			});
 			console.log(Chambre);
 		});
-		
+
 		//window.idHouseConfig à mettre dans le cache
 //		tpl.updateFile(window.idHouseConfig, chambres.toJSON(),function(reponse){	
-//			console.log(reponse);
+//		console.log(reponse);
 //		});
 
 
+	},
+	
+	modal : function(id){
+		$('#row'+id).append(_.template(tpl.get('ModalView')));
+		$('h3').text("Suppression");
+		$('h4').text("Vous êtes sur le point de supprimer la chambre "+id);
+		$("#modal").modal({
+			  backdrop: false  
+		}); 		
 	}
+	
 
 });
