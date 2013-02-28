@@ -14,7 +14,6 @@ window.ConnexionView = Backbone.View.extend({
 	},
 
 	buttonClickHandler : function(event){
-
 		var config = {
 				'client_id': '133252798458.apps.googleusercontent.com',
 				'scope': 'https://www.googleapis.com/auth/drive'
