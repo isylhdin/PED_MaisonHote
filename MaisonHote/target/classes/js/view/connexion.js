@@ -34,6 +34,9 @@ window.ConnexionView = Backbone.View.extend({
 					}else{
 						alert("FICHIER de configuration présent sur google drive !");
 						tpl.downloadFile(reponse.items[0] , tpl.saveContentFileIntoLocalStorage)
+						
+						var houseConfig = new FichierConfig({'idFichier': reponse.items[0].id});
+						houseConfig.save();
 
 						//on charge le menu
 						// this.headerView = new HeaderView();

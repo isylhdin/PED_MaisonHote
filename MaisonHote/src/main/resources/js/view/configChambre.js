@@ -2,23 +2,13 @@ window.EditChambreView = Backbone.View.extend({
 
 	events : {
 		"click .btn-danger"   : "onDelete",
-		"click a.btn-primary" : "onAccept",
+		"click a.btn-primary" : "onAcceptDelete",
 		"click .btn-success"  : "onAdd",
 		"click #submit" 	  : "onSubmit"
-
-
 	},
 
 	initialize: function () {
 		this.render();
-	},
-
-	footpage : function(){
-		$(this.el).append("<div class='row' id='add'> <button class='btn btn-success'><i class='icon-plus icon-white'></i> Ajouter</button></div>");
-		$(this.el).append("<div class='row'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
-		$(this.el).append("<div id='waitingResult' style='visibility:hidden' class='alert alert-info'>Sauvregarde en cours ... </div>");
-		$(this.el).append("<div id='goodResult' style='visibility:hidden' class='alert alert-success'>Vos données ont été sauvegardées avec succès ! </div>");
-		$(this.el).append("<div id='badResult'  style='visibility:hidden' class='alert alert-error'>Une erreur est survenue lors de la sauvegarde. Veuillez vérifier que vous êtes connecté à Internet et que vous utilisez un navigateur récent puis réésayez</div>");
 	},
 
 	render: function (){
@@ -47,6 +37,14 @@ window.EditChambreView = Backbone.View.extend({
 		console.log(chambres.toJSON());
 		return this;
 	},
+	
+	footpage : function(){
+		$(this.el).append("<div class='row' id='add'> <button class='btn btn-success'><i class='icon-plus icon-white'></i> Ajouter</button></div>");
+		$(this.el).append("<div class='row'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
+		$(this.el).append("<div id='waitingResult' style='visibility:hidden' class='alert alert-info'>Sauvregarde en cours ... </div>");
+		$(this.el).append("<div id='goodResult' style='visibility:hidden' class='alert alert-success'>Vos données ont été sauvegardées avec succès ! </div>");
+		$(this.el).append("<div id='badResult'  style='visibility:hidden' class='alert alert-error'>Une erreur est survenue lors de la sauvegarde. Veuillez vérifier que vous êtes connecté à Internet et que vous utilisez un navigateur récent puis réésayez</div>");
+	},
 
 	onDelete: function(event){
 		console.log("clic delete !");
@@ -57,7 +55,7 @@ window.EditChambreView = Backbone.View.extend({
 		this.modal(window.id);
 	},
 
-	onAccept: function(event){
+	onAcceptDelete: function(event){
 		console.log("clic accept !");
 		nbChambres--;
 
