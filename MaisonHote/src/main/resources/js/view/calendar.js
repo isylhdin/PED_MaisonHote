@@ -49,12 +49,15 @@ window.EventsView = Backbone.View.extend({
 			roomNames: {first: "Chambre 1", snd: "Chambre 2", third: "Chambre 3"},
 			roomNames: ["Chambre 1", "Chambre 2", "Chambre 3"]
 			*/
-			eventRender: function(event, element, view) {
+			//weekViewEventHeight: true
+			/*eventRender: function(event, element, view) {
 			    if(view.name === 'basicWeek') {
-			       $(element).height($('#room0:first-child').height() - 7);
+					$(element).height(weekViewEventHeight);
+					$(element).height($('#room0:first-child').height() - 7);
 			    }
-			}
+			}*/
 		});
+		//var weekViewEventHeight = $('#room0:first-child').height() - 7;
 	},
 	addAll: function() {
 		$(this.el).fullCalendar('addEventSource', this.collection.toJSON(), true);
