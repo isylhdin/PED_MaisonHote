@@ -36,8 +36,11 @@ window.ConnexionView = Backbone.View.extend({
 						tpl.downloadFile(reponse.items[0] , tpl.saveContentFileIntoLocalStorage)
 
 						//on charge le menu
-						this.headerView = new HeaderView();
-						$('.header').html(this.headerView.el);
+						// this.headerView = new HeaderView();
+						// $('.header').html(this.headerView.el);
+						$('#room').show();
+						$('#logOut').show();
+						$('#nameAppli').show();
 						//et on redirige sur la page des réservations
 						app.resa();
 					}

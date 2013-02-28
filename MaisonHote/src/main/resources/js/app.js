@@ -12,6 +12,9 @@ var appRouter = Backbone.Router.extend({
 	initialize: function () {
 		console.log("Initialize router !");
 		this.connexion();
+		$('#room').hide();
+		$('#logOut').hide();
+		$('#nameAppli').hide();
 	},
 
 	// cette route sera appelée à chaque fois qu'une route est inexistante ainsi qu'au lancement de l'application
@@ -22,7 +25,9 @@ var appRouter = Backbone.Router.extend({
 	connexion: function () {
 		console.log("Welcome back connexion!");
 		this.connexionView = new ConnexionView();
-		$('#content').html(this.connexionView.el);		
+		$('#content').html(this.connexionView.el);
+	    this.headerView = new HeaderView();
+		$('.header').html(this.headerView.el);
 	},
 
 	resa: function () {	
