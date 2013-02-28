@@ -110,9 +110,9 @@ tpl = {
 			});	
 
 			request.execute(function(resp) {
-				console.log('Title: ' + resp.title);
-				console.log('Description: ' + resp.description);
-				console.log('MIME type: ' + resp.mimeType);	
+				//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
+				var houseConfig = new FichierConfig({'idFichier': resp.items[0].id});
+				houseConfig.save();
 				callback(resp);
 			});
 		},
@@ -133,7 +133,10 @@ tpl = {
 			});
 
 			request.execute(function(resp) { 
-				console.log("File created : id = "+ resp.id); 
+				console.log("File created : id = "+ resp.id);
+				//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
+				var houseConfig = new FichierConfig({'idFichier': resp.id});
+				houseConfig.save();
 				callback(resp);
 			});	     	   
 		},
