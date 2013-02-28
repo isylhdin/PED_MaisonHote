@@ -110,9 +110,6 @@ tpl = {
 			});	
 
 			request.execute(function(resp) {
-				//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
-				var houseConfig = new FichierConfig({'idFichier': resp.items[0].id});
-				houseConfig.save();
 				callback(resp);
 			});
 		},
