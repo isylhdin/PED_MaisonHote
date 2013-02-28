@@ -2,7 +2,7 @@ window.HeaderView = Backbone.View.extend({
 
 	events : {
 		"click #deconnexion" : "buttonClickHandler",
-		"click .dropdown-menu a" : "buttonLangage",
+		 // "click .dropdown-menu a" : "buttonLanguage"
 		 "click #fr"			 : "fr",
 		 "click #en"			 : "en"
 		
@@ -21,19 +21,18 @@ window.HeaderView = Backbone.View.extend({
     	app.connexion();
     },
     
-    buttonLangage : function click(id) {
-      var language = 'fr';
-      $.ajax({
-        url: 'languages.xml',
-        success: function(xml) {
-          $(xml).find('translation').each(function(){
-            var id = $(this).attr('id');
-            var text = $(this).find(language).text();
-            $("#" + id).html(text);
-          });
-        }
-      });
-    },
+    // buttonLanguage : function(language) {
+      // $.ajax({
+        // url: 'languages.xml',
+        // success: function(xml) {
+          // $(xml).find('translation').each(function(){
+            // var id = $(this).attr('id');
+            // var text = $(this).find(language).text();
+            // $("#" + id).html(text);
+          // });
+        // }
+      // });
+    // }
     
     
      fr : function() {
