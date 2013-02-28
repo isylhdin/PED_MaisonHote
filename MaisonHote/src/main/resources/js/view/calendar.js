@@ -94,6 +94,9 @@ window.EventsView = Backbone.View.extend({
 });
 
 window.EventView = Backbone.View.extend({
+	events : {
+		"click #btnFicheSejour" : "btnFicheSejour"
+	},
 	initialize: function() {
 		_.bindAll(this);           
 	},
@@ -159,6 +162,10 @@ window.EventView = Backbone.View.extend({
 	},
 	destroy: function() {
 		this.model.destroy({success: this.close});
+	},
+	btnFicheSejour: function() {
+		app.ficheSejour();
+		$(this.el).dialog('close');
 	}
 });
 
