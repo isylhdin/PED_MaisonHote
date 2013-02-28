@@ -1,7 +1,7 @@
 window.HeaderView = Backbone.View.extend({
 
 	events : {
-		"click #deconnexion" : "buttonClickHandler",
+		"click #logOut" : "buttonClickHandler",
 		 // "click .dropdown-menu a" : "buttonLanguage"
 		 "click #fr"			 : "fr",
 		 "click #en"			 : "en"

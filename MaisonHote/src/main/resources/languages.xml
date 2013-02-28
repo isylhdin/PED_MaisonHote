@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <translations>
+	<translation id="welcome">
+    	<fr>Bienvenue !</fr>
+        <en>Welcome !</en>
+    </translation>
+    <translation id="welcomeMsg">
+    	<fr>Bienvenue sur My Guest House, un site internet qui vous permet de gérer votre maison d'hôte en toute simplicité. Vous n'avez plus qu'à vous connecter !</fr>
+        <en>Welcome on My Guest House, a website that allows you to manage your guesthouse with ease. You only have to log in !</en>
+    </translation>
+    <translation id="connexionMsg">
+    	<fr>Pour vous connecter, cliquez sur un des icônes ci-dessous !</fr>
+        <en>To log in, click one of the icons bellow</en>
+    </translation>
     <translation id="room">
     	<fr>Chambres</fr>
         <en>Room</en>
     </translation>
-    <translation id="deconnexion">
+    <translation id="logOut">
     	<fr>Déconnexion</fr>
         <en>Log out</en>
     </translation>
