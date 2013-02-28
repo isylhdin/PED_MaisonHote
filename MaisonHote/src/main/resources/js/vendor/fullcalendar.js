@@ -2026,7 +2026,6 @@ function BasicWeekView(element, calendar) {
 			addDays(date, delta * 7);
 		}
 		var rowCnt = opt('roomsNb');
-		var maxRowCnt = opt('maxRoomsNb');
 		var start = addDays(cloneDate(date), -((date.getDay() - opt('firstDay') + 7) % 7));
 		var end = addDays(cloneDate(start), 7);
 		var visStart = cloneDate(start);
@@ -2045,11 +2044,11 @@ function BasicWeekView(element, calendar) {
 		t.end = end;
 		t.visStart = visStart;
 		t.visEnd = visEnd;
-		renderBasic(maxRowCnt, rowCnt, weekends ? 7 : 5, false);
+		renderBasic(null, rowCnt, weekends ? 7 : 5, false); //le 1er arg n'est pas utilise
 	}
 	/* Pour retrouver la fonction render originale :
-	 * enlever var rowCnt = opt('roomsNb') et var maxRowCnt = opt('maxRoomsNb') et
-	 * remplacer l'appel à renderBasic par : renderBasic(1, 1, weekends ? 7 : 5, false);
+	 * enlever var rowCnt = opt('roomsNb') et remplacer
+	 * l'appel à renderBasic par : renderBasic(1, 1, weekends ? 7 : 5, false);
 	 */
 }
 
@@ -2124,6 +2123,8 @@ function BasicView(element, calendar, viewName) {
 	t.getColCnt = function() { return colCnt };
 	t.getColWidth = function() { return colWidth };
 	t.getDaySegmentContainer = function() { return daySegmentContainer };
+	t.isBasicWeek = isBasicWeek;
+	t.getRowHeight = getRowHeight;
 	
 	
 	// imports
@@ -2154,6 +2155,7 @@ function BasicView(element, calendar, viewName) {
 	var viewWidth;
 	var viewHeight;
 	var colWidth;
+	var erowHeight;
 	
 	var rowCnt, colCnt;
 	var coordinateGrid;
@@ -2178,6 +2180,10 @@ function BasicView(element, calendar, viewName) {
 		return viewName === 'basicWeek';
 	}
 	
+	function getRowHeight() {
+		return erowHeight;
+	}
+	
 	function renderBasic(maxr, r, c, showNumbers) {
 		rowCnt = r;
 		colCnt = c;
@@ -2185,7 +2191,7 @@ function BasicView(element, calendar, viewName) {
 		var firstTime = !body;
 		if (firstTime) {
 			if (isBasicWeek())
-				buildSkeletonBasicWeek(maxr, showNumbers);
+				buildSkeletonBasicWeek(showNumbers);
 			else
 				buildSkeleton(maxr, showNumbers);
 		}else{
@@ -2212,7 +2218,7 @@ function BasicView(element, calendar, viewName) {
 	}
 
 
-	function buildSkeletonBasicWeek(maxRowCnt, showNumbers) {
+	function buildSkeletonBasicWeek(showNumbers) {
 		var s;
 		var headerClass = tm + "-widget-header";
 		var contentClass = tm + "-widget-content";
@@ -2263,7 +2269,7 @@ function BasicView(element, calendar, viewName) {
 			"</tbody>" +
 			"</table>";
 		table = $(s).appendTo(element);
-		
+
 		head = table.find('thead');
 		headCells = head.find('th').filter(':not(#corner-th)');
 		roomColCornerCell = head.find('#corner-th');
@@ -2273,13 +2279,13 @@ function BasicView(element, calendar, viewName) {
 		bodyFirstCells = body.find('th').filter('.room-th:first-child');
 		//bodyFirstCells = bodyCells.filter(':first-child');
 		bodyCellTopInners = bodyRows.eq(0).find('div.fc-day-content div');
-		
+
 		markFirstLast(head.add(head.find('tr'))); // marks first+last tr/th's
 		markFirstLast(bodyRows); // marks first+last td's
 		bodyRows.eq(0).addClass('fc-first'); // fc-last is done in updateCells
-		
+
 		dayBind(bodyCells);
-		
+
 		daySegmentContainer =
 			$("<div style='position:absolute;z-index:8;top:0;left:0'/>")
 				.appendTo(element);
@@ -2428,7 +2434,7 @@ function BasicView(element, calendar, viewName) {
 				);
 			}
 		});
-
+		erowHeight = rowHeight - 7;
 	}
 	
 	
@@ -3957,7 +3963,7 @@ function AgendaEventRenderer() {
 				trigger('eventAfterRender', event, event, eventElement);
 			}
 		}
-					
+
 	}
 	
 	
@@ -4590,8 +4596,8 @@ function DayEventRenderer() {
 	var renderDayOverlay = t.renderDayOverlay;
 	var clearOverlays = t.clearOverlays;
 	var clearSelection = t.clearSelection;
-	
-	
+	var isBasicWeek = t.isBasicWeek;
+	var getRowHeight = t.getRowHeight;
 	
 	/* Rendering
 	-----------------------------------------------------------------------------*/
@@ -4688,6 +4694,7 @@ function DayEventRenderer() {
 		var right;
 		var skinCss;
 		var html = '';
+		var hasStyle;
 		// calculate desired position/dimensions, create html
 		for (i=0; i<segCnt; i++) {
 			seg = segs[i];
@@ -4730,13 +4737,18 @@ function DayEventRenderer() {
 			}else{
 				html += "<div";
 			}
+			hasStyle = skinCss || opt('rowHeightForEvents');
 			html +=
 				" class='" + classes.join(' ') + "'" +
 				" style='position:absolute;z-index:8;left:"+left+"px;" + skinCss + "'" +
 				">" +
 				"<div" +
 				" class='fc-event-inner fc-event-skin'" +
-				(skinCss ? " style='" + skinCss + "'" : '') +
+				(hasStyle ? " style='" : '') +
+				(skinCss ? skinCss + ';' : '') +
+				(opt('rowHeightForEvents') && isBasicWeek() ?
+					"height:"+getRowHeight()+"px'" : '') +
+				(hasStyle ? "'" : '') +
 				">";
 			if (!event.allDay && seg.isStart) {
 				html +=
