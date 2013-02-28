@@ -1,5 +1,7 @@
 
 var Chambre = Backbone.Model.extend({
+	localStorage: new Backbone.LocalStorage("chambres-backbone"),
+	
 	defaults: {
 		id:null,
 		prixParJour: '',
@@ -14,13 +16,12 @@ var Chambre = Backbone.Model.extend({
 	validate: function( attrs ) {
 
 		var errors = [];
-		console.log(attrs);
 		if ( !attrs.prixParJour.length ) errors.push('prixParJour');
 		if ( !attrs.nbLit.length ) errors.push('nbLit');
 		if ( !attrs.superficie.length ) errors.push('superficie');
 
 		if ( errors.length ){
-			console.log("champ qui provoquent une erreur : "+errors);
+			console.log("champ(s) qui provoque(nt) une erreur : "+errors);
 			return errors;
 		}
 	}

@@ -89,16 +89,15 @@ window.SelectChambreView = Backbone.View.extend({
 		window.arrayChambres = ls.findAll();
 		/*********************************************************/
 		
-		var id = tpl.createNewFile('house_config.json', function(reponse){	
+		tpl.createNewFile('house_config.json', function(reponse){	
+			window.idHouseConfig = reponse.id;
 			tpl.updateFile(reponse.id, chambres.toJSON(),function(reponse){	
 				console.log(reponse);
 			});
 			
 		});
 		
-		
-		
-		
+
 		//on charge le menu
 		this.headerView = new HeaderView();
 		$('.header').html(this.headerView.el);

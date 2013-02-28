@@ -41,18 +41,23 @@ window.EventsView = Backbone.View.extend({
 			eventClick: this.eventClick,
 			eventDrop: this.eventDropOrResize,
 			eventResize: this.eventDropOrResize,
+			height: getWindowHeight() - getBodyPad(),
 			maxRoomsNb: 5,
 			roomsNb: 3,
+			roomColWidth: 0.1,
 			/* impossible
 			roomNames: {first: "Chambre 1", snd: "Chambre 2", third: "Chambre 3"},
 			roomNames: ["Chambre 1", "Chambre 2", "Chambre 3"]
 			*/
-			eventRender: function(event, element, view) {
+			//weekViewEventHeight: true
+			/*eventRender: function(event, element, view) {
 			    if(view.name === 'basicWeek') {
-			       $(element).height($('#room0:first-child').height() - 7);
+					$(element).height(weekViewEventHeight);
+					$(element).height($('#room0:first-child').height() - 7);
 			    }
-			}
+			}*/
 		});
+		//var weekViewEventHeight = $('#room0:first-child').height() - 7;
 	},
 	addAll: function() {
 		$(this.el).fullCalendar('addEventSource', this.collection.toJSON(), true);
@@ -63,7 +68,7 @@ window.EventsView = Backbone.View.extend({
 	select: function(startDate, endDate) {
 		this.eventView.collection = this.collection;
 		this.eventView.model = new Event({start: startDate, end: endDate});
-		this.eventView.render();            
+		this.eventView.render();
 	},
 	eventClick: function(fcEvent) {
 		// utiliser l'id lorsque ce sera sauvegard�, pas firstName
@@ -162,3 +167,24 @@ window.EventView = Backbone.View.extend({
 ////Un calendrier possède un ensemble de réservations
 //calendar = new EventsView({el: $("#calendar"), collection: events}).render();
 //events.fetch();
+
+function getWindowHeight() {
+	if (window.innerHeight) { 
+		//Other than IE
+		var winHeight = window.innerHeight;
+	}
+	else if (document.documentElement && document.documentElement.clientHeight) {
+		//IE standard mode
+		var winHeight = document.documentElement.clientHeight;
+	}
+	else if (document.body && document.body.clientHeight) {
+		//IE quirks mode
+		var winHeight = document.body.clientHeight;
+	}
+	return winHeight;
+}
+	
+function getBodyPad() {
+	return parseInt($('body').css('padding-top').replace('px', '')) +
+		parseInt($('body').css('padding-bottom').replace('px', ''));
+}

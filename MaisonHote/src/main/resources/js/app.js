@@ -55,7 +55,7 @@ var appRouter = Backbone.Router.extend({
 		this.ficheSejourView = new ficheSejourView();
 		$('#content').html(this.ficheSejourView.el);
 	},
-	
+
 	service: function () {	
 		console.log("Welcome back config!");
 		this.serviceView = new ServiceView();
@@ -153,38 +153,37 @@ tpl = {
 			});	    	   
 		},
 
+		downloadFile : function (file, callback) {
+			if (file.downloadUrl) {
+				var accessToken = gapi.auth.getToken().access_token;
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', file.downloadUrl);
+				xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+				xhr.onload = function() {
+					callback(xhr.responseText);
+				};
+				xhr.onerror = function() {
+					callback(null);
+				};
+				xhr.send(); 
+			} else {
+				callback(null);
+			}
+		},
 
-		/** Download a file's content **/
-		getFile: function (fileName) {
-			gapi.client.load('drive', 'v2');
-
-			// on verifie dans un premier temps que le fichier est bien présent sur le drive
-			var request = gapi.client.request({
-				'path': '/drive/v2/files',
-				'method': 'GET',
-				'params': {
-					q : "title='"+fileName+"'"
-				}	        
-			});	
-			request.execute(function(resp) {
-				// cas où le fichier n'est pas présent : on le crée
-				if (resp.items.length == 0) {
-					console.log(fileName + ' does not exist');
-					createNewFile(fileName);
-				}
-				// cas où le fichier existe, on telecharge son contenu
-				else {
-					console.log(fileName + ' has been found : id = ' + resp.items[0].id );
-					// on peut donc le récupérer
-					downloadFile(resp.items[0] , printFileContent)
-				}
-			});
+		saveContentFileIntoLocalStorage : function (fileContent){
+			var chambres = jQuery.parseJSON(fileContent);
+			
+			for(var i=0; i<chambres.length;i++){
+				var chambre = new Chambre(chambres[i]);
+				chambre.save();				
+			}
 		}
 };
 
 
 
-tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView', 'ChambreView', 'ConnexionView', 'ficheSejourView','ServiceView'], function() {
+tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView', 'ChambreView', 'ConnexionView', 'ficheSejourView','ServiceView','ModalView'], function() {
 
 	app = new appRouter();
 	Backbone.history.start();
