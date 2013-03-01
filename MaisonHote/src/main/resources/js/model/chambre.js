@@ -10,10 +10,6 @@ var Chambre = Backbone.Model.extend({
 
 	initialize: function(){
 		console.log('Chambre créée !');
-		var error = this.validate(this.attributes);
-	    if (error) {
-	      this.trigger('error', this, error);
-	    }
 	},
 
 	validate: function( attrs ) {
