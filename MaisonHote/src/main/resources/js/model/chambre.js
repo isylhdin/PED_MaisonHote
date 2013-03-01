@@ -17,7 +17,7 @@ var Chambre = Backbone.Model.extend({
 		var errors = [];
 		if ( !attrs.prixParJour.length ) errors.push('prixParJour');
 		if ( !attrs.nbLit.length ) errors.push('nbLit');
-		if ( !attrs.superficie.length ) errors.push('superficie');
+		//if ( !attrs.superficie.length ) errors.push('superficie');
 
 		if ( errors.length ){
 			console.log("champ(s) qui provoque(nt) une erreur : "+errors);
