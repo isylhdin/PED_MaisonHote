@@ -16,7 +16,7 @@ window.EditChambreView = Backbone.View.extend({
 		window.nbChambresInitial = 0;
 		window.id;
 		window.template = this.template;
-		
+
 		$(this.el).append("<div id='chambre'></div>");
 
 		var self = this;
@@ -39,14 +39,14 @@ window.EditChambreView = Backbone.View.extend({
 		console.log(chambres.toJSON());
 		return this;
 	},
-	
+
 	reRenderChambre : function(){
 		var chambre = this;
 		var addition = parseInt(chambre.id)+1;
 		console.log($('#row'+addition));
 		$('#row'+addition).html(window.template(chambre.toJSON()));
-	},
-	
+		},
+
 	footpage : function(){
 		$(this.el).append("<div class='row' id='add'> <button class='btn btn-success'><i class='icon-plus icon-white'></i> Ajouter</button></div>");
 		$(this.el).append("<div class='row'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
@@ -66,7 +66,7 @@ window.EditChambreView = Backbone.View.extend({
 
 	onAcceptDelete: function(event){
 		console.log("clic accept !");
-		
+
 		//supprime la chambre de la collection
 		var chambre =  window.chambres.get(window.id);
 		chambres.remove(chambre);
@@ -76,10 +76,10 @@ window.EditChambreView = Backbone.View.extend({
 			$('#row'+window.id).remove();	
 		});	
 		$("#modal").remove();
-		
+
 		//supprime toutes les chambres qui la suivent du cache
 		this.deleteFromCache();
-		
+
 		nbChambres--;
 
 		//on rend accessible le bouton "add" s'il était grisé
@@ -94,9 +94,10 @@ window.EditChambreView = Backbone.View.extend({
 
 		var chambre = new Chambre({'id': window.nbChambres});
 		chambres.add(chambre);
-		
+
 		this.template = _.template(tpl.get('ChambreView'));
 		$('#add').before(this.template(chambre.toJSON()));
+		
 		chambre.bind('change', this.reRenderChambre);
 
 		//on ne peut avoir que 5 chambres max
@@ -108,8 +109,9 @@ window.EditChambreView = Backbone.View.extend({
 	onSubmit: function(event){
 		console.log("clic submit!");
 		window.nbChambresSauveesDansCache = 0;
-		
+
 		$('#waitingResult').css('visibility','visible');
+		$('#waitingResult').show();
 
 		//enregistre toutes les chambres dans le cache
 		chambres.each(function(Chambre){
@@ -133,6 +135,7 @@ window.EditChambreView = Backbone.View.extend({
 			//Vérifie que tout s'est bien passé et affiche un message en conséquence
 			if (!reponse.error && nbChambresSauveesDansCache == nbChambres) {
 				$('#goodResult').css('visibility','visible');
+				$('#goodResult').show();
 				$('#goodResult').fadeOut(3000, function() {
 					$('#goodResult').css('visibility','hidden');
 				});	
@@ -144,8 +147,6 @@ window.EditChambreView = Backbone.View.extend({
 				});	
 			}
 		});
-
-
 	},
 
 	modal : function(id){
@@ -156,7 +157,7 @@ window.EditChambreView = Backbone.View.extend({
 			backdrop: false  
 		}); 		
 	},
-	
+
 	deleteFromCache : function(){
 		console.log("id de la chambre supprimée = "+id + " et nbChambre = "+nbChambres);
 		if(id <= nbChambres){
@@ -168,8 +169,5 @@ window.EditChambreView = Backbone.View.extend({
 				console.log(chambre);
 			}
 		}
-		
 	}
-
-
 });
