@@ -14,8 +14,9 @@ window.EditChambreView = Backbone.View.extend({
 	render: function (){
 		window.nbChambres = 0;
 		window.nbChambresInitial = 0;
-		window.nbChambresSauveesDansCache = 0;
 		window.id;
+		window.template = this.template;
+		
 		$(this.el).append("<div id='chambre'></div>");
 
 		var self = this;
@@ -25,6 +26,7 @@ window.EditChambreView = Backbone.View.extend({
 		window.chambres.fetch({
 			success: function(model, response, options) {
 				chambres.each(function(Chambre){
+					Chambre.bind('change', self.reRenderChambre);
 					this.template = _.template(tpl.get('ChambreView'));
 					$(self.el).append(this.template(Chambre.toJSON()));
 					nbChambres++;
@@ -36,6 +38,13 @@ window.EditChambreView = Backbone.View.extend({
 		this.footpage();
 		console.log(chambres.toJSON());
 		return this;
+	},
+	
+	reRenderChambre : function(){
+		var chambre = this;
+		var addition = parseInt(chambre.id)+1;
+		console.log($('#row'+addition));
+		$('#row'+addition).html(window.template(chambre.toJSON()));
 	},
 	
 	footpage : function(){
@@ -57,8 +66,7 @@ window.EditChambreView = Backbone.View.extend({
 
 	onAcceptDelete: function(event){
 		console.log("clic accept !");
-		nbChambres--;
-
+		
 		//supprime la chambre de la collection
 		var chambre =  window.chambres.get(window.id);
 		chambres.remove(chambre);
@@ -68,6 +76,11 @@ window.EditChambreView = Backbone.View.extend({
 			$('#row'+window.id).remove();	
 		});	
 		$("#modal").remove();
+		
+		//supprime toutes les chambres qui la suivent du cache
+		this.deleteFromCache();
+		
+		nbChambres--;
 
 		//on rend accessible le bouton "add" s'il était grisé
 		if($('.btn-success').attr('disabled')=='disabled'){
@@ -81,9 +94,10 @@ window.EditChambreView = Backbone.View.extend({
 
 		var chambre = new Chambre({'id': window.nbChambres});
 		chambres.add(chambre);
-
+		
 		this.template = _.template(tpl.get('ChambreView'));
 		$('#add').before(this.template(chambre.toJSON()));
+		chambre.bind('change', this.reRenderChambre);
 
 		//on ne peut avoir que 5 chambres max
 		if(nbChambres == 5){
@@ -93,15 +107,9 @@ window.EditChambreView = Backbone.View.extend({
 
 	onSubmit: function(event){
 		console.log("clic submit!");
-
+		window.nbChambresSauveesDansCache = 0;
+		
 		$('#waitingResult').css('visibility','visible');
-
-		//supprime les données précédentes des maisons dans le cache pour qu'il n'y ait pas des valeurs 
-		//supprimées qui restent malgrés tout 
-		localStorage.removeItem("chambres-backbone");
-		for(var i=1;i<=window.nbChambresInitial;i++){
-			localStorage.removeItem("chambres-backbone-"+i);
-		}
 
 		//enregistre toutes les chambres dans le cache
 		chambres.each(function(Chambre){
@@ -112,7 +120,8 @@ window.EditChambreView = Backbone.View.extend({
 			Chambre.save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie}, {
 				success: function(model, response, options) {
 					nbChambresSauveesDansCache++;
-				}
+				},
+				silent: true //pour que la fonction reRenderChambre ne soit pas appelée à cause de la modif (les chambres sont bindées)
 			});
 			console.log(Chambre);
 		});
@@ -128,7 +137,7 @@ window.EditChambreView = Backbone.View.extend({
 					$('#goodResult').css('visibility','hidden');
 				});	
 			}else{
-				console.log("ERROR §");
+				console.log("ERROR § "+ nbChambresSauveesDansCache +" chambres sur "+nbChambres+" ont été sauvegardées dans le cache");
 				$('#badResult').css('visibility','visible');
 				$('#badResult').fadeOut(15000, function() {
 					$('#badResult').css('visibility','hidden');
@@ -146,6 +155,20 @@ window.EditChambreView = Backbone.View.extend({
 		$("#modal").modal({
 			backdrop: false  
 		}); 		
+	},
+	
+	deleteFromCache : function(){
+		console.log("id de la chambre supprimée = "+id + " et nbChambre = "+nbChambres);
+		if(id <= nbChambres){
+			localStorage.removeItem("chambres-backbone-"+window.id);
+			for(var i= window.id + 1; i<=nbChambres; i++){
+				localStorage.removeItem("chambres-backbone-"+i);
+				var chambre =  window.chambres.get(i);
+				chambre.set({'id': i-1});
+				console.log(chambre);
+			}
+		}
+		
 	}
 
 
