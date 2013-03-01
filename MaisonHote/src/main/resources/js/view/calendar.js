@@ -71,7 +71,7 @@ window.EventsView = Backbone.View.extend({
 		this.eventView.render();
 	},
 	eventClick: function(fcEvent) {
-		// utiliser l'id lorsque ce sera sauvegardé, pas firstName
+		// utiliser l'id lorsque ce sera sauvegardï¿½, pas firstName
 		//this.eventView.model = this.collection.get(fcEvent.id);
 		this.eventView.model = this.collection.where({firstName: fcEvent.firstName})[0];
 		this.eventView.render();
@@ -84,7 +84,7 @@ window.EventsView = Backbone.View.extend({
 		$(this.el).fullCalendar('updateEvent', fcEvent, true);           
 	},
 	eventDropOrResize: function(fcEvent) {
-		// il faut utiliser l'id, pour le moment ça ne marche pas
+		// il faut utiliser l'id, pour le moment ï¿½a ne marche pas
 		// Lookup the model that has the ID of the event and update its attributes
 		//$(this.collection).get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});            
 	},
@@ -152,8 +152,8 @@ window.EventView = Backbone.View.extend({
 			this.model.save({}, {success: this.close});
 		}
 
-		// a supprimer quand on aura sauvegardé sur le serveur
-		// comme ça ne ferme que lorsque c'est sauvegardé
+		// a supprimer quand on aura sauvegardï¿½ sur le serveur
+		// comme ï¿½a ne ferme que lorsque c'est sauvegardï¿½
 		$(this.el).dialog('close');
 	},
 	close: function() {
