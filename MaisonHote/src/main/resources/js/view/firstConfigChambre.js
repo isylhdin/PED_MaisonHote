@@ -11,7 +11,8 @@ window.SelectChambreView = Backbone.View.extend({
 	initialize: function () {
 		var nbChambre;
 		var chambres;
-
+		var success = true;
+		
 		this.render();
 		//_.bindAll( this, 'onError' );
 	},
@@ -47,8 +48,9 @@ window.SelectChambreView = Backbone.View.extend({
 			//injecte l'id de la chambre dans le code html
 			$('#maison').append(this.template(window["chambre" + i].toJSON()));	
 			$('#'+i).remove();
+			
 			//marche pas
-			//window["chambre"+i].bind('error', this.onError);
+			window["chambre"+i].bind('invalid ', this.onError);
 		}
 		this.submit();
 	},
@@ -59,7 +61,7 @@ window.SelectChambreView = Backbone.View.extend({
 	},
 
 	onSubmit: function(e){
-
+		success = true;
 		e.preventDefault();	
 
 		for(i=1;i<=nbChambre;i++){
@@ -71,10 +73,10 @@ window.SelectChambreView = Backbone.View.extend({
 			console.log(window["chambre" + i]);
 		}
 
-		/**  Exemple de récupération des chambres dans le cache **/
-		window.ls = new Backbone.LocalStorage("chambres-backbone");
-		window.arrayChambres = ls.findAll();
-		/*********************************************************/
+		if(!success){
+			return;
+		}
+			
 
 		tpl.createNewFile('house_config.json', function(reponse){	
 			window.idHouseConfig = reponse.id;
@@ -101,21 +103,10 @@ window.SelectChambreView = Backbone.View.extend({
 	},
 
 	onError: function( model, error ) {
-		console.log("ON PASSE DANS ONERROR");
-
-		_.each( error, function( fieldName ) {
-			this.setFieldError( fieldName );
+		success = false;
+		_.each( error, function( fieldName ) {	
+			$('input[name='+fieldName+model.id+']').parents('.control-group').addClass('error');
 		}, this );
-	},
-
-
-	/** set and unset "error" status on a field's control-group  **/
-	setFieldError: function ( fieldName ) {
-
-		var $controlGroup = this.getFieldControlGroup( this.getField(fieldName) );
-
-		$controlGroup.addClass('error');
-
 	},
 
 	resetFieldError: function( fieldName ) {
