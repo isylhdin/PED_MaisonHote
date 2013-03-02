@@ -49,7 +49,6 @@ window.SelectChambreView = Backbone.View.extend({
 			$('#maison').append(this.template(window["chambre" + i].toJSON()));	
 			$('#'+i).remove();
 			
-			//marche pas
 			window["chambre"+i].bind('invalid ', this.onError);
 		}
 		this.submit();
@@ -70,7 +69,6 @@ window.SelectChambreView = Backbone.View.extend({
 			var superficie = $('#inputArea'+i).val();
 
 			window["chambre"+i].save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie}); //set les chambres dans la collection et les sauvegarde une par une dans le cache
-			console.log(window["chambre" + i]);
 		}
 
 		if(!success){
