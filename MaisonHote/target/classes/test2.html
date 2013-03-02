@@ -8,7 +8,7 @@
     <button id="2" onclick="createFile('house_config.json','contenddddu du jsonnnnn')">Create file</button>
      <button id="3" onclick="listFiles()">List files</button>
      <button id="4" onclick="getFile('house_config.json',printContent)">Get file</button>
-     <button id="5" onclick="findFile('house_config.json')">Find file</button>
+     <button id="5" onclick="findFile('house_config.json', printContent)">Find file</button>
      <button id="5" onclick="showClient()">Show client</button>
      
           
@@ -21,8 +21,9 @@
     	    key: "q3YGlikSvTA=|5VlJUtTaR55fmB0pERJVnZ9kSFoN192U8Uxad7+92w==", sandbox: true
     	});
 	   // provides the integration between the application and the Dropbox OAuth flow
-       client.authDriver(new Dropbox.Drivers.Redirect({useQuery : true , rememberUser: true}));
-
+      client.authDriver(new Dropbox.Drivers.Redirect({useQuery : true , rememberUser: true}));
+	
+	   
        // errors handling
        var showError = function(error) {
     	   switch (error.status) {
@@ -108,33 +109,34 @@
 					  });					 
 			}
 		}
+
+		
        
 		// Returns true is the file has been found on the APP directory, false otherwise
-		function findFile(fileName){
-			var found = false;
-
-			if ( !client.isAuthenticated() ){
-				console.log("You have to be authentified to use DropBox API.");
-				connectDropbox();					
-			}
-			else {								
-				client.findByName("",fileName, function(error, statArray) {
-					if (error) {
-						console.log("Searching file '"+ fileName +"' error :n-->");  
-					    return showError(error);  // Something went wrong.
-					  }
-					  // if file has been found
-					  if ( statArray.length > 0 ) {
-						  console.log("File '"+ fileName + "' found.");
-						  found = true ;
-					  }
-					  else
-						  console.log("File '"+ fileName + "' not found.");						  
-				});				
-				
-			}
-			return found;				
-    		}
+		function findFile(fileName, callback){
+	
+	if ( !client.isAuthenticated() ){
+		console.log("You have to be authentified to use DropBox API.");
+		connectDropbox();					
+	}
+	else {								
+		client.findByName("",fileName, function(error, statArray) {
+			if (error) {
+				console.log("Searching file '"+ fileName +"' error :n-->");  
+			    return showError(error);  // Something went wrong.
+			  }
+			  // if file has been found
+			  if ( statArray.length > 0 ) {
+				  console.log("File '"+ fileName + "' found.");				 
+				  callback(statArray[0].name);
+			  }
+			  else {
+				  console.log("File '"+ fileName + "' not found.");
+				  callback();
+			  }
+		});				
+	}			
+}
 
 		// List every files contained in the APP directory		
 		function listFiles(){
