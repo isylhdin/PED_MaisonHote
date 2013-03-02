@@ -142,6 +142,7 @@ window.EditChambreView = Backbone.View.extend({
 			}else{
 				console.log("ERROR § "+ nbChambresSauveesDansCache +" chambres sur "+nbChambres+" ont été sauvegardées dans le cache");
 				$('#badResult').css('visibility','visible');
+				$('#badResult').show();
 				$('#badResult').fadeOut(15000, function() {
 					$('#badResult').css('visibility','hidden');
 				});	
