@@ -166,13 +166,3 @@ function getFileContentDropbox(fileName,callback){
    		});
  	 }
 }
-
-function saveContentFileIntoLocalStorageDropbox (fileContent){
-	alert("==>"+fileContent);
-	var chambres = jQuery.parseJSON(fileContent);
-	
-	for(var i=0; i<chambres.length;i++){
-		var chambre = new Chambre(chambres[i]);
-		chambre.save();				
-	}
-}
