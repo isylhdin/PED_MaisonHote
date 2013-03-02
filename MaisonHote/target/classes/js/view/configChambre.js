@@ -4,7 +4,8 @@ window.EditChambreView = Backbone.View.extend({
 		"click .btn-danger"   : "onDelete",
 		"click a.btn-primary" : "onAcceptDelete",
 		"click .btn-success"  : "onAdd",
-		"click #submit" 	  : "onSubmit"
+		"click #submit" 	  : "onSubmit",
+		"focus input"	 : "onInputGetFocus",
 	},
 
 	initialize: function () {
@@ -31,6 +32,7 @@ window.EditChambreView = Backbone.View.extend({
 				chambres.each(function(Chambre){
 					//Quand une chambre est modifiée on la réaffiche pour que la vue soit à jour
 					Chambre.bind('change', self.reRenderChambre);
+					Chambre.bind('invalid ', self.onError);
 					this.template = _.template(tpl.get('ChambreView'));
 					$(self.el).append(this.template(Chambre.toJSON()));
 					nbChambres++;
@@ -139,16 +141,15 @@ window.EditChambreView = Backbone.View.extend({
 		$('#add').before(this.template(chambre.toJSON()));
 
 		chambre.bind('change', this.reRenderChambre);
+		chambre.bind('invalid ', this.onError);
 
 		this.disableAddButton();
 	},
 
 	onSubmit: function(event){
 		console.log("clic submit!");
+		success = true;
 		window.nbChambresSauveesDansCache = 0;
-
-		$('#waitingResult').css('visibility','visible');
-		$('#waitingResult').show();
 
 		//enregistre toutes les chambres dans le cache
 		chambres.each(function(Chambre){
@@ -162,8 +163,14 @@ window.EditChambreView = Backbone.View.extend({
 				},
 				silent: true //pour que la fonction reRenderChambre ne soit pas appelée à cause de la modif (les chambres sont bindées)
 			});
-			console.log(Chambre);
 		});
+		
+		if(!success){
+			return;
+		}
+		
+		$('#waitingResult').css('visibility','visible');
+		$('#waitingResult').show();
 
 		//update le fichier sur le serveur
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-0"));
@@ -220,5 +227,13 @@ window.EditChambreView = Backbone.View.extend({
 		if(nbChambres == 5){
 			$('.btn-success').attr("disabled", true);
 		}
+	},
+	
+	onError: function( model, error) {
+		 success = window.validateForm.onError(model, error, this);
+	},
+
+	onInputGetFocus: function( e ) {
+		 window.validateForm.onInputGetFocus(e);
 	}
 });

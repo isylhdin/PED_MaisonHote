@@ -15,6 +15,7 @@ var appRouter = Backbone.Router.extend({
 		$('#room').hide();
 		$('#logOut').hide();
 		$('#nameAppli').hide();
+		
 	},
 
 	// cette route sera appelée à chaque fois qu'une route est inexistante ainsi qu'au lancement de l'application

@@ -14,12 +14,10 @@ window.SelectChambreView = Backbone.View.extend({
 		var success = true;
 		
 		this.render();
-		//_.bindAll( this, 'onError' );
 	},
 
 	render: function () {
 		$(this.el).html(_.template(tpl.get('SelectChambreView')));
-		// $(this.el).append("<div id='maison'></div>");
 		return this;
 	},
 
@@ -95,37 +93,12 @@ window.SelectChambreView = Backbone.View.extend({
 		//et on redirige sur la page des réservations
 		app.resa();
 	},
+	
+	onError: function( model, error) {
+		success = window.validateForm.onError(model, error, this);
+	},
 
 	onInputGetFocus: function( e ) {
-		this.resetFieldError( $(e.target).attr('name') );
-	},
-
-	onError: function( model, error ) {
-		success = false;
-		_.each( error, function( fieldName ) {	
-			$('input[name='+fieldName+model.id+']').parents('.control-group').addClass('error');
-		}, this );
-	},
-
-	resetFieldError: function( fieldName ) {
-
-		var $controlGroup = this.getFieldControlGroup( this.getField(fieldName) );
-
-		$controlGroup.removeClass('error');
-
-	},
-
-	getField: function( fieldName ) {
-
-		return $('input[name='+fieldName+']');
-
-	},
-
-
-	getFieldControlGroup: function( $field ) {
-
-		return $field.parents('.control-group');
-
+		 window.validateForm.onInputGetFocus(e);
 	}
-
 });

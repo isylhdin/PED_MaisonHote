@@ -31,7 +31,7 @@ window.ConnexionView = Backbone.View.extend({
 			if (authResult && !authResult.error) {
 				window.localStorage.clear();
 
-				tpl.retrieveFile('house_config.json', function(reponse){
+				tpl.retrieveFile('house_config2.json', function(reponse){
 					if (reponse.items.length == 0) {
 						alert("PREMIERE UTILISATION");
 						app.firstConfigChambre();
