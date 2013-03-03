@@ -9,6 +9,7 @@ window.EditChambreView = Backbone.View.extend({
 	},
 
 	initialize: function () {
+		$(this.el).append("<header class='jumbotron subhead' id='overview'  style='height:330px;background: url(images/top-image.jpg) no-repeat; margin-top:-20px;'> <div class='container'><h1>Edition des Chambres</h1></div></header>");
 		this.render();
 	},
 
