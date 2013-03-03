@@ -11,11 +11,20 @@ var appRouter = Backbone.Router.extend({
 
 	initialize: function () {
 		console.log("Initialize router !");
-		this.connexion();
-		$('#room').hide();
-		$('#logOut').hide();
-		$('#nameAppli').hide();
-		
+
+		if(localStorage.length == 0){
+			this.connexion();
+			$('#room').hide();
+			$('#logOut').hide();
+			$('#nameAppli').hide();
+		}else{
+			this.headerView = new HeaderView();
+			$('.header').html(this.headerView.el);
+			this.resa();
+		}
+
+
+
 	},
 
 	// cette route sera appelée à chaque fois qu'une route est inexistante ainsi qu'au lancement de l'application
@@ -27,7 +36,7 @@ var appRouter = Backbone.Router.extend({
 		console.log("Welcome back connexion!");
 		this.connexionView = new ConnexionView();
 		$('#content').html(this.connexionView.el);
-	    this.headerView = new HeaderView();
+		this.headerView = new HeaderView();
 		$('.header').html(this.headerView.el);
 	},
 
@@ -180,7 +189,7 @@ tpl = {
 
 		saveContentFileIntoLocalStorage : function (fileContent){
 			var chambres = jQuery.parseJSON(fileContent);
-			
+
 			for(var i=0; i<chambres.length;i++){
 				var chambre = new Chambre(chambres[i]);
 				chambre.save();				

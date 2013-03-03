@@ -5,7 +5,11 @@ var Chambre = Backbone.Model.extend({
 		id:null,
 		prixParJour: '',
 		nbLit: '',
-		superficie :''
+		superficie :'',
+		tele : false,
+		internet : false,
+		baignoire : false,
+		douche : false
 	},
 
 	initialize: function(){

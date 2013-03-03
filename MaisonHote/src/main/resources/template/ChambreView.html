@@ -20,8 +20,45 @@
                     <div class="controls">
                       <input type="text" name="superficie<%= id %>" id="inputArea<%= id %>" value="<%= superficie %>" placeholder="Superficie">
                     </div>
+                  </div>            
+                  
+                  <div class="control-group">
+                  	  <label class="control-label" for="inputArea">Services</label>
+                  	  <div class="controls">
+                 		 <div class="row-fluid">  
+ 							<div class="span5">
+	   						  <label>Television</label>
+	   						  <input id="tele<%= id %>" name="tele<%= id %>" type="checkbox" <%= tele ? 'checked' : '' %>/>		
+	   						</div>
+	    
+	    					<div class="span5">
+	   						  <label>Internet</label>
+	  						  <input id="internet<%= id %>" name="internet<%= id %>" type="checkbox" <%= internet ? 'checked' : '' %>/>	
+	   						</div>
+				 	 	</div>
+                 	 </div>
                   </div>
+                  
+                  <div class="control-group">
+                  	  <label class="control-label" for="inputArea">Salle de bains</label>
+                  	  <div class="controls">
+                 		 <div class="row-fluid">  
+ 							<div class="span5">
+	   						  <label>Baignoire</label>
+	   						  <input id="baignoire<%= id %>" name="baignoire<%= id %>" type="checkbox" <%= baignoire ? 'checked' : '' %>/>		
+	   						</div>
+	    
+	    					<div class="span5">
+	   						  <label>Douche</label>
+	  						  <input id="douche<%= id %>" name="douche<%= id %>" type="checkbox" <%= douche ? 'checked' : '' %>/>	
+	   						</div>
+				 	 	</div>
+                 	 </div>
+                  </div>
+                   
                    <a class="btn btn-danger" id="<%= id %>" data-id="<%= id %>" ><i class="icon-trash icon-white"></i> Delete</a>
                  </form>
                </div>
              </div>
+           </div> 
+          </div> 

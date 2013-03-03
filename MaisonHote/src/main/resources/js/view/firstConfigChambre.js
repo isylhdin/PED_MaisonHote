@@ -65,8 +65,13 @@ window.SelectChambreView = Backbone.View.extend({
 			var price = $('#inputPrice'+i).val();
 			var nbLit = $('#inputNbPerson'+i).val();
 			var superficie = $('#inputArea'+i).val();
+			var tele = $("input[name=tele"+i+"]").is(':checked');
+			var internet = $("input[name=internet"+i+"]").is(':checked');
+			var baignoire = $("input[name=baignoire"+i+"]").is(':checked');
+			var douche = $("input[name=douche"+i+"]").is(':checked');
+			
 
-			window["chambre"+i].save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie}); //set les chambres dans la collection et les sauvegarde une par une dans le cache
+			window["chambre"+i].save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie, 'tele':tele, 'internet':internet, 'baignoire':baignoire, 'douche':douche}); //set les chambres dans la collection et les sauvegarde une par une dans le cache
 		}
 
 		if(!success){
