@@ -19,6 +19,7 @@ window.HeaderView = Backbone.View.extend({
     
     buttonClickHandler : function(event){
     	app.connexion();
+    	localStorage.clear();
     },
     
     // buttonLanguage : function(language) {

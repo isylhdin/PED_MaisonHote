@@ -86,7 +86,7 @@ window.SelectChambreView = Backbone.View.extend({
 			var houseConfig = new FichierConfig({'idFichier': window.idHouseConfig});
 			houseConfig.save();
 
-			updateFile(reponse.id, chambres.toJSON(),function(reponse){	
+			updateFile(reponse.id,  JSON.stringify(chambres.toJSON()),function(reponse){	
 				console.log(reponse);
 			});
 
