@@ -39,7 +39,7 @@ function getFileContent (file, callback) {
 // Update an existing file
 function updateFile (file, newContent, callback) {
 	var funToCall = "updateFile"+currentHost+'(\''+file+'\',\''+newContent+'\','+callback+')';
-	alert(funToCall);
+	//alert(funToCall);
 	eval(funToCall);
 }
 
