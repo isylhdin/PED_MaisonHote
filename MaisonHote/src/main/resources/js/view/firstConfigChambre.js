@@ -74,14 +74,14 @@ window.SelectChambreView = Backbone.View.extend({
 		}
 			
 
-		tpl.createNewFile('house_config.json', function(reponse){	
+		createNewFile('house_config.json', function(reponse){	
 			window.idHouseConfig = reponse.id;
 
 			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
 			var houseConfig = new FichierConfig({'idFichier': window.idHouseConfig});
 			houseConfig.save();
 
-			tpl.updateFile(reponse.id, chambres.toJSON(),function(reponse){	
+			updateFile(reponse.id, chambres.toJSON(),function(reponse){	
 				console.log(reponse);
 			});
 

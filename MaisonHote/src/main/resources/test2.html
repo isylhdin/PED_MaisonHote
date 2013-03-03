@@ -1,6 +1,8 @@
 <html>
   <head>
    <script src="//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.9.1/dropbox.min.js"></script>
+   <script src="js/hostController.js"></script>
+   
   </head>
   
   <body>
@@ -11,10 +13,31 @@
      <button id="5" onclick="findFile('house_config.json', printContent)">Find file</button>
      <button id="5" onclick="showClient()">Show client</button>
      
-          
+	<button onclick='test(pl,test2)'>test</button>
+	
      <div id="content"></div>
      
-     <script type="text/javascript">	    
+     <script type="text/javascript">	
+
+
+     	var host = "Drive" ;
+		var pl = new Array();
+		pl[0] = "pl01";
+		pl[1] = "pl2";
+						     	
+		function test(data,callback){
+			var funToCall = "test"+host+'('+ data +' , '+ callback +')' ;
+			eval(funToCall);			
+		}
+
+		function testDrive(data,callback){
+			callback(data);
+		}
+
+		function test2(data){
+			 alert('OUPs: '+data);
+        }
+    	
    
 	   // client is a Dropbox.Client instance that you can use to make API calls.
        var client = new Dropbox.Client({
@@ -110,7 +133,31 @@
 			}
 		}
 
-		
+		function retrieveFileDropbox(fileName, callback) {
+			 if ( !client.isAuthenticated() ){
+					console.log("You have to be authentified to use DropBox API.");
+					connectToHostDropbox();					
+				}
+				else {								
+					client.findByName("",fileName, function(error, statArray) {
+						if (error) {
+							console.log("Searching file '"+ fileName +"' error :n-->");  
+						    return showError(error);  // Something went wrong.
+						  }
+						  // if file has been found
+						  if ( statArray.length > 0 ) {
+							  console.log("File '"+ fileName + "' found.");				 
+							  //callback(true);
+							  callback(statArray[0]);
+						  }
+						  else {
+							  console.log("File '"+ fileName + "' not found.");
+							  //callback(false);
+							  callback(null);
+						  }
+					});				
+				}	
+		 }
        
 		// Returns true is the file has been found on the APP directory, false otherwise
 		function findFile(fileName, callback){
@@ -128,11 +175,11 @@
 			  // if file has been found
 			  if ( statArray.length > 0 ) {
 				  console.log("File '"+ fileName + "' found.");				 
-				  callback(statArray[0].name);
+				  callback(statArray[0]);
 			  }
 			  else {
 				  console.log("File '"+ fileName + "' not found.");
-				  callback();
+				  callback(null);
 			  }
 		});				
 	}			
@@ -157,8 +204,8 @@
 		}
 		
 		// Print data in console
-		function printContent(data){
-			console.log("File content : " + data);
+		function printContent(data){			
+				console.log("File content : " + data);
 		}
 
 		// Get 'fileName' content and send it in callback function
@@ -168,16 +215,25 @@
 				connectDropbox();					
 			}
 			else {
-	       		client.readFile(fileName, function(error, data) {
-	       		  if (error) {
-	           		console.log("getFile error :\n-->") ;  
-	       		    return showError(error);  // Something went wrong.
-	       		  }
-	
-	       		  callback(data);  // data has the file's contents
-	       		});
+				retrieveFileDropbox( fileName, function(file){
+					if (file) {
+						client.readFile(file.name, function(error, data) {
+				       		  if (error) {
+				           		console.log("getFile error :\n-->") ;  
+				       		    return showError(error);  // Something went wrong.
+				       		  }
+				
+				       		  callback(data);  // data has the file's contents
+				       		});
+					}
+					else
+						console.log('BIG FAILURE');
+					});	       		
 	     	 }
 		}
+
+
+		
 	     </script>	    
   </body>
 </html>

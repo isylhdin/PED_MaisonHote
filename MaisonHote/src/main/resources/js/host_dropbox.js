@@ -50,13 +50,11 @@ var showError = function(error) {
 	   }
 };
 
-   // show OAuth token credentials : key, token, token secret, uid
-   function showClient(){
-		console.log(client.credentials());
-   }
 
-   // Authenticates the app's user to Dropbox' API server.	       
-   function connectDropbox(callback){
+/**
+ *  Connection : Authenticates the app's user to Dropbox' API server.
+**/    
+function connectToHostDropbox(callback){
    	 if ( !client.isAuthenticated() ){					
 			console.log("Connection to Dropbox");
 			
@@ -73,63 +71,132 @@ var showError = function(error) {
 	}
 	 else
 		console.log("Already authentified to dropbox");
-  }
+}
 
-// Create a file in the user's dropbox app folder
-function createFileDropbox(fileName,content){
+ function handleAuthResultDropbox (authResult) {
+		retrieveFileDropbox('house_config.json', function(reponse){
+				if (!reponse){
+					alert("PREMIERE UTILISATION");
+					app.firstConfigChambre();	
+				}
+				else {
+					alert("FICHIER de configuration présent sur Dropbox !");
+					getFileContentDropbox( reponse, saveContentFileIntoLocalStorage);
+					
+					var houseConfig = new FichierConfig({'idFichier': reponse.name}); // sur dropbox, pas d'id . le nom de fichier fait office d'id unique
+					houseConfig.save();
+					
+					//on charge le menu
+					// this.headerView = new HeaderView();
+					// $('.header').html(this.headerView.el);
+					$('#room').show();
+					$('#logOut').show();
+					$('#nameAppli').show();
+					//et on redirige sur la page des réservations
+					app.resa();
+				}
+		});
+}
+ 
+ /** 
+  * Retrieve a file
+  **/
+ function retrieveFileDropbox(fileName, callback) {
+	 if ( !client.isAuthenticated() ){
+			console.log("You have to be authentified to use DropBox API.");
+			connectToHostDropbox();					
+		}
+		else {								
+			client.findByName("",fileName, function(error, statArray) {
+				if (error) {
+					console.log("Searching file '"+ fileName +"' error :n-->");  
+				    return showError(error);  // Something went wrong.
+				  }
+				  // if file has been found
+				  if ( statArray.length > 0 ) {
+					  console.log("File '"+ fileName + "' found.");				 
+					  //callback(true);
+					  callback(statArray[0]);
+				  }
+				  else {
+					  console.log("File '"+ fileName + "' not found.");
+					  //callback(false);
+					  callback(null);
+				  }
+			});				
+		}	
+ }
+
+ 
+ /** 
+  * Create a new file on the dropbox 
+  **/
+ function createNewFileDropbox(fileName,callback){
+		if ( !client.isAuthenticated() ){
+			console.log("You have to be authentified to use DropBox API.");
+			connectToHostDropbox();
+		}
+		else {						  						 
+		  client.writeFile(fileName, '' , function(error, stat) {
+					  if (error) {
+						console.log("Writing file error :\n-->");  
+					    return showError(error);
+					  }
+
+					  console.log("File created on dropbox, revision = " + stat.versionTag);
+					  callback(stat);
+					  });
+			}
+}
+ 
+ 
+ /**
+  * Get file content
+  */
+ function getFileContentDropbox(file,callback){
+ 	
+ 	if ( !client.isAuthenticated() ){		
+ 		console.log("You have to be authentified to use DropBox API.");
+ 		connectToHostDropbox();			
+ 	}
+ 	else { 			
+    		client.readFile(file.name, function(error, data) {
+    		  if (error) {
+    			console.log("getFile error :\n-->") ;  
+    		    return showError(error);
+    		  }
+    		  
+    		  callback(data);  // data has the file's contents
+    		});
+  	 }
+ }
+
+
+ /**
+  * Update an existing file knowing his name
+  **/
+function updateFileDropbox(fileName,newContent,callback){
 	if ( !client.isAuthenticated() ){
 		console.log("You have to be authentified to use DropBox API.");
-		connectDropbox();
+		connectToHostDropbox();
 	}
 	else {						  						 
-	  client.writeFile(fileName, content, function(error, stat) {
+	  client.writeFile(fileName, newContent, function(error, stat) {
 				  if (error) {
 					console.log("Writing file error :\n-->");  
 				    return showError(error);
 				  }
 
-				  console.log("File saved as revision " + stat.versionTag);
+				 callback(stat);
 				  });					 
-		}
-}
-   
-function test(){
-	alert("test");
-	
-}
-
-
-// Returns true is the file has been found on the APP directory, false otherwise
-function findFileDropbox(fileName, callback){
-	
-	if ( !client.isAuthenticated() ){
-		console.log("You have to be authentified to use DropBox API.");
-		connectDropbox();					
 	}
-	else {								
-		client.findByName("",fileName, function(error, statArray) {
-			if (error) {
-				console.log("Searching file '"+ fileName +"' error :n-->");  
-			    return showError(error);  // Something went wrong.
-			  }
-			  // if file has been found
-			  if ( statArray.length > 0 ) {
-				  console.log("File '"+ fileName + "' found.");				 
-				  callback(true);
-			  }
-			  else {
-				  console.log("File '"+ fileName + "' not found.");
-				  callback(false);
-			  }
-		});				
-	}			
 }
 
 // List every files contained in the APP directory		
-function listFilesDropbox(){
+/*function listFilesDropbox(){
 	if ( !client.isAuthenticated() ){
 		console.log("You have to be authentified to use DropBox API.");
-		connectDropbox();					
+		connectToHostDropbox();					
 	}
 	else {
 		 client.readdir("", function(error, entries) {
@@ -141,28 +208,4 @@ function listFilesDropbox(){
 			  console.log("Your Dropbox contains " + entries.join(", "));
 		});
 	 }				 
-}
-
-// Print data in console
-function printContentDropbox(data){
-	console.log("File content : " + data);
-}
-
-// Get 'fileName' content and send it in callback function
-function getFileContentDropbox(fileName,callback){
-	
-	if ( !client.isAuthenticated() ){		
-		console.log("You have to be authentified to use DropBox API.");
-		connectDropbox();			
-	}
-	else {
-   		client.readFile(fileName, function(error, data) {
-   		  if (error) {
-   			console.log("getFile error :\n-->") ;  
-   		    return showError(error);  // Something went wrong.
-   		  }
-   		  
-   		  callback(data);  // data has the file's contents
-   		});
- 	 }
-}
+}*/
