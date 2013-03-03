@@ -174,7 +174,7 @@ window.EditChambreView = Backbone.View.extend({
 
 		//update le fichier sur le serveur
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-0"));
-		updateFile(obj.idFichier, chambres.toJSON(),function(reponse){	
+		updateFile(obj.idFichier, JSON.stringify(chambres.toJSON() ),function(reponse){	
 			$('#waitingResult').fadeOut('fast');
 			//Vérifie que tout s'est bien passé et affiche un message en conséquence
 			if (!reponse.error && nbChambresSauveesDansCache == nbChambres) {
