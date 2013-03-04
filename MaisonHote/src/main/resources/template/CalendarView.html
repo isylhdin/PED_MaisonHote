@@ -2,30 +2,43 @@
 
 <div id='eventDialog' class='dialog ui-helper-hidden'>
 	<form>
-		<div>
-			<label>Nom :</label>
-			<input id='lastName' class="field" type="text"></input>
+		<div class="control-group">
+			<label class="control-label" for="lastName">Nom :</label>
+			<div class="controls">
+				<input name='lastName' class="field" type="text"
+					pattern="[a-zA-Z ]+" maxlength="30" required="required"></input>
+			</div>
 		</div>
-		<div>
-			<label>Pr&eacute;nom :</label>
-			<input id='firstName' class="field" type="text"></input>
+		<div class="control-group">
+			<label class="control-label" for="firstName">Pr&eacute;nom :</label>
+			<div class="controls">
+				<input name='firstName' class="field" type="text"
+					pattern="[a-zA-Z ]+" maxlength="30" required="required"></input>
+			</div>
 		</div>
-		<div>
-			<label>T&eacute;l. :</label>
-			<input id='phone' class="field" type="tel"
-			title="Num&eacute;ro de t&eacute;l&eacute;phone (Format : +99(99)9999-9999)"></input>
-				<!--enlevÔøΩ pour faciliter les tests; format ÔøΩ changer selon le pays/la langue (?)
-				pattern='[\+]\d{2}[\(]\d{2}[\)]\d{4}[\-]\d{4}'
-				-->
+		<div class="control-group">
+			<label class="control-label" for="phone">T&eacute;l. :</label>
+			<div class="controls">
+				<input name='phone' class="field" type="tel" required="required"
+					title="Num&eacute;ro de t&eacute;l&eacute;phone (Format : +99(99)9999-9999)"></input>
+					<!--enlevÈ pour faciliter les tests; format ‡ changer selon le pays/la langue (?)
+					pattern='[\+]\d{2}[\(]\d{2}[\)]\d{4}[\-]\d{4}'
+					-->
+			</div>
 		</div>
-		<div>
-			<label>Chambre :</label>
-			<input id='room' class="field" type="text"></input>
+		<div class="control-group">
+			<label class="control-label" for="room">Chambre :</label>
+			<div class="controls">
+				<input name='room' class="field" type="text"
+					maxlength="30" required="required"></input>
+			</div>
 		</div>
-		<div>
-			<label for="nbPersons">Nombre de personnes :</label>
-			<input id='nbPersons' name="value" />
+		<div class="control-group">
+			<label class="control-label" for="nbPersons">Nombre de personnes :</label>
+			<div class="controls">
+				<input name='nbPersons'/>
+			</div>
 		</div>
 	</form>
-	<button id="btnFicheSejour" type="submit" class="btn-default">Fiche s√©jour</button>
+	<button id="btnFicheSejour" type="submit" class="btn-default">Fiche s&eacute;jour</button>
 </div> 

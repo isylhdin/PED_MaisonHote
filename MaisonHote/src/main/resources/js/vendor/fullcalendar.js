@@ -2124,7 +2124,7 @@ function BasicView(element, calendar, viewName) {
 	t.getColWidth = function() { return colWidth };
 	t.getDaySegmentContainer = function() { return daySegmentContainer };
 	t.isBasicWeek = isBasicWeek;
-	t.getRowHeight = getRowHeight;
+	t.getMaxEventHeight = getMaxEventHeight;
 	
 	
 	// imports
@@ -2155,7 +2155,7 @@ function BasicView(element, calendar, viewName) {
 	var viewWidth;
 	var viewHeight;
 	var colWidth;
-	var erowHeight;
+	var maxEventHeight;
 	
 	var rowCnt, colCnt;
 	var coordinateGrid;
@@ -2180,8 +2180,8 @@ function BasicView(element, calendar, viewName) {
 		return viewName === 'basicWeek';
 	}
 	
-	function getRowHeight() {
-		return erowHeight;
+	function getMaxEventHeight() {
+		return maxEventHeight;
 	}
 	
 	function renderBasic(maxr, r, c, showNumbers) {
@@ -2434,7 +2434,7 @@ function BasicView(element, calendar, viewName) {
 				);
 			}
 		});
-		erowHeight = rowHeight - 7;
+		maxEventHeight = rowHeight - 7;
 	}
 	
 	
@@ -4597,7 +4597,7 @@ function DayEventRenderer() {
 	var clearOverlays = t.clearOverlays;
 	var clearSelection = t.clearSelection;
 	var isBasicWeek = t.isBasicWeek;
-	var getRowHeight = t.getRowHeight;
+	var getMaxEventHeight = t.getMaxEventHeight;
 	
 	/* Rendering
 	-----------------------------------------------------------------------------*/
@@ -4747,7 +4747,7 @@ function DayEventRenderer() {
 				(hasStyle ? " style='" : '') +
 				(skinCss ? skinCss + ';' : '') +
 				(opt('rowHeightForEvents') && isBasicWeek() ?
-					"height:"+getRowHeight()+"px'" : '') +
+					"height:"+getMaxEventHeight()+"px'" : '') +
 				(hasStyle ? "'" : '') +
 				">";
 			if (!event.allDay && seg.isStart) {
