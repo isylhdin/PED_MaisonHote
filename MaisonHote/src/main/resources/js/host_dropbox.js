@@ -59,6 +59,7 @@ function connectToHostDropbox(callback){
 			console.log("Connection to Dropbox");
 			
 		   client.authenticate(function(error, client) {
+			   console.log("test");
 			  if (error) {
 			    console.log("Connection to Dropbox error :\n-->");
 			    return showError(error);
@@ -68,7 +69,7 @@ function connectToHostDropbox(callback){
 			  if (callback != null)
 				  callback();
 		   });
-	}
+   	 }
 	 else
 		console.log("Already authentified to dropbox");
 }

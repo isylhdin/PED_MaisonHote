@@ -23,7 +23,7 @@ window.ConnexionView = Backbone.View.extend({
 	
 	buttonDropboxHandler : function (event){
 		currentHost = 'Dropbox' ;
-		connectToHost (handleAuthResult);
+		connectToHost (handleAuthResultDropbox);
 	}
 	
 });
