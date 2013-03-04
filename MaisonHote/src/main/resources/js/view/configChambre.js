@@ -57,7 +57,7 @@ window.EditChambreView = Backbone.View.extend({
 		var chambre = this;
 		var addition = parseInt(chambre.id)+1;
 		console.log($('#row'+addition));
-		$('#row'+addition).html(window.template(chambre.toJSON()));
+		$('#row'+addition).replaceWith(window.template(chambre.toJSON()));
 	},
 
 	/**
@@ -213,6 +213,7 @@ window.EditChambreView = Backbone.View.extend({
 
 	/**
 	 * Supprime du cache les chambres suivant la chambre qui vient d'être supprimée pour avoir un cache cohérent avec l'UI
+	 * et renumérote les chambres suivantes
 	 */
 	deleteFromCache : function(){
 		console.log("id de la chambre supprimée = "+id + " et nbChambre = "+nbChambres);
