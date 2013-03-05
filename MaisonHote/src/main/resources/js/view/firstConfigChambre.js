@@ -97,7 +97,7 @@ window.SelectChambreView = Backbone.View.extend({
 			window.idHouseConfig = reponse.id;
 
 			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
-			var houseConfig = new FichierConfig({'idFichier': window.idHouseConfig});
+			var houseConfig = new FichierConfig({'id':reponse.title, 'idFichier': idHouseConfig });
 			houseConfig.save();
 
 			updateFile(reponse.id,  JSON.stringify(chambres.toJSON()),function(reponse){	
