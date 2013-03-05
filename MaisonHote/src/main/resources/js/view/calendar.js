@@ -90,11 +90,15 @@ window.EventView = Backbone.View.extend({
 
 	render: function() {
 		var isNewModel = this.model.isNew();
-		var buttons = {'Ok': this.save};
+				var buttons = {'Ok' : {text: 'Ok', click: this.save,
+					class: "btn btn-primary"}};
+		//var buttons = {'Ok': {click: this.save, class: "btn btn-large btn-primary"}};
 		if (!isNewModel) {
-			_.extend(buttons, {'Delete': this.destroy});
+			_.extend(buttons, {'Delete': {text: 'Delete', click: this.destroy,
+						class: "btn"}});
 		}
-		_.extend(buttons, {'Cancel': this.close});            
+		_.extend(buttons, {'Cancel': {text: 'Cancel', click: this.close,
+					class: "btn"}});            
 
 		this.$el.dialog({
 			modal: true,
