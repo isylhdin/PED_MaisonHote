@@ -184,7 +184,7 @@ window.EditChambreView = Backbone.View.extend({
 		$('#waitingResult').show();
 
 		//update le fichier sur le serveur
-		var obj = JSON.parse(localStorage.getItem("fichier-backbone-0"));
+		var obj = JSON.parse(localStorage.getItem("fichier-backbone-house_config.json"));
 		updateFile(obj.idFichier, JSON.stringify(chambres.toJSON() ),function(reponse){	
 			$('#waitingResult').fadeOut('fast');
 			//Vérifie que tout s'est bien passé et affiche un message en conséquence

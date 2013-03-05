@@ -152,6 +152,15 @@ window.EventView = Backbone.View.extend({
 				success: function() {
 					self.collection.add(self.model);
 					self.close();
+					
+					var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
+					updateFile(obj.idFichier, JSON.stringify(self.collection.toJSON() ),function(reponse){	
+						if (!reponse.error){
+							console.log("réservation sauvegardée sur le serveur");
+						}
+					});
+					
+					
 				},
 				error : function() {
 					console.log("une erreur s'est produite lors de la sauvegarde dans le cache");

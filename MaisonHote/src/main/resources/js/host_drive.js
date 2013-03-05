@@ -1,5 +1,5 @@
-// old key, in case : 966416489314.apps.googleusercontent.com		
-// key to use : 133252798458.apps.googleusercontent.com
+//old key, in case : 966416489314.apps.googleusercontent.com		
+//key to use : 133252798458.apps.googleusercontent.com
 var config = {
 		'client_id': '133252798458.apps.googleusercontent.com',
 		'scope': 'https://www.googleapis.com/auth/drive'
@@ -8,7 +8,7 @@ var config = {
 
 /**
  *  Connection 
-**/
+ **/
 function connectToHostDrive(callback){
 	gapi.auth.authorize(config, callback);
 }
@@ -18,14 +18,16 @@ function handleAuthResultDrive (authResult) {
 	if (authResult && !authResult.error) {
 		window.localStorage.clear();
 
-		retrieveFileDrive('house_config.json', function(reponse){
+		//on téléchatge les métadonnées de tous les fichiers qui seront utilisés par l'appli, à la connexion
+		downloadRequiredFiles();
+		/*retrieveFileDrive('house_config.json', function(reponse){
 			if (reponse.items.length == 0) {
 				alert("PREMIERE UTILISATION");
 				app.firstConfigChambre();
 			}else{
 				alert("FICHIER de configuration présent sur google drive !");
 				tpl.downloadFile(reponse.items[0] , saveContentFileIntoLocalStorage);
-				
+
 				var houseConfig = new FichierConfig({'idFichier': reponse.items[0].id});
 				houseConfig.save();
 
@@ -38,13 +40,15 @@ function handleAuthResultDrive (authResult) {
 				//et on redirige sur la page des réservations
 				app.resa();
 			}
-		});
+		});*/
+
+
 	} 
 	else{
 		console.log("Récupération de token : FAIL");
 	}	
 }
-		
+
 /** 
  * Retrieve a file
  **/
@@ -83,7 +87,7 @@ function createNewFileDrive(fileName, callback) {
 	request.execute(function(resp) { 
 		console.log("File created : id = "+ resp.id);
 		//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
-		var houseConfig = new FichierConfig({'idFichier': resp.id});
+		var houseConfig = new FichierConfig({'id':resp.title, 'idFichier': resp.id });
 		houseConfig.save();
 		callback(resp);
 	});	     	   
