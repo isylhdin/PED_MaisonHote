@@ -2,10 +2,9 @@ window.HeaderView = Backbone.View.extend({
 
 	events : {
 		"click #logOut" : "buttonClickHandler",
-		 // "click .dropdown-menu a" : "buttonLanguage"
-		 "click #fr"			 : "fr",
-		 "click #en"			 : "en"
-		
+		"click .dropdown-menu li a" : "buttonLanguage"
+		 // "click #fr"			 : "fr",
+		 // "click #en"			 : "en"
 	},
 	
     initialize: function () {
@@ -19,48 +18,53 @@ window.HeaderView = Backbone.View.extend({
     
     buttonClickHandler : function(event){
     	app.connexion();
+    	$('#room').hide();
+		$('#logOut').hide();
+		$('#nameAppli').hide();
     	localStorage.clear();
     },
     
-    // buttonLanguage : function(language) {
-      // $.ajax({
-        // url: 'languages.xml',
-        // success: function(xml) {
-          // $(xml).find('translation').each(function(){
-            // var id = $(this).attr('id');
-            // var text = $(this).find(language).text();
-            // $("#" + id).html(text);
-          // });
-        // }
-      // });
-    // }
-    
-    
-     fr : function() {
-       var language = 'fr';
-       $.ajax({
-         url: 'languages.xml',
-         success: function(xml) {
-           $(xml).find('translation').each(function(){
-             var id = $(this).attr('id');
-             var text = $(this).find(language).text();
-             $("#" + id).html(text);
-           });
-         }
-       });
-     },
-     
-     en : function() {
-       var language = 'en';
-       $.ajax({
-         url: 'languages.xml',
-         success: function(xml) {
-           $(xml).find('translation').each(function(){
-             var id = $(this).attr('id');
-             var text = $(this).find(language).text();
-             $("#" + id).html(text);
-           });
-         }
-       });
-     } 
+    buttonLanguage : function(l) {
+    var language = l.currentTarget.id;
+    console.log(l);
+    //alert("test : " + language);
+      $.ajax({
+        url: 'languages.xml',
+        success: function(xml) {
+          $(xml).find('translation').each(function(){
+            var id = $(this).attr('id');
+            var text = $(this).find(language).text();
+            $("#" + id).html(text);
+          });
+        }
+      });
+    }
+       
+     // fr : function() {
+       // var language = 'fr';
+       // $.ajax({
+         // url: 'languages.xml',
+         // success: function(xml) {
+           // $(xml).find('translation').each(function(){
+             // var id = $(this).attr('id');
+             // var text = $(this).find(language).text();
+             // $("#" + id).html(text);
+           // });
+         // }
+       // });
+     // },
+//      
+     // en : function() {
+       // var language = 'en';
+       // $.ajax({
+         // url: 'languages.xml',
+         // success: function(xml) {
+           // $(xml).find('translation').each(function(){
+             // var id = $(this).attr('id');
+             // var text = $(this).find(language).text();
+             // $("#" + id).html(text);
+           // });
+         // }
+       // });
+     // } 
 });

@@ -7,9 +7,6 @@ var GoogleToken = Backbone.Model.extend({
 
 
 var FichierConfig = Backbone.Model.extend({
-	defaults:{
-		id : 0	//id par défaut comme ça on connait son id à l'avance pour le récupérer dans le local storage
-	},
 	localStorage: new Backbone.LocalStorage("fichier-backbone"),
 });
 
@@ -28,9 +25,9 @@ var Reservation = Backbone.Model.extend({
 		//price: 0
 	},
 	initialize: function(){
-		console.log('R&eacut;servation cr&eacut;&eacut;e !');
+		console.log('Réservation créée !');
 		//this.on('doReset', this.reset);
-	},
+	}
 /*
 	validate: function(attrs) {
 		var errors = [];

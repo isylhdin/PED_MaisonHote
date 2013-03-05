@@ -9,10 +9,11 @@ window.SelectChambreView = Backbone.View.extend({
 
 
 	initialize: function () {
+		var nbPrest = 0;
+		var prestations;
 		var nbChambre;
 		var chambres;
 		var success = true;
-		
 		this.render();
 	},
 
@@ -26,7 +27,12 @@ window.SelectChambreView = Backbone.View.extend({
 	},
 
 	addServ: function () {
-		$('#prestation').append(_.template(tpl.get('ServiceView')));
+		nbPrest = nbPrest+1;
+		prestations = new Prestations();
+		window["prestation"+nbPrest] = new Prestation({'id':nbPrest});
+		prestations.add(window["prestation"+nbPrest]);
+		this.template = _.template(tpl.get('ServiceView'));
+		$('#prestation').append(this.template(window["prestation" + nbPrest].toJSON()));
 	},
 
 	//Quand on clique sur un numéro de la liste on construit l'ui (avec les id pas encore définis).
@@ -89,7 +95,7 @@ window.SelectChambreView = Backbone.View.extend({
 			window.idHouseConfig = reponse.id;
 
 			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
-			var houseConfig = new FichierConfig({'idFichier': window.idHouseConfig});
+			var houseConfig = new FichierConfig({'id':reponse.title, 'idFichier': idHouseConfig });
 			houseConfig.save();
 
 			updateFile(reponse.id,  JSON.stringify(chambres.toJSON()),function(reponse){	

@@ -80,7 +80,6 @@ window.EventsView = Backbone.View.extend({
 
 window.EventView = Backbone.View.extend({
 	events : {
-		//"focus input"	: "onInputGetFocus",
 		"click #btnFicheSejour" : "btnFicheSejour"
 	},
 	initialize: function() {
@@ -90,9 +89,8 @@ window.EventView = Backbone.View.extend({
 
 	render: function() {
 		var isNewModel = this.model.isNew();
-				var buttons = {'Ok' : {text: 'Ok', click: this.save,
-					class: "btn btn-primary"}};
-		//var buttons = {'Ok': {click: this.save, class: "btn btn-large btn-primary"}};
+		var buttons = {'Ok' : {text: 'Ok', click: this.save,
+				class: "btn btn-primary"}};
 		if (!isNewModel) {
 			_.extend(buttons, {'Delete': {text: 'Delete', click: this.destroy,
 						class: "btn"}});
@@ -100,6 +98,7 @@ window.EventView = Backbone.View.extend({
 		_.extend(buttons, {'Cancel': {text: 'Cancel', click: this.close,
 					class: "btn"}});            
 
+		this.resetFormClasses();
 		this.$el.dialog({
 			modal: true,
 			title: (isNewModel ? 'New' : 'Edit') + ' Event',
@@ -141,25 +140,39 @@ window.EventView = Backbone.View.extend({
 			'nbPersons': nbPersons});
 
 		if (this.model.isNew()) {
-			this.collection.create(this.model, {success: this.close});
-			console.log("ok");
+			console.log("nouvelle réservation détectée");
+//			this.collection.create(this.model, {
+//				success: this.close,
+//				error : console.log("il y a eu une erreur lors de la sauvegarde")			
+//			});
+			var self = this;
+			
+			this.model.save(null,{
+				success: function() {
+					self.collection.add(self.model);
+					self.close();
+					
+					var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
+					updateFile(obj.idFichier, JSON.stringify(self.collection.toJSON() ),function(reponse){	
+						if (!reponse.error){
+							console.log("réservation sauvegardée sur le serveur");
+						}
+					});
+					
+					
+				},
+				error : function() {
+					console.log("une erreur s'est produite lors de la sauvegarde dans le cache");
+					self.close();
+				}
+			});
+			
+
 		} else {
+			console.log("edition de réservation");
 			this.model.save({}, {success: this.close});
 		}
-
-		// a supprimer quand on aura sauvegard� sur le serveur
-		// comme �a ne ferme que lorsque c'est sauvegard�
-		//this.close();
-	},/*
-	onError: function(model, error) {
-		_.each(error, function(fieldName) {
-			this.setFieldError(fieldName);
-		}, this);
 	},
-	onInputGetFocus: function(e) {
-		 window.validateForm.onInputGetFocus(e);
-	},
-*/
 	close: function() {
 		$('body').removeClass("unselectCanceled");
 		this.$el.dialog('close');
@@ -171,24 +184,14 @@ window.EventView = Backbone.View.extend({
 		app.ficheSejour();
 		this.$el.dialog('close');
 	},
-/*
-	setFieldError: function(fieldName) {
-		var $controlGroup = validateForm.getFieldControlGroup(validateForm.getField(fieldName));
-		$controlGroup.addClass('error');
-	},*/
-	getField: function(fieldName) {
-		return $('input[name='+fieldName+']');
-	}/*,
-	getFieldControlGroup: function($field) {
-		return $field.parents('.control-group');
-	}*/
+	resetFormClasses: function() {
+		var form = $('#resa-form');
+		form.validate().resetForm();
+		form.find('.success').removeClass('success');
+		form.find('.error').removeClass('error');
+		form.find('.valid').removeClass('valid');
+	}
 });
-
-////Reservations
-//events = new Events();
-////Un calendrier possède un ensemble de réservations
-//calendar = new EventsView({el: $("#calendar"), collection: events}).render();
-//events.fetch();
 
 function getWindowHeight() {
 	if (window.innerHeight) { 
