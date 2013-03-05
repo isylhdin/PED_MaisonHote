@@ -5,7 +5,6 @@ window.HeaderView = Backbone.View.extend({
 		"click .dropdown-menu li a" : "buttonLanguage"
 		 // "click #fr"			 : "fr",
 		 // "click #en"			 : "en"
-		
 	},
 	
     initialize: function () {

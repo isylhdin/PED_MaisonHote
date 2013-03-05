@@ -26,7 +26,8 @@ window.SelectChambreView = Backbone.View.extend({
 	},
 
 	addServ: function () {
-		$('#prestation').append(_.template(tpl.get('ServiceView')));
+		$('#prestation').append("<h3>PLOP</h3>");
+		//$('#prestation').append(_.template(tpl.get('ServiceView')));
 	},
 
 	//Quand on clique sur un numéro de la liste on construit l'ui (avec les id pas encore définis).
