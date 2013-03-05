@@ -19,6 +19,9 @@ window.HeaderView = Backbone.View.extend({
     
     buttonClickHandler : function(event){
     	app.connexion();
+    	$('#room').hide();
+		$('#logOut').hide();
+		$('#nameAppli').hide();
     	localStorage.clear();
     },
     
