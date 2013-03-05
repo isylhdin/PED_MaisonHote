@@ -1,19 +1,32 @@
  			<div class="row">
-            <!-- first span -->
-              <div class="span6">
+              <div class="hero-unit">
                 <h2>Prestation <%= id %></h2>
                 <form class="form-horizontal">
                   <div class="control-group">
-                    <label class="control-label" for="inputName">Nom</label>
+                    <label class="control-label" for="inputTitle">Intitulé</label>
                     <div class="controls">
-                      <input type="text" name="inputName" id="inputName<%= id %>" value="<%= name %>" placeholder="Nom">
+                      <input type="text" name="title" id="inputTitle<%= id %>" value="<%= title %>" placeholder="Intitulé">
                     </div>
                   </div>
                   <div class="control-group">
                     <label class="control-label" for="inputPrice">Prix</label>
                     <div class="controls">
-                      <input type="text" name="inputPrice" id="inputPrice<%= id %>" value="<%= price %>" placeholder="Prix">
+                      <input type="text" name="price" id="inputPrice<%= id %>" value="<%= price %>" placeholder="Prix">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="inputNumber">Quantité</label>
+                    <div class="controls">
+                      <input type="text" name="number" id="inputNumber<%= id %>" value="<%= number %>" placeholder="Quantité">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="inputComment">Commentaire</label>
+                    <div class="controls">
+                      <input type="text" name="comment" id="inputComment<%= id %>" value="<%= comment %>" placeholder="Commentaire">
                     </div>
                   </div>
                  </form>
                </div>
+             </div>
+             
