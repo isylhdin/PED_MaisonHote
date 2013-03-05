@@ -6,14 +6,6 @@ window.CalendarView = Backbone.View.extend({
 	}
 });
 
-
-var Event = Backbone.Model.extend();
-
-var Events = Backbone.Collection.extend({
-	model: Event,
-	url: 'events'
-}); 
-
 window.EventsView = Backbone.View.extend({
 	initialize: function(){
 		_.bindAll(this); 
@@ -49,39 +41,32 @@ window.EventsView = Backbone.View.extend({
 			roomNames: {first: "Chambre 1", snd: "Chambre 2", third: "Chambre 3"},
 			roomNames: ["Chambre 1", "Chambre 2", "Chambre 3"]
 			*/
-			//weekViewEventHeight: true
-			/*eventRender: function(event, element, view) {
-			    if(view.name === 'basicWeek') {
-					$(element).height(weekViewEventHeight);
-					$(element).height($('#room0:first-child').height() - 7);
-			    }
-			}*/
 		});
-		//var weekViewEventHeight = $('#room0:first-child').height() - 7;
 	},
 	addAll: function() {
-		$(this.el).fullCalendar('addEventSource', this.collection.toJSON(), true);
+		this.$el.fullCalendar('addEventSource', this.collection.toJSON(), true);
 	},
 	addOne: function(event) {
-		$(this.el).fullCalendar('renderEvent', event.toJSON(), true);
+		this.$el.fullCalendar('renderEvent', event.toJSON(), true);
 	},        
 	select: function(startDate, endDate) {
 		this.eventView.collection = this.collection;
-		this.eventView.model = new Event({start: startDate, end: endDate});
+		this.eventView.model = new Reservation({start: startDate, end: endDate});
+		//this.eventView.model.bind('invalid', this.eventView.onError);
 		this.eventView.render();
 	},
 	eventClick: function(fcEvent) {
 		// utiliser l'id lorsque ce sera sauvegard�, pas firstName
-		//this.eventView.model = this.collection.get(fcEvent.id);
-		this.eventView.model = this.collection.where({firstName: fcEvent.firstName})[0];
+		this.eventView.model = this.collection.get(fcEvent.id);
+		//this.eventView.model = this.collection.where({firstName: fcEvent.firstName})[0];
 		this.eventView.render();
 	},
 	change: function(event) {
 		// Look up the underlying event in the calendar and update its details from the model
-		var fcEvent = $(this.el).fullCalendar('clientEvents', event.get('id'))[0];
+		var fcEvent = this.$el.fullCalendar('clientEvents', event.get('id'))[0];
 		fcEvent.title = event.get('room');
 		//fcEvent.color = event.get('color');
-		$(this.el).fullCalendar('updateEvent', fcEvent, true);           
+		this.$el.fullCalendar('updateEvent', fcEvent, true);           
 	},
 	eventDropOrResize: function(fcEvent) {
 		// il faut utiliser l'id, pour le moment �a ne marche pas
@@ -89,84 +74,110 @@ window.EventsView = Backbone.View.extend({
 		//$(this.collection).get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});            
 	},
 	destroy: function(event) {
-		$(this.el).fullCalendar('removeEvents', event.id, true);         
+		this.$el.fullCalendar('removeEvents', event.id, true);         
 	}
 });
 
 window.EventView = Backbone.View.extend({
 	events : {
+		//"focus input"	: "onInputGetFocus",
 		"click #btnFicheSejour" : "btnFicheSejour"
 	},
 	initialize: function() {
-		_.bindAll(this);           
+		_.bindAll(this);
+		initResaDialog();
 	},
+
 	render: function() {
+		var isNewModel = this.model.isNew();
 		var buttons = {'Ok': this.save};
-		if (!this.model.isNew()) {
+		if (!isNewModel) {
 			_.extend(buttons, {'Delete': this.destroy});
 		}
 		_.extend(buttons, {'Cancel': this.close});            
 
-		$(this.el).dialog({
+		this.$el.dialog({
 			modal: true,
-			title: (this.model.isNew() ? 'New' : 'Edit') + ' Event',
+			title: (isNewModel ? 'New' : 'Edit') + ' Event',
 			buttons: buttons,
 			open: this.open
 		});
 		$('body').addClass("unselectCanceled");
 
-		var spinner = $("#nbPersons").spinner({
-				spin: function(event, ui) {
-					if (ui.value > 10) {
-						$(this).spinner("value", 1);
-						return false;
-					} else if (ui.value < 1) {
-						$(this).spinner("value", 10);
-						return false;
-					}
-				}
-			});
 		return this;
-	},        
+	},
+
 	open: function() {
-		this.$('#lastName').val(this.model.get('lastName'));
-		this.$('#firstName').val(this.model.get('firstName'));
-		this.$('#phone').val(this.model.get('phone'));
-		this.$('#room').val(this.model.get('room'));
-		this.$('#nbPersons').val(this.model.get('nbPersons'));
-	},        
+		validateForm.getField('lastName').val(this.model.get('lastName'));
+		validateForm.getField('firstName').val(this.model.get('firstName'));
+		validateForm.getField('phone').val(this.model.get('phone'));
+		validateForm.getField('email').val(this.model.get('email'));
+		validateForm.getField('room').val(this.model.get('room'));
+		validateForm.getField('nbPersons').val(this.model.get('nbPersons'));
+	},
+
 	save: function() {
-		var room = this.$('#room').val();
-		var lastName = this.$('#lastName').val();
+		if ( !$('#resa-form').validate().form())
+			return;
+
+		var lastName = validateForm.getField('lastName').val();
+		var firstName = validateForm.getField('firstName').val();
+		var phone = validateForm.getField('phone').val();
+		var email = validateForm.getField('email').val();
+		var room = validateForm.getField('room').val();
+		var nbPersons = validateForm.getField('nbPersons').val();
+
 		this.model.set({
 			'title': "Chambre " + room + " | " + lastName,
 			'lastName': lastName,
-			'firstName': this.$('#firstName').val(),
-			'phone': this.$('#phone').val(),
+			'firstName': firstName,
+			'phone': phone,
+			'email': (email.length > 0) ? email : '',
 			'room': room,
-			'nbPersons': this.$('#nbPersons').val()});
+			'nbPersons': nbPersons});
 
 		if (this.model.isNew()) {
 			this.collection.create(this.model, {success: this.close});
+			console.log("ok");
 		} else {
 			this.model.save({}, {success: this.close});
 		}
 
 		// a supprimer quand on aura sauvegard� sur le serveur
 		// comme �a ne ferme que lorsque c'est sauvegard�
-		$(this.el).dialog('close');
+		//this.close();
+	},/*
+	onError: function(model, error) {
+		_.each(error, function(fieldName) {
+			this.setFieldError(fieldName);
+		}, this);
 	},
+	onInputGetFocus: function(e) {
+		 window.validateForm.onInputGetFocus(e);
+	},
+*/
 	close: function() {
 		$('body').removeClass("unselectCanceled");
-		$(this.el).dialog('close');
+		this.$el.dialog('close');
 	},
 	destroy: function() {
 		this.model.destroy({success: this.close});
 	},
 	btnFicheSejour: function() {
 		app.ficheSejour();
-		$(this.el).dialog('close');
-	}
+		this.$el.dialog('close');
+	},
+/*
+	setFieldError: function(fieldName) {
+		var $controlGroup = validateForm.getFieldControlGroup(validateForm.getField(fieldName));
+		$controlGroup.addClass('error');
+	},*/
+	getField: function(fieldName) {
+		return $('input[name='+fieldName+']');
+	}/*,
+	getFieldControlGroup: function($field) {
+		return $field.parents('.control-group');
+	}*/
 });
 
 ////Reservations
@@ -192,6 +203,7 @@ function getWindowHeight() {
 }
 	
 function getBodyPad() {
-	return parseInt($('body').css('padding-top').replace('px', '')) +
-		parseInt($('body').css('padding-bottom').replace('px', ''));
+	var body = $('body');
+	return parseInt(body.css('padding-top').replace('px', '')) +
+		parseInt(body.css('padding-bottom').replace('px', ''));
 }
