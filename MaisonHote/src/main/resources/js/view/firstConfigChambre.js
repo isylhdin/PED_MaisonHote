@@ -45,6 +45,9 @@ window.SelectChambreView = Backbone.View.extend({
 			this.template = _.template(tpl.get('ChambreView'));
 			//injecte l'id de la chambre dans le code html
 			$('#maison').append(this.template(window["chambre" + i].toJSON()));	
+			$('#litSimple'+i).spinner();
+			$('#litDouble'+i).spinner();
+			$('#litJumeau'+i).spinner();
 			$('#'+i).remove();
 			
 			window["chambre"+i].bind('invalid ', this.onError);
@@ -65,13 +68,18 @@ window.SelectChambreView = Backbone.View.extend({
 			var price = $('#inputPrice'+i).val();
 			var nbLit = $('#inputNbPerson'+i).val();
 			var superficie = $('#inputArea'+i).val();
+			
+			var litSimple = $('#litSimple'+i).val();
+			var litDouble = $('#litDouble'+i).val();
+			var litJumeau = $('#litJumeau'+i).val();
+			
 			var tele = $("input[name=tele"+i+"]").is(':checked');
 			var internet = $("input[name=internet"+i+"]").is(':checked');
 			var baignoire = $("input[name=baignoire"+i+"]").is(':checked');
 			var douche = $("input[name=douche"+i+"]").is(':checked');
 			
 
-			window["chambre"+i].save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie, 'tele':tele, 'internet':internet, 'baignoire':baignoire, 'douche':douche}); //set les chambres dans la collection et les sauvegarde une par une dans le cache
+			window["chambre"+i].save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie, 'tele':tele, 'internet':internet, 'baignoire':baignoire, 'douche':douche, 'litSimple': litSimple, 'litDouble': litDouble, 'litJumeau': litJumeau}); //set les chambres dans la collection et les sauvegarde une par une dans le cache
 		}
 
 		if(!success){

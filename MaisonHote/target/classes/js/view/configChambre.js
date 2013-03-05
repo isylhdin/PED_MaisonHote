@@ -161,8 +161,11 @@ window.EditChambreView = Backbone.View.extend({
 			window.internet = $("input[name=internet"+Chambre.id+"]").is(':checked');
 			window.baignoire = $("input[name=baignoire"+Chambre.id+"]").is(':checked');
 			window.douche = $("input[name=douche"+Chambre.id+"]").is(':checked');
+			window.litSimple = $('#litSimple'+ Chambre.id).val();
+			window.litDouble = $('#litDouble'+ Chambre.id).val();
+			window.litJumeau = $('#litJumeau'+ Chambre.id).val();
 
-			Chambre.save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie, 'tele':tele, 'internet':internet, 'baignoire':baignoire, 'douche':douche}, {
+			Chambre.save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie, 'tele':tele, 'internet':internet, 'baignoire':baignoire, 'douche':douche, 'litSimple': litSimple, 'litDouble': litDouble, 'litJumeau': litJumeau}, {
 				success: function(model, response, options) {
 					nbChambresSauveesDansCache++;
 				},
