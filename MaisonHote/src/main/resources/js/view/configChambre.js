@@ -36,6 +36,9 @@ window.EditChambreView = Backbone.View.extend({
 					Chambre.bind('invalid ', self.onError);
 					this.template = _.template(tpl.get('ChambreView'));
 					$(self.el).append(this.template(Chambre.toJSON()));
+					$(self.el).find('#litSimple'+Chambre.id).spinner();
+					$(self.el).find('#litDouble'+Chambre.id).spinner();
+					$(self.el).find('#litJumeau'+Chambre.id).spinner();
 					nbChambres++;
 					nbChambresInitial++;
 				});

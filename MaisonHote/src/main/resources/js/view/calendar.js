@@ -141,15 +141,29 @@ window.EventView = Backbone.View.extend({
 			'nbPersons': nbPersons});
 
 		if (this.model.isNew()) {
-			this.collection.create(this.model, {success: this.close});
-			console.log("ok");
+			console.log("nouvelle réservation détectée");
+//			this.collection.create(this.model, {
+//				success: this.close,
+//				error : console.log("il y a eu une erreur lors de la sauvegarde")			
+//			});
+			var self = this;
+			
+			this.model.save(null,{
+				success: function() {
+					self.collection.add(self.model);
+					self.close();
+				},
+				error : function() {
+					console.log("une erreur s'est produite lors de la sauvegarde dans le cache");
+					self.close();
+				}
+			});
+			
+
 		} else {
+			console.log("edition de réservation");
 			this.model.save({}, {success: this.close});
 		}
-
-		// a supprimer quand on aura sauvegard� sur le serveur
-		// comme �a ne ferme que lorsque c'est sauvegard�
-		//this.close();
 	},/*
 	onError: function(model, error) {
 		_.each(error, function(fieldName) {
