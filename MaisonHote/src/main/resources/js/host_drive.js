@@ -18,7 +18,7 @@ function handleAuthResultDrive (authResult) {
 	if (authResult && !authResult.error) {
 		window.localStorage.clear();
 
-		retrieveFileDrive('house_config.json', function(reponse){
+		retrieveFileDrive('house_config2.json', function(reponse){
 			if (reponse.items.length == 0) {
 				alert("PREMIERE UTILISATION");
 				app.firstConfigChambre();

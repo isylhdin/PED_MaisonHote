@@ -66,9 +66,7 @@ window.SelectChambreView = Backbone.View.extend({
 
 		for(i=1;i<=nbChambre;i++){
 			var price = $('#inputPrice'+i).val();
-			var nbLit = $('#inputNbPerson'+i).val();
-			var superficie = $('#inputArea'+i).val();
-			
+		
 			var litSimple = $('#litSimple'+i).val();
 			var litDouble = $('#litDouble'+i).val();
 			var litJumeau = $('#litJumeau'+i).val();
@@ -79,7 +77,7 @@ window.SelectChambreView = Backbone.View.extend({
 			var douche = $("input[name=douche"+i+"]").is(':checked');
 			
 
-			window["chambre"+i].save({'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie, 'tele':tele, 'internet':internet, 'baignoire':baignoire, 'douche':douche, 'litSimple': litSimple, 'litDouble': litDouble, 'litJumeau': litJumeau}); //set les chambres dans la collection et les sauvegarde une par une dans le cache
+			window["chambre"+i].save({'prixParJour':price,'tele':tele, 'internet':internet, 'baignoire':baignoire, 'douche':douche, 'litSimple': litSimple, 'litDouble': litDouble, 'litJumeau': litJumeau}); //set les chambres dans la collection et les sauvegarde une par une dans le cache
 		}
 
 		if(!success){
