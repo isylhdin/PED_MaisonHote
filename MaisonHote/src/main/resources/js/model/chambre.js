@@ -4,8 +4,6 @@ var Chambre = Backbone.Model.extend({
 	defaults: {
 		id:null,
 		prixParJour: '',
-		nbLit: '',
-		superficie :'',
 		litSimple: 0,
 		litDouble: 0,
 		litJumeau: 0,
@@ -23,7 +21,7 @@ var Chambre = Backbone.Model.extend({
 
 		var errors = [];
 		if ( !attrs.prixParJour.length ) errors.push('prixParJour');
-		if ( !attrs.nbLit.length ) errors.push('nbLit');
+
 		//if ( !attrs.superficie.length ) errors.push('superficie');
 
 		if ( errors.length ){

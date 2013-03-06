@@ -21,6 +21,7 @@ function handleAuthResultDrive (authResult) {
 		//on téléchatge les métadonnées de tous les fichiers qui seront utilisés par l'appli, à la connexion
 		downloadRequiredFiles();
 		/*retrieveFileDrive('house_config.json', function(reponse){
+
 			if (reponse.items.length == 0) {
 				alert("PREMIERE UTILISATION");
 				app.firstConfigChambre();

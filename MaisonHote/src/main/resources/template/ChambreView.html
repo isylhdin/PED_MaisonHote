@@ -1,67 +1,71 @@
  		<div class="row" id="row<%= id %>">
             <!-- first span -->
-              <div class="span6">
+            <div class="span6">
                 <h2>Chambre <%= id %></h2>
-                <form class="form-horizontal">
-                  <div class="control-group">
-                    <label class="control-label" for="inputPrice">Prix *</label>
-                    <div class="controls">
-                      <input type="text" name="prixParJour<%= id %>" id="inputPrice<%= id %>" value="<%= prixParJour %>" placeholder="Prix">
-                    </div>
-                  </div>
-                  <div class="control-group">
-                    <label class="control-label" for="inputNbPerson">Nombre de personnes *</label>
-                    <div class="controls">
-                      <input type="text" name="nbLit<%= id %>" id="inputNbPerson<%= id %>" value="<%= nbLit %>" placeholder="Nombre de personnes">
-                    </div>
-                  </div>
-                  <div class="control-group">
-                    <label class="control-label" for="inputArea">Superficie</label>
-                    <div class="controls">
-                      <input type="text" name="superficie<%= id %>" id="inputArea<%= id %>" value="<%= superficie %>" placeholder="Superficie">
-                    </div>
-                  </div>
-                  
-                  <div class="control-group">
-                  	<input id="litSimple<%= id%>" value="<%= litSimple%>">
-                  	<input id="litDouble<%= id%>" value="<%= litDouble%>">
-                  	<input id="litJumeau<%= id%>" value="<%= litJumeau%>">
-                  
-                              
-                  
-                  <div class="control-group">
-                  	  <label class="control-label" for="inputArea">Services</label>
-                  	  <div class="controls">
-                 		 <div class="row-fluid">  
- 							<div class="span5">
-	   						  <label>Television</label>
-	   						  <input id="tele<%= id %>" name="tele<%= id %>" type="checkbox" <%= tele ? 'checked' : '' %>/>		
-	   						</div>
-	    
-	    					<div class="span5">
-	   						  <label>Internet</label>
-	  						  <input id="internet<%= id %>" name="internet<%= id %>" type="checkbox" <%= internet ? 'checked' : '' %>/>	
-	   						</div>
-				 	 	</div>
-                 	 </div>
-                  </div>
-                  
-                  <div class="control-group">
-                  	  <label class="control-label" for="inputArea">Salle de bains</label>
-                  	  <div class="controls">
-                 		 <div class="row-fluid">  
- 							<div class="span5">
-	   						  <label>Baignoire</label>
-	   						  <input id="baignoire<%= id %>" name="baignoire<%= id %>" type="checkbox" <%= baignoire ? 'checked' : '' %>/>		
-	   						</div>
-	    
-	    					<div class="span5">
-	   						  <label>Douche</label>
-	  						  <input id="douche<%= id %>" name="douche<%= id %>" type="checkbox" <%= douche ? 'checked' : '' %>/>	
-	   						</div>
-				 	 	</div>
-                 	 </div>
-                  </div>
+ 
+                <div class="row-fluid">
+					<div class="span12">
+		
+             		   <form class="form-horizontal">
+               		   <div class="control-group">
+                  		  <label class="control-label" for="inputPrice">Prix *</label>
+                  			  <div class="controls">
+                    		  <input type="text" name="prixParJour<%= id %>" id="inputPrice<%= id %>" value="<%= prixParJour %>" placeholder="Prix">
+                   	 		</div>
+                 		 </div>
+    
+          			 <!-- Lits-->
+               		 <div class="row-fluid">
+						<div class="span6"> 		
+			                <div class="control-group">
+			                  <label class="control-label" for="litSimple">Lits Simples</label>
+			                  	<div class="controls">					               		
+			                  		<input class="input-mini" id="litSimple<%= id%>" value="<%= litSimple%>">
+			                  	</div> 
+			                  </div>                      
+			                <div class="control-group">
+			                  <label class="control-label" for="litSimple">Lits Doubles</label>
+			                  	<div class="controls">
+			                  		<input class="input-mini" id="litDouble<%= id%>" value="<%= litDouble%>">
+			                  	</div>
+			                  </div>
+			                <div class="control-group">
+			                  <label class="control-label" for="litSimple">Lits Jumeaux</label>
+			                  	<div class="controls">
+			                  		<input class="input-mini" id="litJumeau<%= id%>" value="<%= litJumeau%>">
+			                  	</div>	
+			                  </div>
+			               	</div> <!-- /span6-->
+			               	
+			             <!-- Checkboxes-->
+			         	<div class="row-fluid">
+						<div class="span6"> 
+                 			 <div class="control-group">  
+                  			  <div class="controls">
+                  			  	<div class="row-fluid">
+								<div class="span4">         
+		   						  <label class="checkbox inline">	
+		   						  <input id="tele<%= id %>" name="tele<%= id %>" type="checkbox" <%= tele ? 'checked' : '' %>/>	Television </label>
+		   						  </div>
+		   						 </div>
+		   						 <div class="row-fluid">
+								<div class="span4"> 
+		   						  <label class="checkbox inline">	
+		  						  <input id="internet<%= id %>" name="internet<%= id %>" type="checkbox" <%= internet ? 'checked' : '' %>/>	Internet </label> 
+		  						  </div>
+		   						 </div>
+		   						 <div class="row-fluid">
+								<div class="span4"> 
+		  						  <label class="checkbox inline">
+		  						  <input id="baignoire<%= id %>" name="baignoire<%= id %>" type="checkbox" <%= baignoire ? 'checked' : '' %>/> Baignoire </label>
+		  						   </div>
+		   						 </div>
+		  						  <label class="checkbox inline">					 					
+								  <input id="douche<%= id %>" name="douche<%= id %>" type="checkbox" <%= douche ? 'checked' : '' %>/>Douche </label>	
+			                  </div>
+			                  </div> <!-- span6-->
+			                 </div><!-- rowFluid-->
+		 
                    
                    <a class="btn btn-danger" id="<%= id %>" data-id="<%= id %>" ><i class="icon-trash icon-white"></i> Delete</a>
                  </form>
