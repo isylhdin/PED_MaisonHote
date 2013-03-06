@@ -50,7 +50,14 @@ var Reservation = Backbone.Model.extend({
 
 var Reservations = Backbone.Collection.extend({
 	localStorage: new Backbone.LocalStorage("resas-backbone"),
-	model: Reservation
+	model: Reservation,
+
+	nextId: function() {
+		if (!this.length) {
+			return 1;
+		}
+		return this.last().get('id') + 1;
+	}
 });
 
 var Locataire = Backbone.Model.extend({

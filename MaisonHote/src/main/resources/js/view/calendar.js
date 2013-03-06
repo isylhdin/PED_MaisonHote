@@ -69,9 +69,8 @@ window.EventsView = Backbone.View.extend({
 		this.$el.fullCalendar('updateEvent', fcEvent, true);           
 	},
 	eventDropOrResize: function(fcEvent) {
-		// il faut utiliser l'id, pour le moment �a ne marche pas
 		// Lookup the model that has the ID of the event and update its attributes
-		//$(this.collection).get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});            
+		this.collection.get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});            
 	},
 	destroy: function(event) {
 		this.$el.fullCalendar('removeEvents', event.id, true);         
@@ -92,11 +91,11 @@ window.EventView = Backbone.View.extend({
 		var buttons = {'Ok' : {text: 'Ok', click: this.save,
 				class: "btn btn-primary"}};
 		if (!isNewModel) {
-			_.extend(buttons, {'Delete': {text: 'Delete', click: this.destroy,
-						class: "btn"}});
+			_.extend(buttons, {'Delete': {text: 'Delete',
+						click: this.destroy, class: "btn"}});
 		}
-		_.extend(buttons, {'Cancel': {text: 'Cancel', click: this.close,
-					class: "btn"}});            
+		_.extend(buttons, {'Cancel': {text: 'Cancel',
+					click: this.close, class: "btn"}});            
 
 		this.resetFormClasses();
 		this.$el.dialog({
@@ -145,6 +144,8 @@ window.EventView = Backbone.View.extend({
 //				success: this.close,
 //				error : console.log("il y a eu une erreur lors de la sauvegarde")			
 //			});
+			this.model.set({'id': this.collection.nextId()});
+
 			var self = this;
 			
 			this.model.save(null,{
