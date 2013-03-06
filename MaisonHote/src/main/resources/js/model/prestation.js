@@ -4,7 +4,7 @@ var Prestation = Backbone.Model.extend({
 	defaults: {
 		id:null,
 		title: '',
-		price: '',
+		price: 0,
 		number: 0,
 		comment: '',
 	},
