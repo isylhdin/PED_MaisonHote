@@ -1,6 +1,3 @@
-//currentHost contains the name of the file host currently in use
-var currentHost ;
-
 //Connection to the appropriate host
 function connectToHost(callback){
 	var funToCall = "connectToHost"+currentHost+'('+callback+')';
@@ -43,6 +40,15 @@ function updateFile (file, newContent, callback) {
 	eval(funToCall);
 }
 
+
+function setToken () {
+	var funToCall = "setToken"+currentHost+'()';
+	eval(funToCall);
+}
+
+
+
+
 /**
  * COMMON FUNCTIONS TO EVERY FILE HOSTER
  **/
@@ -56,12 +62,33 @@ function saveChambreIntoLocalStorage(fileContent){
 	}
 }
 
-function saveResaIntoLocalStorage(fileContent){
-	var reservations = jQuery.parseJSON(fileContent);
+function saveresaIntoLocalStorage(fileContent){
+	window.reservations = jQuery.parseJSON(fileContent);
 
 	for(var i=0; i<reservations.length;i++){
+		window.indice = i;
 		var resa = new Reservation(reservations[i]);
-		resa.save();				
+		resa.save();
+		
+//		resa.save(null,{
+//			success : function(model){
+//				console.log(model);
+//				console.log(this.localStorage);
+//				console.log("indice = "+ indice);
+//				console.log("taille réservation = "+ reservations.length);
+//				
+//				//si on a réussi à sauvegarder dans le cache la dernière réservation alors on redirige sur la page des réservations
+//				if(indice == (reservations.length -1)){
+//					$('#room').show();
+//					$('#logOut').show();
+//					$('#nameAppli').show();
+//					//et on redirige sur la page des réservations
+//					app.resa();
+//					
+//				}
+//			}
+//			
+//		});
 	}
 }
 
@@ -87,9 +114,6 @@ function getEntryPointFile(file){
 			var houseConfig = new FichierConfig({'id': window.file, 'idFichier': reponse.items[0].id});
 			houseConfig.save();
 
-			//on charge le menu
-			// this.headerView = new HeaderView();
-			// $('.header').html(this.headerView.el);
 			$('#room').show();
 			$('#logOut').show();
 			$('#nameAppli').show();
@@ -127,7 +151,13 @@ function downloadRequiredFiles(){
 			}
 			else{
 				console.log("le fichier "+fichier+" était deja sur le serveur, il a l'id "+reponse.items[0].id);
-				tpl.downloadFile(reponse.items[0] , saveResaIntoLocalStorage);
+				
+				//pour appeler la bonne méthode qui va sauvagegarder dans le cache, on retire .json au nom du fichier
+				var reg=new RegExp("[.]+", "g"); 
+				var tableau=fichier.split(reg);
+				var name = tableau[0]; //contient "resa" par exemple
+
+				tpl.downloadFile(reponse.items[0] , eval("save"+name+"IntoLocalStorage"));
 
 				var fichierConfig = new FichierConfig({'id': reponse.items[0].title,'idFichier': reponse.items[0].id});
 				fichierConfig.save();

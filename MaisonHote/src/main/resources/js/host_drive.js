@@ -14,12 +14,18 @@ function connectToHostDrive(callback){
 }
 
 function handleAuthResultDrive (authResult) {
+	console.log(gapi.auth.getToken());
 	//si connexion réussie + token récupéré
 	if (authResult && !authResult.error) {
-		window.localStorage.clear();
 
-		//on téléchatge les métadonnées de tous les fichiers qui seront utilisés par l'appli, à la connexion
+		console.log(authResult);
+		var token = new Token(authResult);
+		token.save();
+		
+		//on télécharge les métadonnées de tous les fichiers qui seront utilisés par l'appli, à la connexion
 		downloadRequiredFiles();
+		
+		
 		/*retrieveFileDrive('house_config.json', function(reponse){
 
 			if (reponse.items.length == 0) {
@@ -133,3 +139,14 @@ function updateFileDrive (fileId, newContent, callback) {
 		callback(resp);
 	});	    	   
 }
+
+
+function setTokenDrive () {
+	var idToken = localStorage.getItem('token-backbone');
+	var token = jQuery.parseJSON(localStorage.getItem('token-backbone-'+idToken));
+	console.log(token);
+	gapi.auth.setToken(new Token(token));
+	console.log(gapi.auth.getToken());
+}
+
+

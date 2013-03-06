@@ -10,14 +10,24 @@ var appRouter = Backbone.Router.extend({
 
 
 	initialize: function () {
-		console.log("Initialize router !");
-
+		console.log("Initialize router !");	
+		
 		if(localStorage.length == 0){
 			this.connexion();
 			$('#room').hide();
 			$('#logOut').hide();
 			$('#nameAppli').hide();
 		}else{
+			//Quand on actualise la page 
+			//on récupère le nom du service de stockage qui est contenu dans le local storage
+			if(currentHost == null){
+				currentHost =  jQuery.parseJSON(localStorage.getItem('currentHost-backbone-0')).host;
+			}
+			
+			setToken();
+			//A cet endroit il faudra set le token du service de stockage pour qu'il soit intégré aux appels de web services
+			//ne marche pas, l'appel aux web service n'intègre pas le token dans le header ...
+
 			this.headerView = new HeaderView();
 			$('.header').html(this.headerView.el);
 			this.resa();

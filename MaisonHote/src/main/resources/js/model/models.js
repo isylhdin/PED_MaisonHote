@@ -1,13 +1,17 @@
-var GoogleToken = Backbone.Model.extend({
-	defaults:{
-		id : 0	//id par défaut comme ça on connait son id à l'avance pour le récupérer dans le local storage
-	},
+var Token = Backbone.Model.extend({
 	localStorage: new Backbone.LocalStorage("token-backbone"),
 });
 
 
 var FichierConfig = Backbone.Model.extend({
-	localStorage: new Backbone.LocalStorage("fichier-backbone"),
+	localStorage: new Backbone.LocalStorage("fichier-backbone")
+});
+
+var CurrentHost = Backbone.Model.extend({
+	defaults:{
+		id : 0	
+	},
+	localStorage: new Backbone.LocalStorage("currentHost-backbone")
 });
 
 

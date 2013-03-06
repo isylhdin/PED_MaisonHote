@@ -1,3 +1,5 @@
+var currentHost;
+
 window.ConnexionView = Backbone.View.extend({
 
 	events : {
@@ -6,6 +8,7 @@ window.ConnexionView = Backbone.View.extend({
 	},
 
 	initialize: function () {
+		window.localStorage.clear();
 		this.render();
 	},
 
@@ -16,14 +19,20 @@ window.ConnexionView = Backbone.View.extend({
 
 	buttonGoogleHandler : function(event){
 		currentHost = 'Drive' ;
+		this.saveCurrentHost(currentHost);	
 		connectToHost(handleAuthResultDrive);
 		//connectToHost(handleAuthResult); ne fonctionne pas encore, probleme "Uncaught TypeError: Cannot convert object to primitive value"
-
 	},
 	
 	buttonDropboxHandler : function (event){
 		currentHost = 'Dropbox' ;
+		this.saveCurrentHost(currentHost);
 		connectToHost (handleAuthResultDropbox);
+	},
+	
+	saveCurrentHost : function (currentHost){
+		var host = new CurrentHost({'host' : currentHost});
+		host.save();
 	}
 	
 });
