@@ -63,32 +63,15 @@ function saveChambreIntoLocalStorage(fileContent){
 }
 
 function saveresaIntoLocalStorage(fileContent){
-	window.reservations = jQuery.parseJSON(fileContent);
-
-	for(var i=0; i<reservations.length;i++){
+	window.reser = jQuery.parseJSON(fileContent);
+	
+	for(var i=0; i<reser.length;i++){
 		window.indice = i;
-		var resa = new Reservation(reservations[i]);
+		var resa = new Reservation(reser[i]);
 		resa.save();
-		
-//		resa.save(null,{
-//			success : function(model){
-//				console.log(model);
-//				console.log(this.localStorage);
-//				console.log("indice = "+ indice);
-//				console.log("taille réservation = "+ reservations.length);
-//				
-//				//si on a réussi à sauvegarder dans le cache la dernière réservation alors on redirige sur la page des réservations
-//				if(indice == (reservations.length -1)){
-//					$('#room').show();
-//					$('#logOut').show();
-//					$('#nameAppli').show();
-//					//et on redirige sur la page des réservations
-//					app.resa();
-//					
-//				}
-//			}
-//			
-//		});
+
+		reservations.add(resa);
+
 	}
 }
 
@@ -159,6 +142,7 @@ function downloadRequiredFiles(){
 
 				tpl.downloadFile(reponse.items[0] , eval("save"+name+"IntoLocalStorage"));
 
+				//stocke l'id du fichier récupéré du serveur, dans le cache
 				var fichierConfig = new FichierConfig({'id': reponse.items[0].title,'idFichier': reponse.items[0].id});
 				fichierConfig.save();
 

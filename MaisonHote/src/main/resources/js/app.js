@@ -11,7 +11,7 @@ var appRouter = Backbone.Router.extend({
 
 	initialize: function () {
 		console.log("Initialize router !");	
-		
+
 		if(localStorage.length == 0){
 			this.connexion();
 			$('#room').hide();
@@ -23,7 +23,7 @@ var appRouter = Backbone.Router.extend({
 			if(currentHost == null){
 				currentHost =  jQuery.parseJSON(localStorage.getItem('currentHost-backbone-0')).host;
 			}
-			
+
 			setToken();
 			//A cet endroit il faudra set le token du service de stockage pour qu'il soit intégré aux appels de web services
 			//ne marche pas, l'appel aux web service n'intègre pas le token dans le header ...
@@ -57,9 +57,11 @@ var appRouter = Backbone.Router.extend({
 
 		//Reservations
 		reservations = new Reservations();
+
 		//Un calendrier possède un ensemble de réservations
 		calendar = new EventsView({el: $("#calendar"), collection: reservations}).render();
 		reservations.fetch();
+
 	},
 
 	firstConfigChambre: function () {	

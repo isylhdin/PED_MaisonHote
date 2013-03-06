@@ -1,7 +1,7 @@
 window.CalendarView = Backbone.View.extend({
 	initialize: function () {
 		// initialisation de la vue
-		console.log('Main view initialized !'); 
+		console.log('Calendar view initialized !'); 
 		$(this.el).html(_.template(tpl.get('CalendarView')));
 	}
 });
