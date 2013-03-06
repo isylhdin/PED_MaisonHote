@@ -9,7 +9,7 @@ window.SelectChambreView = Backbone.View.extend({
 
 
 	initialize: function () {
-		var nbPrest = 0;
+		nbPrest=0;
 		var prestations;
 		var nbChambre;
 		var chambres;
@@ -27,12 +27,13 @@ window.SelectChambreView = Backbone.View.extend({
 	},
 
 	addServ: function () {
-		nbPrest = nbPrest+1;
-		prestations = new Prestations();
-		window["prestation"+nbPrest] = new Prestation({'id':nbPrest});
-		prestations.add(window["prestation"+nbPrest]);
-		this.template = _.template(tpl.get('ServiceView'));
-		$('#prestation').append(this.template(window["prestation" + nbPrest].toJSON()));
+		 nbPrest = nbPrest+1;
+		 prestations = new Prestations();
+		 window["prestation"+nbPrest] = new Prestation({'id':nbPrest});
+		 prestations.add(window["prestation"+nbPrest]);
+		 this.template = _.template(tpl.get('ServiceView'));
+		 $('#prestation').append(this.template(window["prestation"+nbPrest].toJSON()));
+		 //$('#prestation').append(tpl.get('ServiceView'));
 	},
 
 	//Quand on clique sur un numéro de la liste on construit l'ui (avec les id pas encore définis).
