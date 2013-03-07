@@ -65,6 +65,7 @@ window.SelectChambreView = Backbone.View.extend({
 		 prestations.add(window["prestation"+nbPrest]);
 		 this.template = _.template(tpl.get('ServiceView'));
 		 $('#prestation').append(this.template(window["prestation"+nbPrest].toJSON()));
+		 $('#'+nbPrest).remove();
 	},
 	
 	saveDataRoom: function(){

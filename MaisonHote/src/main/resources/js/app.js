@@ -5,6 +5,7 @@ var appRouter = Backbone.Router.extend({
 		"":	 				"home",  //index.html
 		"resa":  			"resa",	 //index.html#resa
 		"chambre":  		"editChambre", //index.html#chambre
+		"prestation":  		"editPrestation", //index.html#prestation
 		"ficheSejour":  	"ficheSejour" //index.html#ficheSejour
 	},
 
@@ -78,6 +79,12 @@ var appRouter = Backbone.Router.extend({
 		this.editChambreView = new EditChambreView();
 		$('#content').html(this.editChambreView.el);
 
+	},
+
+	editPrestation: function () {	
+		console.log("Welcome back config!");
+		this.editPrestationView = new EditPrestationView();
+		$('#content').html(this.editPresationView.el);
 	},
 
 	ficheSejour: function () {	
