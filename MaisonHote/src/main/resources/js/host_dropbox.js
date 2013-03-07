@@ -75,7 +75,7 @@ function connectToHostDropbox(callback){
 }
 
  function handleAuthResultDropbox (authResult) {
-		retrieveFileDropbox('house_config.json', function(reponse){
+		retrieveFileDropbox('house_config_chambres.json', function(reponse){
 				if (!reponse){
 					alert("PREMIERE UTILISATION");
 					app.firstConfigChambre();	
