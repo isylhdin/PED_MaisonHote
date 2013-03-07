@@ -11,19 +11,19 @@ var Prestation = Backbone.Model.extend({
 
 	initialize: function(){
 		console.log('Prestation créée !');
-	},
-
-	validate: function( attrs ) {
-		var errors = [];
-		if ( !attrs.title.length ) errors.push('title');
-		if ( !attrs.price.length ) errors.push('price');
-		if ( !attrs.number.length ) errors.push('number');
-
-		if ( errors.length ){
-			console.log("champ(s) qui provoque(nt) une erreur : "+errors);
-			return errors;
-		}
 	}
+
+	// validate: function( attrs ) {
+		// var errors = [];
+		// if ( !attrs.title.length ) errors.push('title');
+		// if ( !attrs.price.length ) errors.push('price');
+		// if ( !attrs.number.length ) errors.push('number');
+// 
+		// if ( errors.length ){
+			// console.log("champ(s) qui provoque(nt) une erreur : "+errors);
+			// return errors;
+		// }
+	// }
 });
 
 var Prestations = Backbone.Collection.extend({
