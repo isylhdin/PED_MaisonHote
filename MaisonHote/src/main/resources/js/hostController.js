@@ -58,8 +58,11 @@ function saveChambreIntoLocalStorage(fileContent){
 
 	for(var i=0; i<chambres.length;i++){
 		var chambre = new Chambre(chambres[i]);
-		chambre.save();				
+		chambre.save();	
+		
+		chambresPourCalendrier.add(chambre);
 	}
+
 }
 
 function saveresaIntoLocalStorage(fileContent){
@@ -70,6 +73,8 @@ function saveresaIntoLocalStorage(fileContent){
 		var resa = new Reservation(reser[i]);
 		resa.save();
 
+		//remplit la collections de calendar.js avec les reservations téléchargées pour qu'elles soient directement affichées dans
+		//le calendrier
 		reservations.add(resa);
 
 	}

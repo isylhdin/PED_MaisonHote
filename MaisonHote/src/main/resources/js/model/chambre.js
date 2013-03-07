@@ -22,8 +22,6 @@ var Chambre = Backbone.Model.extend({
 		var errors = [];
 		if ( !attrs.prixParJour.length ) errors.push('prixParJour');
 
-		//if ( !attrs.superficie.length ) errors.push('superficie');
-
 		if ( errors.length ){
 			console.log("champ(s) qui provoque(nt) une erreur : "+errors);
 			return errors;
@@ -49,3 +47,7 @@ var Chambres = Backbone.Collection.extend({
 		this.sort();
 	}
 }); 
+
+
+
+var couleurs = ['#BAF9F0','#C8F9BA','#F9EABA','#C0BAF9','#F4BAF9'];

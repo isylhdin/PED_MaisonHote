@@ -1,3 +1,5 @@
+var chambresPourCalendrier;
+
 window.CalendarView = Backbone.View.extend({
 	initialize: function () {
 		// initialisation de la vue
@@ -16,6 +18,8 @@ window.EventsView = Backbone.View.extend({
 		this.collection.bind('destroy', this.destroy);
 
 		this.eventView = new EventView({el: $('#eventDialog')});
+		chambresPourCalendrier.bind('replace reset add remove', this.caption);  
+		chambresPourCalendrier.fetch(); //si on refresh la page ça va cherhcer les chambres dans le localstorage
 	},
 	render: function() {
 		$(this.el).fullCalendar({
@@ -40,7 +44,7 @@ window.EventsView = Backbone.View.extend({
 			/* impossible
 			roomNames: {first: "Chambre 1", snd: "Chambre 2", third: "Chambre 3"},
 			roomNames: ["Chambre 1", "Chambre 2", "Chambre 3"]
-			*/
+			 */
 		});
 	},
 	addAll: function() {
@@ -74,6 +78,15 @@ window.EventsView = Backbone.View.extend({
 	},
 	destroy: function(event) {
 		this.$el.fullCalendar('removeEvents', event.id, true);         
+	},
+	
+
+	caption : function(){
+		$('#caption').empty();
+		chambresPourCalendrier.each(function(Chambre){
+			$('#caption').append("<div>"+ Chambre.id +"</div>");
+		});
+
 	}
 });
 
@@ -89,13 +102,13 @@ window.EventView = Backbone.View.extend({
 	render: function() {
 		var isNewModel = this.model.isNew();
 		var buttons = {'Ok' : {text: 'Ok', click: this.save,
-				class: "btn btn-primary"}};
+			class: "btn btn-primary"}};
 		if (!isNewModel) {
 			_.extend(buttons, {'Delete': {text: 'Delete',
-						click: this.destroy, class: "btn"}});
+				click: this.destroy, class: "btn"}});
 		}
 		_.extend(buttons, {'Cancel': {text: 'Cancel',
-					click: this.close, class: "btn"}});            
+			click: this.close, class: "btn"}});            
 
 		this.resetFormClasses();
 		this.$el.dialog({
@@ -135,39 +148,35 @@ window.EventView = Backbone.View.extend({
 			'firstName': firstName,
 			'phone': phone,
 			'email': (email.length > 0) ? email : '',
-			'room': room,
-			'nbPersons': nbPersons});
+					'room': room,
+					'nbPersons': nbPersons});
 
 		if (this.model.isNew()) {
 			console.log("nouvelle réservation détectée");
-//			this.collection.create(this.model, {
-//				success: this.close,
-//				error : console.log("il y a eu une erreur lors de la sauvegarde")			
-//			});
 			this.model.set({'id': this.collection.nextId()});
 
 			var self = this;
-			
+
 			this.model.save(null,{
 				success: function() {
 					self.collection.add(self.model);
 					self.close();
-					
+
 					var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 					updateFile(obj.idFichier, JSON.stringify(self.collection.toJSON() ),function(reponse){	
 						if (!reponse.error){
 							console.log("réservation sauvegardée sur le serveur");
 						}
 					});
-					
-					
+
+
 				},
 				error : function() {
 					console.log("une erreur s'est produite lors de la sauvegarde dans le cache");
 					self.close();
 				}
 			});
-			
+
 
 		} else {
 			console.log("edition de réservation");
@@ -209,9 +218,9 @@ function getWindowHeight() {
 	}
 	return winHeight;
 }
-	
+
 function getBodyPad() {
 	var body = $('body');
 	return parseInt(body.css('padding-top').replace('px', '')) +
-		parseInt(body.css('padding-bottom').replace('px', ''));
+	parseInt(body.css('padding-bottom').replace('px', ''));
 }
