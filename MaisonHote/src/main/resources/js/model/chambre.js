@@ -50,4 +50,4 @@ var Chambres = Backbone.Collection.extend({
 
 
 
-var couleurs = ['#BAF9F0','#C8F9BA','#F9EABA','#C0BAF9','#F4BAF9'];
+var couleurs = ['','#3366CC','#FF0244','#02FF08','#FFF602','#FF9D02'];
