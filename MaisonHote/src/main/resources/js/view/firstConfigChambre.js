@@ -4,7 +4,7 @@ window.SelectChambreView = Backbone.View.extend({
 		"click .dropdown-menu a"	: "displayRoomConfigForms",
 		"click #submit"  : "onSubmit",
 		"focus input"	 : "onInputGetFocus",
-		"click #addServ" : "addServ"
+		"click #btnAddServ" : "constructFormService"
 	},
 
 
@@ -22,19 +22,9 @@ window.SelectChambreView = Backbone.View.extend({
 		return this;
 	},
 
-	submit : function(){
-		$('#maison').append("<div class='row'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
-	},
-
-	addServ: function () {
-		 nbPrest = nbPrest+1;
-		 prestations = new Prestations();
-		 window["prestation"+nbPrest] = new Prestation({'id':nbPrest});
-		 prestations.add(window["prestation"+nbPrest]);
-		 this.template = _.template(tpl.get('ServiceView'));
-		 $('#prestation').append(this.template(window["prestation"+nbPrest].toJSON()));
-		 //$('#prestation').append(tpl.get('ServiceView'));
-	},
+	// submit : function(){
+		// $('#maison').append("<div class='row'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
+	// },
 
 	//Quand on clique sur un numéro de la liste on construit l'ui (avec les id pas encore définis).
 	//Chaque "input" doit avoir un id modifié dynamiquement
@@ -59,18 +49,25 @@ window.SelectChambreView = Backbone.View.extend({
 			
 			window["chambre"+i].bind('invalid ', this.onError);
 		}
-		this.submit();
+		// this.submit();
 	},
 
 	displayRoomConfigForms: function(event){
 		nbChambre = $(event.currentTarget).text();
 		this.constructForm(nbChambre);
 	},
-
-	onSubmit: function(e){
-		success = true;
-		e.preventDefault();	
-
+	
+	constructFormService: function () {
+		 nbPrest = nbPrest+1;
+		 if(nbPrest==1)
+		 	prestations = new Prestations();
+		 window["prestation"+nbPrest] = new Prestation({'id':nbPrest});
+		 prestations.add(window["prestation"+nbPrest]);
+		 this.template = _.template(tpl.get('ServiceView'));
+		 $('#prestation').append(this.template(window["prestation"+nbPrest].toJSON()));
+	},
+	
+	saveDataRoom: function(){
 		for(i=1;i<=nbChambre;i++){
 			var price = $('#inputPrice'+i).val();
 		
@@ -83,16 +80,14 @@ window.SelectChambreView = Backbone.View.extend({
 			var baignoire = $("input[name=baignoire"+i+"]").is(':checked');
 			var douche = $("input[name=douche"+i+"]").is(':checked');
 			
-
-			window["chambre"+i].save({'prixParJour':price,'tele':tele, 'internet':internet, 'baignoire':baignoire, 'douche':douche, 'litSimple': litSimple, 'litDouble': litDouble, 'litJumeau': litJumeau}); //set les chambres dans la collection et les sauvegarde une par une dans le cache
-		}
-
-		if(!success){
-			return;
-		}
-			
-
-		createNewFile('house_config.json', function(reponse){	
+			//set les chambres dans la collection et les sauvegarde une par une dans le cache
+			window["chambre"+i].save({'prixParJour':price,'tele':tele, 'internet':internet, 'baignoire':baignoire, 'douche':douche, 'litSimple': litSimple, 'litDouble': litDouble, 'litJumeau': litJumeau}); 
+		}	
+	},
+	
+	//creation du fichier house_config_chambres
+	createFileChambre: function(){	
+		createNewFile('house_config_chambres.json', function(reponse){	
 			window.idHouseConfig = reponse.id;
 
 			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
@@ -104,6 +99,54 @@ window.SelectChambreView = Backbone.View.extend({
 			});
 
 		});
+	},
+
+	saveDataService: function(){
+		for(i=1;i<=nbPrest;i++){
+			console.log("passage dans la boucle");
+			var titleP = $('#inputTitleP'+i).val();
+			var priceP = $('#inputPriceP'+i).val();
+			var numberP = $('#inputNumberP'+i).val();
+			var commentP = $('#inputCommentP'+i).val();
+
+			//set les chambres dans la collection et les sauvegarde une par une dans le cache
+			window["prestation"+i].save({'title':titleP,'price':priceP, 'number':numberP, 'comment':commentP}); 
+		}
+	},
+	
+	//creation du fichier house_config_prestations
+	createFileService: function(){
+		createNewFile('house_config_prestations.json', function(reponse){	
+			window.idHouseConfig = reponse.id;
+
+			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
+			var houseConfig = new FichierConfig({'id':reponse.title, 'idFichier': idHouseConfig });
+			houseConfig.save();
+
+			updateFile(reponse.id,  JSON.stringify(prestations.toJSON()),function(reponse){	
+				console.log(reponse);
+			});
+
+		});
+	},
+
+	onSubmit: function(e){
+		success = true;
+		e.preventDefault();	
+
+		//partie chambre
+		this.saveDataRoom();
+		
+		//partie prestation
+		this.saveDataService();
+		
+		if(!success){
+			return;
+		}
+		
+		this.createFileChambre();
+ 		
+		this.createFileService();
 
 		//on charge le menu
 		this.headerView = new HeaderView();
