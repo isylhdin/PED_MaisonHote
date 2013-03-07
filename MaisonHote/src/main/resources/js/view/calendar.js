@@ -1,5 +1,3 @@
-var chambresPourCalendrier;
-
 window.CalendarView = Backbone.View.extend({
 	initialize: function () {
 		// initialisation de la vue
@@ -19,7 +17,7 @@ window.EventsView = Backbone.View.extend({
 
 		this.eventView = new EventView({el: $('#eventDialog')});
 		chambresPourCalendrier.bind('replace reset add remove', this.caption);  
-		chambresPourCalendrier.fetch(); //si on refresh la page ça va cherhcer les chambres dans le localstorage
+		chambresPourCalendrier.fetch(); //si on refresh la page ça va chercher les chambres dans le localstorage
 	},
 	render: function() {
 		$(this.el).fullCalendar({
@@ -84,7 +82,12 @@ window.EventsView = Backbone.View.extend({
 	caption : function(){
 		$('#caption').empty();
 		chambresPourCalendrier.each(function(Chambre){
-			$('#caption').append("<div>"+ Chambre.id +"</div>");
+
+			$('#caption').append("<div id='popover"+ Chambre.id +"' class='span1' rel='popover'  style='background-color:"+ couleurs[Chambre.id]+";'></div>");
+			var title ='Chambre '+Chambre.id;
+			var content = "	<b>PrixParjour </b>: "+Chambre.get('prixParJour')+"<br> <b>Nombre de lit simple</b> : "+Chambre.get('litSimple')+"<br> <b>Nombre de lit double</b> : "+Chambre.get('litDouble')+"<br> <b>Nombre de lit jumeau</b> : "+Chambre.get('litJumeau');			
+			
+			$("#popover"+Chambre.id).popover({ title: title, content: content, trigger: 'hover' , html:true, placement: 'top'});
 		});
 
 	}

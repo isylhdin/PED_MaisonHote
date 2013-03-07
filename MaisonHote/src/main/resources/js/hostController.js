@@ -62,8 +62,8 @@ function saveChambreIntoLocalStorage(fileContent){
 		
 		chambresPourCalendrier.add(chambre);
 	}
-
 }
+
 
 function saveresaIntoLocalStorage(fileContent){
 	window.reser = jQuery.parseJSON(fileContent);
@@ -78,6 +78,18 @@ function saveresaIntoLocalStorage(fileContent){
 		reservations.add(resa);
 
 	}
+}
+
+
+function savehouse_config_prestationsIntoLocalStorage(fileContent){
+	console.log("prestation dans le cache !")
+	var prestations = jQuery.parseJSON(fileContent);
+
+	for(var i=0; i<prestations.length;i++){
+		var prestation = new Prestation(prestations[i]);
+		prestation.save();	
+	}
+
 }
 
 
@@ -117,7 +129,7 @@ function getEntryPointFile(file){
  */
 function downloadRequiredFiles(){
 
-	window.requiredFiles = ['house_config.json','resa.json'];
+	window.requiredFiles = ['house_config_chambres.json','house_config_prestations.json','resa.json'];
 
 	getEntryPointFile(requiredFiles[0]);
 
@@ -133,16 +145,16 @@ function downloadRequiredFiles(){
 				// on le crée sur le serveur
 				createNewFile(fichier, function(reponse){	
 					window.idFichier = reponse.id;
-					console.log("le fichier "+fichier+" a été créé sur le serveur, il a l'id "+idFichier);
+					console.log("un fichier a été créé sur le serveur, il a l'id "+idFichier);
 				});
 				
 			}
 			else{
-				console.log("le fichier "+fichier+" était deja sur le serveur, il a l'id "+reponse.items[0].id);
+				console.log("le fichier "+reponse.items[0].title+" était deja sur le serveur, il a l'id "+reponse.items[0].id);
 				
 				//pour appeler la bonne méthode qui va sauvagegarder dans le cache, on retire .json au nom du fichier
 				var reg=new RegExp("[.]+", "g"); 
-				var tableau=fichier.split(reg);
+				var tableau=reponse.items[0].title.split(reg);
 				var name = tableau[0]; //contient "resa" par exemple
 
 				tpl.downloadFile(reponse.items[0] , eval("save"+name+"IntoLocalStorage"));
