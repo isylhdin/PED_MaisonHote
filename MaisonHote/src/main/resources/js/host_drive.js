@@ -18,7 +18,7 @@ function handleAuthResultDrive (authResult) {
 	//si connexion réussie + token récupéré
 	if (authResult && !authResult.error) {
 
-		console.log(authResult);
+		//console.log(authResult);
 		var token = new Token(authResult);
 		token.save();
 		
@@ -144,9 +144,9 @@ function updateFileDrive (fileId, newContent, callback) {
 function setTokenDrive () {
 	var idToken = localStorage.getItem('token-backbone');
 	var token = jQuery.parseJSON(localStorage.getItem('token-backbone-'+idToken));
-	console.log(token);
+	//console.log(token);
 	gapi.auth.setToken(new Token(token));
-	console.log(gapi.auth.getToken());
+	//console.log(gapi.auth.getToken());
 }
 
 

@@ -56,15 +56,14 @@ var appRouter = Backbone.Router.extend({
 		this.calendarView = new CalendarView();
 		$('#content').html(this.calendarView.el);
 
-		chambresPourCalendrier = new Chambres();
+		chambresPourCalendrier = new Chambres(); 
 		
 		//Reservations
 		reservations = new Reservations();
-
+		
 		//Un calendrier possède un ensemble de réservations
 		calendar = new EventsView({el: $("#calendar"), collection: reservations}).render();
 		reservations.fetch();
-
 	},
 
 	firstConfigChambre: function () {	

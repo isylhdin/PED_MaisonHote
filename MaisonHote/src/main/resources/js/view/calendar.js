@@ -1,8 +1,27 @@
 window.CalendarView = Backbone.View.extend({
+	events : {
+		"click #submit"   : "onSubmit"
+	},
+
 	initialize: function () {
 		// initialisation de la vue
 		console.log('Calendar view initialized !'); 
 		$(this.el).html(_.template(tpl.get('CalendarView')));
+	},
+
+	onSubmit: function(){
+
+		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
+		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()),function(reponse){
+			if (!reponse.error){
+				$('#SaveRow').html("<div id='goodResult' class='alert alert-success'>Vos modifications ont été sauvegardées avec succès ! </div>")
+				$('#SaveRow').fadeOut(3000, function() {
+					$('#SaveRow').remove();
+				});	
+			}else{
+				$('#SaveRow').append("<div id='badResult' class='alert alert-error span2'><strong>Sauvegarde échouée</strong>, veuillez vérifier que vous êtes connecté à Internet et réessayez</div>")
+			}
+		});
 	}
 });
 
@@ -73,22 +92,25 @@ window.EventsView = Backbone.View.extend({
 		var fcEvent = this.$el.fullCalendar('clientEvents', event.get('id'))[0];
 		fcEvent.title = event.get('room');
 		//fcEvent.color = event.get('color');
-		this.$el.fullCalendar('updateEvent', fcEvent, true);           
+		this.$el.fullCalendar('updateEvent', fcEvent, true); 
 	},
 	eventDropOrResize: function(fcEvent) {
 		// Lookup the model that has the ID of the event and update its attributes
 		this.collection.get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});
-		
-		var text = "Veuillez sauvegarder pour que vos modifications soient prises en compte sur le serveur <i id='infoSave' class='icon-info-sign' data-toggle='tooltip'></i>";
-		var contentSaveForm = "<div class='control-group'><label class='control-label'>"+text+"</label>"+
-				   "<div class='controls'><button type='submit' id='submit' class='btn btn-warning'>Enregistrer</button></div></div></div>"; 
-		
-		$('#calendar').before("<div class='row'> <div class='span4 offset4 text-center'>"+ contentSaveForm +"</div></div>");
-		$('#infoSave').tooltip({'title' : 'Si vous ne sauvegardez pas, vos modifications ne seront pas prises en compte lors de votre prochaine connexion'})
-		console.log("il faut sauvegarder sur le serveur");
+
+		//Affiche le bouton pour sauvegarder la reservation sur le serveur après que ses dates de début/fin aient changées
+		if (!$('#SaveRow').length){
+			var text = "Veuillez <strong>sauvegarder</strong> pour que vos modifications soient prises en compte sur le serveur <i id='infoSave' class='icon-info-sign' data-toggle='tooltip'></i>";
+			var contentSaveForm = "<div class='control-group'><label class='control-label'>"+text+"</label>"+
+			"<div class='controls'><button type='submit' id='submit' class='btn btn-warning'>Sauvegarder</button></div></div></div>"; 
+
+			$('#calendar').before("<div id='SaveRow' class='row'> <div class='span4 offset4 text-center alert'>"+ contentSaveForm +"</div></div>");
+			$('#infoSave').tooltip({'title' : 'Si vous ne sauvegardez pas, vos modifications ne seront pas prises en compte lors de votre prochaine connexion'});
+		}
 	},
 	destroy: function(event) {
-		this.$el.fullCalendar('removeEvents', event.id, true);         
+		this.$el.fullCalendar('removeEvents', event.id, true);
+		this.updateOnServer();
 	},
 
 	eventContentToDisplay: function(event) {
@@ -96,8 +118,8 @@ window.EventsView = Backbone.View.extend({
 
 		if (view.name === "basicWeek") {
 			return "M/Mme " + event.lastName + "\n" + event.nbPersons +
-				(event.nbPersons > 1 ? " personnes" : " personne") +
-				(event.phone ? "\n☎ " + event.phone : "");
+			(event.nbPersons > 1 ? " personnes" : " personne") +
+			(event.phone ? "\n☎ " + event.phone : "");
 		} else if (view.name === "month") {
 			return "Chambre " + event.room + " | " + event.lastName;
 		} else {
@@ -112,11 +134,22 @@ window.EventsView = Backbone.View.extend({
 			$('#caption').append("<div id='popover"+ Chambre.id +"' class='span1' rel='popover'  style='background-color:"+ couleurs[Chambre.id]+";'></div>");
 			var title ='Chambre '+Chambre.id;
 			var content = "	<b>PrixParjour </b>: "+Chambre.get('prixParJour')+"<br> <b>Nombre de lit simple</b> : "+Chambre.get('litSimple')+"<br> <b>Nombre de lit double</b> : "+Chambre.get('litDouble')+"<br> <b>Nombre de lit jumeau</b> : "+Chambre.get('litJumeau');			
-			
+
 			$("#popover"+Chambre.id).popover({ title: title, content: content, trigger: 'hover' , html:true, placement: 'top'});
 		});
-
+	},
+	
+	updateOnServer : function(){
+		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
+		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()),function(reponse){
+			if (!reponse.error){
+				console.log('réservations mises à jour sur le serveur'); 
+			}else{
+				console.log('les réservations n\'ont pas pu être mise à jour sur le serveur'); 
+			}
+		});
 	}
+	
 });
 
 window.EventView = Backbone.View.extend({
@@ -185,7 +218,7 @@ window.EventView = Backbone.View.extend({
 					'nbPersons': nbPersons});
 
 		if (this.model.isNew()) {
-			console.log("nouvelle rÃ©servation dÃ©tectÃ©e");
+			console.log("nouvelle réservation détectée");
 			this.model.set({'id': this.collection.nextId()});
 
 			var self = this;
@@ -198,7 +231,7 @@ window.EventView = Backbone.View.extend({
 					var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 					updateFile(obj.idFichier, JSON.stringify(self.collection.toJSON() ),function(reponse){	
 						if (!reponse.error){
-							console.log("rÃ©servation sauvegardÃ©e sur le serveur");
+							console.log("réservation sauvegardée sur le serveur");
 						}
 					});
 
@@ -212,8 +245,16 @@ window.EventView = Backbone.View.extend({
 
 
 		} else {
-			console.log("edition de rÃ©servation");
+			console.log("edition de réservation");
+			var self = this;
+			
 			this.model.save({}, {success: this.close});
+			var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
+			updateFile(obj.idFichier, JSON.stringify(reservations.toJSON() ),function(reponse){	
+				if (!reponse.error){
+					console.log("réservation sauvegardée sur le serveur");
+				}
+			});
 		}
 	},
 	close: function() {
