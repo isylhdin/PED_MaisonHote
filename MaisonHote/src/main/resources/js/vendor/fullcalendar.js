@@ -347,7 +347,7 @@ function Calendar(element, options, eventSources) {
 				header.deactivateButton(oldView.name);
 			}
 			header.activateButton(newViewName);
-			
+
 			renderView(); // after height has been set, will make absoluteViewElement's position=relative, then set to null
 			
 			content.css('overflow', '');
@@ -366,6 +366,7 @@ function Calendar(element, options, eventSources) {
 	
 	
 	function renderView(inc) {
+
 		if (elementVisible()) {
 			ignoreWindowResize++; // because renderEvents might temporarily change the height before setSize is reached
 
@@ -870,7 +871,7 @@ function EventManager(options, _sources) {
 	var trigger = t.trigger;
 	var getView = t.getView;
 	var reportEvents = t.reportEvents;
-	
+
 	
 	// locals
 	var stickySource = { events: [] };
@@ -2012,14 +2013,14 @@ function BasicWeekView(element, calendar) {
 	
 	// exports
 	t.render = render;
-	
+
 	
 	// imports
 	BasicView.call(t, element, calendar, 'basicWeek');
 	var opt = t.opt;
 	var renderBasic = t.renderBasic;
 	var formatDates = calendar.formatDates;
-	
+
 
 	function render(date, delta) {
 		if (delta) {
@@ -2125,8 +2126,8 @@ function BasicView(element, calendar, viewName) {
 	t.getDaySegmentContainer = function() { return daySegmentContainer };
 	t.isBasicWeek = isBasicWeek;
 	t.getMaxEventHeight = getMaxEventHeight;
-	
-	
+	t.eventContentToDisplay = calendar.options.eventContentToDisplay;
+
 	// imports
 	View.call(t, element, calendar, viewName);
 	OverlayManager.call(t);
@@ -2139,7 +2140,7 @@ function BasicView(element, calendar, viewName) {
 	var clearOverlays = t.clearOverlays;
 	var daySelectionMousedown = t.daySelectionMousedown;
 	var formatDate = calendar.formatDate;
-	
+
 	
 	// locals
 	
@@ -2669,7 +2670,7 @@ function BasicView(element, calendar, viewName) {
 function BasicEventRenderer() {
 	var t = this;
 	
-	
+
 	// exports
 	t.renderEvents = renderEvents;
 	t.compileDaySegs = compileSegs; // for DayEventRenderer
@@ -4598,6 +4599,8 @@ function DayEventRenderer() {
 	var clearSelection = t.clearSelection;
 	var isBasicWeek = t.isBasicWeek;
 	var getMaxEventHeight = t.getMaxEventHeight;
+	var eventContentToDisplay = t.eventContentToDisplay;
+
 	
 	/* Rendering
 	-----------------------------------------------------------------------------*/
@@ -4757,7 +4760,9 @@ function DayEventRenderer() {
 					"</span>";
 			}
 			html +=
-				"<span class='fc-event-title'>" + htmlEscape(event.title) + "</span>" +
+				"<span class='fc-event-title'>" +
+				htmlEscape(eventContentToDisplay(event)) +
+				"</span>" +
 				"</div>";
 			if (seg.isEnd && isEventResizable(event)) {
 				html +=
@@ -5069,11 +5074,11 @@ function SelectionManager() {
 	var defaultSelectionEnd = t.defaultSelectionEnd;
 	var renderSelection = t.renderSelection;
 	var clearSelection = t.clearSelection;
-	
+	var coordinateGrid = t.coordinateGrid;
 	
 	// locals
 	var selected = false;
-
+	var origRow;
 
 
 	// unselectAuto
@@ -5109,12 +5114,11 @@ function SelectionManager() {
 	}
 	
 	
-	function reportSelection(startDate, endDate, allDay, ev) {
+	function reportSelection(startDate, endDate, allDay, ev, origRow) {
 		selected = true;
-		trigger('select', null, startDate, endDate, allDay, ev);
+		trigger('select', null, startDate, endDate, allDay, ev, origRow);
 	}
-	
-	
+
 	function daySelectionMousedown(ev) { // not really a generic manager method, oh well
 		var cellDate = t.cellDate;
 		var cellIsAllDay = t.cellIsAllDay;
@@ -5126,6 +5130,7 @@ function SelectionManager() {
 			var dates;
 			hoverListener.start(function(cell, origCell) { // TODO: maybe put cellDate/cellIsAllDay info in cell
 				clearSelection();
+				origRow = origCell.row;
 				if (cell && cellIsAllDay(cell)) {
 					dates = [ cellDate(origCell), cellDate(cell) ].sort(cmp);
 					renderSelection(dates[0], dates[1], true);
@@ -5139,7 +5144,7 @@ function SelectionManager() {
 					if (+dates[0] == +dates[1]) {
 						reportDayClick(dates[0], true, ev);
 					}
-					reportSelection(dates[0], dates[1], true, ev);
+					reportSelection(dates[0], dates[1], true, ev, origRow);
 				}
 			});
 		}
