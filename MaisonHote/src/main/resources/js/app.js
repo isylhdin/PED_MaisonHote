@@ -82,9 +82,9 @@ var appRouter = Backbone.Router.extend({
 	},
 
 	editPrestation: function () {	
-		console.log("Welcome back config!");
+		console.log("Welcome back prestationConfig!");
 		this.editPrestationView = new EditPrestationView();
-		$('#content').html(this.editPresationView.el);
+		$('#content').html(this.editPrestationView.el);
 	},
 
 	ficheSejour: function () {	

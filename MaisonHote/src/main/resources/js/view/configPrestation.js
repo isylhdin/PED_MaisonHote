@@ -5,7 +5,7 @@ window.EditPrestationView = Backbone.View.extend({
 		"click a.btn-primary" : "onAcceptDelete",
 		"click .btn-success"  : "onAdd",
 		"click #submit" 	  : "onSubmit",
-		"focus input"	 : "onInputGetFocus",
+		//"focus input"	 : "onInputGetFocus",
 	},
 
 	initialize: function () {
@@ -33,7 +33,7 @@ window.EditPrestationView = Backbone.View.extend({
 				prestations.each(function(Prestation){
 					//Quand une chambre est modifiée on la réaffiche pour que la vue soit à jour
 					Prestation.bind('change', self.reRenderPrestation);
-					Prestation.bind('invalid ', self.onError);
+					//Prestation.bind('invalid ', self.onError);
 					this.template = _.template(tpl.get('ServiceView'));
 					$(self.el).append(this.template(Prestation.toJSON()));
 					nbPrest++;
@@ -109,7 +109,7 @@ window.EditPrestationView = Backbone.View.extend({
 
 		//supprime la chambre de la collection
 		var prestation =  window.prestations.get(window.id);
-		prestations.remove(prestations);
+		prestations.remove(prestation);
 
 		//supprime la chambre de la vue
 		$('#row'+window.id).fadeOut(1000, function() {
@@ -142,7 +142,7 @@ window.EditPrestationView = Backbone.View.extend({
 		$('#add').before(this.template(prestation.toJSON()));
 
 		prestation.bind('change', this.reRenderPrestation);
-		prestation.bind('invalid ', this.onError);
+		//prestation.bind('invalid ', this.onError);
 
 		//this.disableAddButton();
 	},
@@ -223,7 +223,7 @@ window.EditPrestationView = Backbone.View.extend({
 				console.log(prestation);
 			}
 		}
-	},
+	}
 
 	// disableAddButton: function(){
 		// //on ne peut avoir que 5 chambres max
@@ -232,11 +232,11 @@ window.EditPrestationView = Backbone.View.extend({
 		// }
 	// },
 	
-	onError: function( model, error) {
-		 success = window.validateForm.onError(model, error, this);
-	},
-
-	onInputGetFocus: function( e ) {
-		 window.validateForm.onInputGetFocus(e);
-	}
+	// onError: function( model, error) {
+		 // success = window.validateForm.onError(model, error, this);
+	// },
+// 
+	// onInputGetFocus: function( e ) {
+		 // window.validateForm.onInputGetFocus(e);
+	// }
 });
