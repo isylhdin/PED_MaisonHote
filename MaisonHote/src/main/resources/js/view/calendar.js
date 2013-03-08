@@ -12,7 +12,7 @@ window.CalendarView = Backbone.View.extend({
 	onSubmit: function() {
 
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
-		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse){
+		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
 			if (!reponse.error) {
 				$('#SaveRow').html("<div id='goodResult' class='alert alert-success'>Vos modifications ont Ã©tÃ© sauvegardÃ©es avec succÃ¨s ! </div>")
 				$('#SaveRow').fadeOut(3000, function() {
@@ -35,8 +35,9 @@ window.EventsView = Backbone.View.extend({
 		this.collection.bind('destroy', this.destroy);
 
 		this.eventView = new EventView({el: $('#eventDialog')});
-		chambresPourCalendrier.bind('replace reset add remove', this.caption);  
-		chambresPourCalendrier.fetch(); //si on refresh la page ÃƒÂ§a va chercher les chambres dans le localstorage
+		chambresPourCalendrier.bind('replace reset add remove', this.caption);
+		//si on refresh la page ça va chercher les chambres dans le localstorage
+		chambresPourCalendrier.fetch();
 	},
 	render: function() {
 		$(this.el).fullCalendar({
@@ -62,7 +63,7 @@ window.EventsView = Backbone.View.extend({
 			/* possible !
 			roomNames: {first: "Chambre 1", snd: "Chambre 2", third: "Chambre 3"},
 			roomNames: ["Chambre 1", "Chambre 2", "Chambre 3"]
-			 */
+			*/
 		});
 	},
 	addAll: function() {
@@ -98,7 +99,8 @@ window.EventsView = Backbone.View.extend({
 		// Lookup the model that has the ID of the event and update its attributes
 		this.collection.get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});
 
-		//Affiche le bouton pour sauvegarder la reservation sur le serveur aprÃ¨s que ses dates de dÃ©but/fin aient changÃ©es
+		// Affiche le bouton pour sauvegarder la réservation sur le serveur
+		// après que ses dates de début/fin aient changé
 		if (!$('#SaveRow').length){
 			var text = "Veuillez <strong>sauvegarder</strong> pour que vos modifications soient prises en compte sur le serveur <i id='infoSave' class='icon-info-sign' data-toggle='tooltip'></i>";
 			var contentSaveForm = "<div class='control-group'><label class='control-label'>" + text + "</label>"+
@@ -150,9 +152,9 @@ window.EventsView = Backbone.View.extend({
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
 			if (!reponse.error) {
-				console.log('rÃ©servations mises Ã  jour sur le serveur'); 
+				console.log("réservations mises à jour sur le serveur"); 
 			} else {
-				console.log('les rÃ©servations n\'ont pas pu Ãªtre mise Ã  jour sur le serveur'); 
+				console.log("les réservations n'ont pas pu être mises à jour sur le serveur"); 
 			}
 		});
 	}
@@ -226,7 +228,7 @@ window.EventView = Backbone.View.extend({
 		});
 
 		if (this.model.isNew()) {
-			console.log("nouvelle rÃ©servation dÃ©tectÃ©e");
+			console.log("nouvelle réservation détectée");
 			this.model.set({'id': this.collection.nextId()});
 
 			var self = this;
@@ -239,7 +241,7 @@ window.EventView = Backbone.View.extend({
 					var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 					updateFile(obj.idFichier, JSON.stringify(self.collection.toJSON()), function(reponse) {	
 						if (!reponse.error){
-							console.log("rÃ©servation sauvegardÃ©e sur le serveur");
+							console.log("réservation sauvegardée sur le serveur");
 						}
 					});
 
@@ -252,14 +254,14 @@ window.EventView = Backbone.View.extend({
 			});
 
 		} else {
-			console.log("edition de rÃ©servation");
+			console.log("édition de réservation");
 			var self = this;
 			
 			this.model.save({}, {success: this.close});
 			var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 			updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {	
 				if (!reponse.error) {
-					console.log("rÃ©servation sauvegardÃ©e sur le serveur");
+					console.log("réservation sauvegardée sur le serveur");
 				}
 			});
 		}

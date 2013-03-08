@@ -233,7 +233,8 @@ window.EditChambreView = Backbone.View.extend({
 	 * les chambres suivantes
 	 */
 	deleteFromCache: function() {
-		console.log("id de la chambre supprimée = "+id + " et nbChambre = "+nbChambres);
+		console.log("id de la chambre supprimée = " + id +
+					" et nbChambre = " + nbChambres);
 		if (id <= nbChambres) {
 			localStorage.removeItem("chambres-backbone-"+window.id);
 			for (var i = window.id + 1; i <= nbChambres; i++){
@@ -247,7 +248,7 @@ window.EditChambreView = Backbone.View.extend({
 
 	disableAddButton: function() {
 		//on ne peut avoir que 5 chambres max
-		if (nbChambres == 5) {
+		if (nbChambres === 5) {
 			$('.btn-success').attr("disabled", true);
 		}
 	},
