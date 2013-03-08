@@ -60,6 +60,7 @@ function saveChambreIntoLocalStorage(fileContent){
 		var chambre = new Chambre(chambres[i]);
 		chambre.save();	
 		
+		//nécessaire pour afficher la légende du calendrier
 		chambresPourCalendrier.add(chambre);
 	}
 }

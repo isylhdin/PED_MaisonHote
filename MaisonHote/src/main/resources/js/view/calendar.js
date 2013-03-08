@@ -72,7 +72,15 @@ window.EventsView = Backbone.View.extend({
 	},
 	eventDropOrResize: function(fcEvent) {
 		// Lookup the model that has the ID of the event and update its attributes
-		this.collection.get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});            
+		this.collection.get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});
+		
+		var text = "Veuillez sauvegarder pour que vos modifications soient prises en compte sur le serveur <i id='infoSave' class='icon-info-sign' data-toggle='tooltip'></i>";
+		var contentSaveForm = "<div class='control-group'><label class='control-label'>"+text+"</label>"+
+				   "<div class='controls'><button type='submit' id='submit' class='btn btn-warning'>Enregistrer</button></div></div></div>"; 
+		
+		$('#calendar').before("<div class='row'> <div class='span4 offset4 text-center'>"+ contentSaveForm +"</div></div>");
+		$('#infoSave').tooltip({'title' : 'Si vous ne sauvegardez pas, vos modifications ne seront pas prises en compte lors de votre prochaine connexion'})
+		console.log("il faut sauvegarder sur le serveur");
 	},
 	destroy: function(event) {
 		this.$el.fullCalendar('removeEvents', event.id, true);         
