@@ -186,7 +186,7 @@ window.EditPrestationView = Backbone.View.extend({
 					$('#goodResult').css('visibility','hidden');
 				});	
 			}else{
-				console.log("ERROR § "+ nbPrestationsSauveesDansCache +" chambres sur "+nbPrest+" ont été sauvegardées dans le cache");
+				console.log("ERROR § "+ nbPrestationsSauveesDansCache +" prestations sur "+nbPrest+" ont été sauvegardées dans le cache");
 				$('#badResult').css('visibility','visible');
 				$('#badResult').show();
 				$('#badResult').fadeOut(15000, function() {
