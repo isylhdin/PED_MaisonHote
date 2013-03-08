@@ -12,12 +12,12 @@ window.EventsView = Backbone.View.extend({
 
 		this.collection.bind('reset', this.addAll);
 		this.collection.bind('add', this.addOne);
-		this.collection.bind('change', this.change);            
+		this.collection.bind('change', this.change);
 		this.collection.bind('destroy', this.destroy);
 
 		this.eventView = new EventView({el: $('#eventDialog')});
 		chambresPourCalendrier.bind('replace reset add remove', this.caption);  
-		chambresPourCalendrier.fetch(); //si on refresh la page ça va chercher les chambres dans le localstorage
+		chambresPourCalendrier.fetch(); //si on refresh la page Ã§a va chercher les chambres dans le localstorage
 	},
 	render: function() {
 		$(this.el).fullCalendar({
@@ -36,10 +36,11 @@ window.EventsView = Backbone.View.extend({
 			eventDrop: this.eventDropOrResize,
 			eventResize: this.eventDropOrResize,
 			height: getWindowHeight() - getBodyPad(),
-			roomsNb: 3,
+			roomsNb: chambresPourCalendrier.length,
 			roomColWidth: 0.1,
-			rowHeightForEvents: true
-			/* impossible
+			rowHeightForEvents: true,
+			eventContentToDisplay: this.eventContentToDisplay
+			/* possible !
 			roomNames: {first: "Chambre 1", snd: "Chambre 2", third: "Chambre 3"},
 			roomNames: ["Chambre 1", "Chambre 2", "Chambre 3"]
 			 */
@@ -51,16 +52,20 @@ window.EventsView = Backbone.View.extend({
 	addOne: function(event) {
 		this.$el.fullCalendar('renderEvent', event.toJSON(), true);
 	},        
-	select: function(startDate, endDate) {
+	select: function(startDate, endDate, allDay, ev, origRow) {
 		this.eventView.collection = this.collection;
 		this.eventView.model = new Reservation({start: startDate, end: endDate});
-		//this.eventView.model.bind('invalid', this.eventView.onError);
+		if (this.$el.fullCalendar('getView').name === "basicWeek") {
+			var roomNum = origRow + 1;
+			this.eventView.model.set({
+				room: chambresPourCalendrier.get(roomNum).id/*,
+				color: couleurs[roomNum]*/
+			});
+		}
 		this.eventView.render();
 	},
 	eventClick: function(fcEvent) {
-		// utiliser l'id lorsque ce sera sauvegard�, pas firstName
 		this.eventView.model = this.collection.get(fcEvent.id);
-		//this.eventView.model = this.collection.where({firstName: fcEvent.firstName})[0];
 		this.eventView.render();
 	},
 	change: function(event) {
@@ -77,7 +82,20 @@ window.EventsView = Backbone.View.extend({
 	destroy: function(event) {
 		this.$el.fullCalendar('removeEvents', event.id, true);         
 	},
-	
+
+	eventContentToDisplay: function(event) {
+		var view = this.$el.fullCalendar('getView');
+
+		if (view.name === "basicWeek") {
+			return "M/Mme " + event.lastName + "\n" + event.nbPersons +
+				(event.nbPersons > 1 ? " personnes" : " personne") +
+				(event.phone ? "\n☎ " + event.phone : "");
+		} else if (view.name === "month") {
+			return "Chambre " + event.room + " | " + event.lastName;
+		} else {
+			return event.title;
+		}
+	},
 
 	caption : function(){
 		$('#caption').empty();
@@ -104,6 +122,10 @@ window.EventView = Backbone.View.extend({
 
 	render: function() {
 		var isNewModel = this.model.isNew();
+		if (isNewModel && this.model.get('room')) {
+			//document.getElementById("room").disabled = true;
+			//$("#room").prop('disabled', true);
+		}
 		var buttons = {'Ok' : {text: 'Ok', click: this.save,
 			class: "btn btn-primary"}};
 		if (!isNewModel) {
@@ -146,7 +168,7 @@ window.EventView = Backbone.View.extend({
 		var nbPersons = validateForm.getField('nbPersons').val();
 
 		this.model.set({
-			'title': "Chambre " + room + " | " + lastName,
+			'title': "",
 			'lastName': lastName,
 			'firstName': firstName,
 			'phone': phone,
@@ -155,7 +177,7 @@ window.EventView = Backbone.View.extend({
 					'nbPersons': nbPersons});
 
 		if (this.model.isNew()) {
-			console.log("nouvelle réservation détectée");
+			console.log("nouvelle rÃ©servation dÃ©tectÃ©e");
 			this.model.set({'id': this.collection.nextId()});
 
 			var self = this;
@@ -168,7 +190,7 @@ window.EventView = Backbone.View.extend({
 					var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 					updateFile(obj.idFichier, JSON.stringify(self.collection.toJSON() ),function(reponse){	
 						if (!reponse.error){
-							console.log("réservation sauvegardée sur le serveur");
+							console.log("rÃ©servation sauvegardÃ©e sur le serveur");
 						}
 					});
 
@@ -182,7 +204,7 @@ window.EventView = Backbone.View.extend({
 
 
 		} else {
-			console.log("edition de réservation");
+			console.log("edition de rÃ©servation");
 			this.model.save({}, {success: this.close});
 		}
 	},
