@@ -1,7 +1,11 @@
- 			<div class="row">
-              <div class="hero-unit">
+   		<div class="row" id="row<%= id %>">
+            <!-- first span -->
+            <div class="span6">
                 <h2>Prestation <%= id %></h2>
-                <form class="form-horizontal">
+ 
+            <div class="row-fluid">
+			  <div class="span12">
+    			<form class="form-horizontal">
                   <div class="control-group">
                     <label class="control-label" for="inputTitleP">Intitulé</label>
                     <div class="controls">
@@ -26,7 +30,12 @@
                       <input type="text" name="comment" id="inputCommentP<%= id %>" value="<%= comment %>" placeholder="Commentaire">
                     </div>
                   </div>
+
+                   <a class="btn btn-danger" id="<%= id %>" data-id="<%= id %>" ><i class="icon-trash icon-white"></i> Delete</a>
                  </form>
                </div>
              </div>
+           </div> 
+          </div> 
+
              
