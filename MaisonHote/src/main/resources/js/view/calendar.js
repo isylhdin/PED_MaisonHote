@@ -1,32 +1,32 @@
 window.CalendarView = Backbone.View.extend({
-	events : {
+	events: {
 		"click #submit"   : "onSubmit"
 	},
 
-	initialize: function () {
+	initialize: function() {
 		// initialisation de la vue
 		console.log('Calendar view initialized !'); 
 		$(this.el).html(_.template(tpl.get('CalendarView')));
 	},
 
-	onSubmit: function(){
+	onSubmit: function() {
 
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
-		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()),function(reponse){
-			if (!reponse.error){
-				$('#SaveRow').html("<div id='goodResult' class='alert alert-success'>Vos modifications ont été sauvegardées avec succès ! </div>")
+		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse){
+			if (!reponse.error) {
+				$('#SaveRow').html("<div id='goodResult' class='alert alert-success'>Vos modifications ont Ã©tÃ© sauvegardÃ©es avec succÃ¨s ! </div>")
 				$('#SaveRow').fadeOut(3000, function() {
 					$('#SaveRow').remove();
 				});	
-			}else{
-				$('#SaveRow').append("<div id='badResult' class='alert alert-error span2'><strong>Sauvegarde échouée</strong>, veuillez vérifier que vous êtes connecté à Internet et réessayez</div>")
+			} else {
+				$('#SaveRow').append("<div id='badResult' class='alert alert-error span2'><strong>Sauvegarde Ã©chouÃ©e</strong>, veuillez vÃ©rifier que vous Ãªtes connectÃ© Ã  Internet et rÃ©essayez</div>")
 			}
 		});
 	}
 });
 
 window.EventsView = Backbone.View.extend({
-	initialize: function(){
+	initialize: function() {
 		_.bindAll(this); 
 
 		this.collection.bind('reset', this.addAll);
@@ -36,7 +36,7 @@ window.EventsView = Backbone.View.extend({
 
 		this.eventView = new EventView({el: $('#eventDialog')});
 		chambresPourCalendrier.bind('replace reset add remove', this.caption);  
-		chambresPourCalendrier.fetch(); //si on refresh la page Ã§a va chercher les chambres dans le localstorage
+		chambresPourCalendrier.fetch(); //si on refresh la page ÃƒÂ§a va chercher les chambres dans le localstorage
 	},
 	render: function() {
 		$(this.el).fullCalendar({
@@ -90,7 +90,7 @@ window.EventsView = Backbone.View.extend({
 	change: function(event) {
 		// Look up the underlying event in the calendar and update its details from the model
 		var fcEvent = this.$el.fullCalendar('clientEvents', event.get('id'))[0];
-		fcEvent.title = event.get('room');
+		fcEvent.title = this.eventContentToDisplay(event);
 		//fcEvent.color = event.get('color');
 		this.$el.fullCalendar('updateEvent', fcEvent, true); 
 	},
@@ -98,13 +98,13 @@ window.EventsView = Backbone.View.extend({
 		// Lookup the model that has the ID of the event and update its attributes
 		this.collection.get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});
 
-		//Affiche le bouton pour sauvegarder la reservation sur le serveur après que ses dates de début/fin aient changées
+		//Affiche le bouton pour sauvegarder la reservation sur le serveur aprÃ¨s que ses dates de dÃ©but/fin aient changÃ©es
 		if (!$('#SaveRow').length){
 			var text = "Veuillez <strong>sauvegarder</strong> pour que vos modifications soient prises en compte sur le serveur <i id='infoSave' class='icon-info-sign' data-toggle='tooltip'></i>";
-			var contentSaveForm = "<div class='control-group'><label class='control-label'>"+text+"</label>"+
+			var contentSaveForm = "<div class='control-group'><label class='control-label'>" + text + "</label>"+
 			"<div class='controls'><button type='submit' id='submit' class='btn btn-warning'>Sauvegarder</button></div></div></div>"; 
 
-			$('#calendar').before("<div id='SaveRow' class='row'> <div class='span4 offset4 text-center alert'>"+ contentSaveForm +"</div></div>");
+			$('#calendar').before("<div id='SaveRow' class='row'> <div class='span4 offset4 text-center alert'>" + contentSaveForm +"</div></div>");
 			$('#infoSave').tooltip({'title' : 'Si vous ne sauvegardez pas, vos modifications ne seront pas prises en compte lors de votre prochaine connexion'});
 		}
 	},
@@ -129,23 +129,30 @@ window.EventsView = Backbone.View.extend({
 
 	caption : function(){
 		$('#caption').empty();
-		chambresPourCalendrier.each(function(Chambre){
+		chambresPourCalendrier.each(function(Chambre) {
 
-			$('#caption').append("<div id='popover"+ Chambre.id +"' class='span1' rel='popover'  style='background-color:"+ couleurs[Chambre.id]+";'></div>");
+			$('#caption').append("<div id='popover"+ Chambre.id +
+						"' class='span1' rel='popover'  style='background-color:" +
+						couleurs[Chambre.id]+";'></div>");
 			var title ='Chambre '+Chambre.id;
-			var content = "	<b>PrixParjour </b>: "+Chambre.get('prixParJour')+"<br> <b>Nombre de lit simple</b> : "+Chambre.get('litSimple')+"<br> <b>Nombre de lit double</b> : "+Chambre.get('litDouble')+"<br> <b>Nombre de lit jumeau</b> : "+Chambre.get('litJumeau');			
+			var content = "	<b>PrixParjour </b>: "+ Chambre.get('prixParJour') +
+						"<br> <b>Nombre de lit simple</b> : " +	Chambre.get('litSimple') +
+						"<br> <b>Nombre de lit double</b> : " +	Chambre.get('litDouble') +
+						"<br> <b>Nombre de lit jumeau</b> : " + Chambre.get('litJumeau');			
 
-			$("#popover"+Chambre.id).popover({ title: title, content: content, trigger: 'hover' , html:true, placement: 'top'});
+			$("#popover"+Chambre.id).popover({
+				title: title, content: content, trigger: 'hover', html: true, placement: 'top'
+			});
 		});
 	},
 	
-	updateOnServer : function(){
+	updateOnServer : function() {
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
-		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()),function(reponse){
-			if (!reponse.error){
-				console.log('réservations mises à jour sur le serveur'); 
-			}else{
-				console.log('les réservations n\'ont pas pu être mise à jour sur le serveur'); 
+		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
+			if (!reponse.error) {
+				console.log('rÃ©servations mises Ã  jour sur le serveur'); 
+			} else {
+				console.log('les rÃ©servations n\'ont pas pu Ãªtre mise Ã  jour sur le serveur'); 
 			}
 		});
 	}
@@ -153,7 +160,7 @@ window.EventsView = Backbone.View.extend({
 });
 
 window.EventView = Backbone.View.extend({
-	events : {
+	events: {
 		"click #btnFicheSejour" : "btnFicheSejour"
 	},
 	initialize: function() {
@@ -214,11 +221,12 @@ window.EventView = Backbone.View.extend({
 			'firstName': firstName,
 			'phone': phone,
 			'email': (email.length > 0) ? email : '',
-					'room': room,
-					'nbPersons': nbPersons});
+			'room': room,
+			'nbPersons': nbPersons
+		});
 
 		if (this.model.isNew()) {
-			console.log("nouvelle réservation détectée");
+			console.log("nouvelle rÃ©servation dÃ©tectÃ©e");
 			this.model.set({'id': this.collection.nextId()});
 
 			var self = this;
@@ -229,30 +237,29 @@ window.EventView = Backbone.View.extend({
 					self.close();
 
 					var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
-					updateFile(obj.idFichier, JSON.stringify(self.collection.toJSON() ),function(reponse){	
+					updateFile(obj.idFichier, JSON.stringify(self.collection.toJSON()), function(reponse) {	
 						if (!reponse.error){
-							console.log("réservation sauvegardée sur le serveur");
+							console.log("rÃ©servation sauvegardÃ©e sur le serveur");
 						}
 					});
 
 
 				},
-				error : function() {
+				error: function() {
 					console.log("une erreur s'est produite lors de la sauvegarde dans le cache");
 					self.close();
 				}
 			});
 
-
 		} else {
-			console.log("edition de réservation");
+			console.log("edition de rÃ©servation");
 			var self = this;
 			
 			this.model.save({}, {success: this.close});
 			var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
-			updateFile(obj.idFichier, JSON.stringify(reservations.toJSON() ),function(reponse){	
-				if (!reponse.error){
-					console.log("réservation sauvegardée sur le serveur");
+			updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {	
+				if (!reponse.error) {
+					console.log("rÃ©servation sauvegardÃ©e sur le serveur");
 				}
 			});
 		}

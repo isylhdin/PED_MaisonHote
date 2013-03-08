@@ -5074,7 +5074,6 @@ function SelectionManager() {
 	var defaultSelectionEnd = t.defaultSelectionEnd;
 	var renderSelection = t.renderSelection;
 	var clearSelection = t.clearSelection;
-	var coordinateGrid = t.coordinateGrid;
 	
 	// locals
 	var selected = false;
