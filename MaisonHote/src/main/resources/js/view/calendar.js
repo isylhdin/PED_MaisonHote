@@ -37,6 +37,7 @@ window.EventsView = Backbone.View.extend({
 
 		this.eventView = new EventView({el: $('#eventDialog')});
 		chambresPourCalendrier.bind('replace reset add remove', this.caption);
+		chambresPourCalendrier.bind('replace reset add remove', this.renderList);
 		//si on refresh la page ça va chercher les chambres dans le localstorage
 		chambresPourCalendrier.fetch();
 	},
@@ -158,9 +159,9 @@ window.EventsView = Backbone.View.extend({
 	},
 	
 	renderList: function() {
+		$("select[name=room]").empty();
 		chambresPourCalendrier.each(function(room) {
-			$("select[name=room]").append("<option value='" + room.get("id") +
-					"%>'><%=" + room.get("id") + "%></option>");
+			$("select[name=room]").append("<option value='" + room.get("id") +"'> Chambre" +  room.get("id") + "</option>");
 		});
 	},
 	
