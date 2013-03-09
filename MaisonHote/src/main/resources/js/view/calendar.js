@@ -219,7 +219,7 @@ window.EventView = Backbone.View.extend({
 		validateForm.getField('firstName').val(this.model.get('firstName'));
 		validateForm.getField('phone').val(this.model.get('phone'));
 		validateForm.getField('email').val(this.model.get('email'));
-		validateForm.getField('room').val(this.model.get('room'));
+		$('select[name=room]').val(this.model.get('room'));
 		validateForm.getField('nbPersons').val(this.model.get('nbPersons'));
 	},
 
