@@ -14,12 +14,12 @@ window.CalendarView = Backbone.View.extend({
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
 			if (!reponse.error) {
-				$('#SaveRow').html("<div id='goodResult' class='alert alert-success'>Vos modifications ont Ã©tÃ© sauvegardÃ©es avec succÃ¨s ! </div>")
+				$('#SaveRow').html("<div id='goodResult' class='alert alert-success'>Vos modifications ont été sauvegardées avec succès ! </div>")
 				$('#SaveRow').fadeOut(3000, function() {
 					$('#SaveRow').remove();
 				});	
 			} else {
-				$('#SaveRow').append("<div id='badResult' class='alert alert-error span2'><strong>Sauvegarde Ã©chouÃ©e</strong>, veuillez vÃ©rifier que vous Ãªtes connectÃ© Ã  Internet et rÃ©essayez</div>")
+				$('#SaveRow').append("<div id='badResult' class='alert alert-error span2'><strong>Sauvegarde échouée</strong>, veuillez vérifier que vous êtes connecté à Internet et réessayez</div>")
 			}
 		});
 	}
