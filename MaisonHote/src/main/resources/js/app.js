@@ -22,7 +22,7 @@ var appRouter = Backbone.Router.extend({
 			//Quand on actualise la page 
 			//on récupère le nom du service de stockage qui est contenu dans le local storage
 			if (currentHost == null) {
-				currentHost =  jQuery.parseJSON(localStorage.getItem('currentHost-backbone-0')).host;
+				currentHost = jQuery.parseJSON(localStorage.getItem('currentHost-backbone-0')).host;
 			}
 
 			setToken();
@@ -54,11 +54,11 @@ var appRouter = Backbone.Router.extend({
 
 	resa: function() {
 		console.log("Welcome back resa!");
-		chambresPourCalendrier = new Chambres(); 
+		chambresPourCalendrier = new Chambres();
 		chambresPourCalendrier.fetch();
 
 		this.calendarView = new CalendarView();
-		$('#content').html(this.calendarView.template({rooms : chambresPourCalendrier}));
+		$('#content').html(this.calendarView.el);
 
 		//Reservations
 		reservations = new Reservations();
@@ -136,7 +136,7 @@ tpl = {
 				'path': '/drive/v2/files',
 				'method': 'GET',
 				'params': {
-					q : "title='"+ fileName+ "'"
+					q : "title='"+ fileName + "'"
 				}	        
 			});	
 

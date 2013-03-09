@@ -34,7 +34,7 @@
 			<label class="control-label" for="room">Chambre :</label>
 			<div class="controls">
 				<select name="room">
-					<% rooms.each(function(room) { %>
+					<% chambresPourCalendrier.each(function(room) { %>
 						<option value="<%= room.get('id') %>"><%= room.get('id') %></option>
 					<% }); %>
 				</select>
@@ -47,7 +47,7 @@
 			</div>
 		</div>
 	</form>
-	<button id="btnFicheSejour" type="submit" class="btn btn-link">Fiche s&eacute;jour</button>
+	<button id="btnFicheSejour" type="submit" class="btn btn-link">Fiche séjour</button>
 </div> 
 <br>
 <div class="row-fluid">
