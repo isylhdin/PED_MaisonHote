@@ -145,7 +145,7 @@ window.EventsView = Backbone.View.extend({
 			$("#caption").append("<div id='popover" + Chambre.id +
 						"' class='span1' rel='popover'  style='background-color:" +
 						couleurs[Chambre.id]+";'></div>");
-			var title ='Chambre '+Chambre.id;
+			var title ='Chambre '+ Chambre.id;
 			var content = "	<b>PrixParjour </b>: "+ Chambre.get('prixParJour') +
 						"<br> <b>Nombre de lit simple</b> : " +	Chambre.get('litSimple') +
 						"<br> <b>Nombre de lit double</b> : " +	Chambre.get('litDouble') +
@@ -154,6 +154,13 @@ window.EventsView = Backbone.View.extend({
 			$("#popover" + Chambre.id).popover({
 				title: title, content: content, trigger: 'hover', html: true, placement: 'top'
 			});
+		});
+	},
+	
+	renderList: function() {
+		chambresPourCalendrier.each(function(room) {
+			$("select[name=room]").append("<option value='" + room.get("id") +
+					"%>'><%=" + room.get("id") + "%></option>");
 		});
 	},
 	
@@ -177,6 +184,7 @@ window.EventView = Backbone.View.extend({
 	initialize: function() {
 		_.bindAll(this);
 		initResaDialog();
+		chambresPourCalendrier.bind('replace reset add remove', this.renderList);
 	},
 
 	render: function() {
@@ -225,7 +233,7 @@ window.EventView = Backbone.View.extend({
 		var email = validateForm.getField('email').val();
 		// roomNum
 		var room = $('select[name=room]').val();
-		//var roomName = $('#room :selected').text();
+		//var roomName = $('select[name=room] :selected').text();
 		var nbPersons = validateForm.getField('nbPersons').val();
 
 		this.model.set({
@@ -245,7 +253,7 @@ window.EventView = Backbone.View.extend({
 
 			var self = this;
 
-			this.model.save(null,{
+			this.model.save(null, {
 				success: function() {
 					self.collection.add(self.model);
 					self.close();
