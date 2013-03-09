@@ -1,12 +1,13 @@
 window.CalendarView = Backbone.View.extend({
+	
 	events: {
 		"click #submit"   : "onSubmit"
 	},
 
 	initialize: function() {
 		// initialisation de la vue
-		console.log('Calendar view initialized !'); 
-		$(this.el).html(_.template(tpl.get('CalendarView')));
+		console.log('Calendar view initialized !');
+		this.template = _.template(tpl.get('CalendarView'));
 	},
 
 	onSubmit: function() {
@@ -42,7 +43,7 @@ window.EventsView = Backbone.View.extend({
 	render: function() {
 		$(this.el).fullCalendar({
 			header: {
-				left: 'prev,next', // 'prev,next today',
+				left: 'prev,next',
 				center: 'title',
 				right: 'basicWeek,month'
 			},
@@ -55,7 +56,7 @@ window.EventsView = Backbone.View.extend({
 			eventClick: this.eventClick,
 			eventDrop: this.eventDropOrResize,
 			eventResize: this.eventDropOrResize,
-			height: getWindowHeight() - getBodyPad(),
+			height: $(document).height() - getBodyPad(),
 			roomsNb: chambresPourCalendrier.length,
 			roomColWidth: 0.1,
 			rowHeightForEvents: true,
@@ -67,19 +68,19 @@ window.EventsView = Backbone.View.extend({
 		});
 	},
 	addAll: function() {
-		this.$el.fullCalendar('addEventSource', this.collection.toJSON(), true);
+		this.$el.fullCalendar("addEventSource", this.collection.toJSON(), true);
 	},
 	addOne: function(event) {
-		this.$el.fullCalendar('renderEvent', event.toJSON(), true);
+		this.$el.fullCalendar("renderEvent", event.toJSON(), true);
 	},        
 	select: function(startDate, endDate, allDay, ev, origRow) {
 		this.eventView.collection = this.collection;
 		this.eventView.model = new Reservation({start: startDate, end: endDate});
-		if (this.$el.fullCalendar('getView').name === "basicWeek") {
+		if (this.$el.fullCalendar("getView").name === "basicWeek") {
 			var roomNum = origRow + 1;
 			this.eventView.model.set({
-				room: chambresPourCalendrier.get(roomNum).id/*,
-				color: couleurs[roomNum]*/
+				room: chambresPourCalendrier.get(roomNum).id,
+				color: couleurs[roomNum]
 			});
 		}
 		this.eventView.render();
@@ -90,10 +91,18 @@ window.EventsView = Backbone.View.extend({
 	},
 	change: function(event) {
 		// Look up the underlying event in the calendar and update its details from the model
-		var fcEvent = this.$el.fullCalendar('clientEvents', event.get('id'))[0];
-		fcEvent.title = this.eventContentToDisplay(event);
-		//fcEvent.color = event.get('color');
-		this.$el.fullCalendar('updateEvent', fcEvent, true); 
+		var fcEvent = this.$el.fullCalendar("clientEvents", event.get('id'))[0],
+			roomNum = event.get("room");
+		fcEvent.color = couleurs[roomNum];
+		fcEvent.lastName = event.get("lastName");
+		fcEvent.firstName = event.get("firstName");
+		fcEvent.phone = event.get("phone");
+		fcEvent.email = event.get("email");
+		fcEvent.room = event.get("room");
+		fcEvent.nbPersons = event.get("nbPersons");
+		fcEvent.title = this.eventContentToDisplay(fcEvent);
+
+		this.$el.fullCalendar("updateEvent", fcEvent, true); 
 	},
 	eventDropOrResize: function(fcEvent) {
 		// Lookup the model that has the ID of the event and update its attributes
@@ -111,44 +120,44 @@ window.EventsView = Backbone.View.extend({
 		}
 	},
 	destroy: function(event) {
-		this.$el.fullCalendar('removeEvents', event.id, true);
+		this.$el.fullCalendar("removeEvents", event.id, true);
 		this.updateOnServer();
 	},
 
-	eventContentToDisplay: function(event) {
-		var view = this.$el.fullCalendar('getView');
+	eventContentToDisplay: function(fcEvent) {
+		var view = this.$el.fullCalendar("getView");
 
 		if (view.name === "basicWeek") {
-			return "M/Mme " + event.lastName + "\n" + event.nbPersons +
-			(event.nbPersons > 1 ? " personnes" : " personne") +
-			(event.phone ? "\n☎ " + event.phone : "");
+			return "M/Mme " + fcEvent.lastName + "\n" + fcEvent.nbPersons +
+			(fcEvent.nbPersons > 1 ? " personnes" : " personne") +
+			(fcEvent.phone ? "\n☎ " + fcEvent.phone : "");
 		} else if (view.name === "month") {
-			return "Chambre " + event.room + " | " + event.lastName;
+			return "Chambre " + fcEvent.room + " | " + fcEvent.lastName;
 		} else {
-			return event.title;
+			return fcEvent.title;
 		}
 	},
 
-	caption : function(){
-		$('#caption').empty();
+	caption: function() {
+		$("#caption").empty();
 		chambresPourCalendrier.each(function(Chambre) {
 
-			$('#caption').append("<div id='popover"+ Chambre.id +
+			$("#caption").append("<div id='popover" + Chambre.id +
 						"' class='span1' rel='popover'  style='background-color:" +
 						couleurs[Chambre.id]+";'></div>");
 			var title ='Chambre '+Chambre.id;
 			var content = "	<b>PrixParjour </b>: "+ Chambre.get('prixParJour') +
 						"<br> <b>Nombre de lit simple</b> : " +	Chambre.get('litSimple') +
 						"<br> <b>Nombre de lit double</b> : " +	Chambre.get('litDouble') +
-						"<br> <b>Nombre de lit jumeau</b> : " + Chambre.get('litJumeau');			
+						"<br> <b>Nombre de lit jumeau</b> : " + Chambre.get('litJumeau');
 
-			$("#popover"+Chambre.id).popover({
+			$("#popover" + Chambre.id).popover({
 				title: title, content: content, trigger: 'hover', html: true, placement: 'top'
 			});
 		});
 	},
 	
-	updateOnServer : function() {
+	updateOnServer: function() {
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
 			if (!reponse.error) {
@@ -176,19 +185,19 @@ window.EventView = Backbone.View.extend({
 			//document.getElementById("room").disabled = true;
 			//$("#room").prop('disabled', true);
 		}
-		var buttons = {'Ok' : {text: 'Ok', click: this.save,
+		var buttons = {'Ok' : {text: "Ok", click: this.save,
 			class: "btn btn-primary"}};
 		if (!isNewModel) {
-			_.extend(buttons, {'Delete': {text: 'Delete',
+			_.extend(buttons, {'Delete': {text: "Delete",
 				click: this.destroy, class: "btn"}});
 		}
-		_.extend(buttons, {'Cancel': {text: 'Cancel',
+		_.extend(buttons, {'Cancel': {text: "Cancel",
 			click: this.close, class: "btn"}});            
 
 		this.resetFormClasses();
 		this.$el.dialog({
 			modal: true,
-			title: (isNewModel ? 'New' : 'Edit') + ' Event',
+			title: (isNewModel ? "New" : "Edit") + " Event",
 			buttons: buttons,
 			open: this.open
 		});
@@ -207,18 +216,21 @@ window.EventView = Backbone.View.extend({
 	},
 
 	save: function() {
-		if ( !$('#resa-form').validate().form())
+		if (!$('#resa-form').validate().form())
 			return;
 
 		var lastName = validateForm.getField('lastName').val();
 		var firstName = validateForm.getField('firstName').val();
 		var phone = validateForm.getField('phone').val();
 		var email = validateForm.getField('email').val();
-		var room = validateForm.getField('room').val();
+		// roomNum
+		var room = $('select[name=room]').val();
+		//var roomName = $('#room :selected').text();
 		var nbPersons = validateForm.getField('nbPersons').val();
 
 		this.model.set({
 			'title': "",
+			'color': couleurs[room],
 			'lastName': lastName,
 			'firstName': firstName,
 			'phone': phone,
@@ -267,25 +279,25 @@ window.EventView = Backbone.View.extend({
 		}
 	},
 	close: function() {
-		$('body').removeClass("unselectCanceled");
-		this.$el.dialog('close');
+		$("body").removeClass("unselectCanceled");
+		this.$el.dialog("close");
 	},
 	destroy: function() {
 		this.model.destroy({success: this.close});
 	},
 	btnFicheSejour: function() {
 		app.ficheSejour();
-		this.$el.dialog('close');
+		this.$el.dialog("close");
 	},
 	resetFormClasses: function() {
-		var form = $('#resa-form');
+		var form = $("#resa-form");
 		form.validate().resetForm();
-		form.find('.success').removeClass('success');
-		form.find('.error').removeClass('error');
-		form.find('.valid').removeClass('valid');
+		form.find(".success").removeClass("success");
+		form.find(".error").removeClass("error");
+		form.find(".valid").removeClass("valid");
 	}
 });
-
+/*
 function getWindowHeight() {
 	if (window.innerHeight) { 
 		//Other than IE
@@ -301,9 +313,9 @@ function getWindowHeight() {
 	}
 	return winHeight;
 }
-
+*/
 function getBodyPad() {
-	var body = $('body');
-	return parseInt(body.css('padding-top').replace('px', '')) +
-	parseInt(body.css('padding-bottom').replace('px', ''));
+	var body = $("body");
+	return parseInt(body.css("padding-top").replace("px", "")) +
+	parseInt(body.css("padding-bottom").replace("px", ""));
 }

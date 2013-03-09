@@ -10,18 +10,18 @@ var appRouter = Backbone.Router.extend({
 	},
 
 
-	initialize: function () {
-		console.log("Initialize router !");	
+	initialize: function() {
+		console.log("Initialize router !");
 
-		if(localStorage.length == 0){
+		if (localStorage.length === 0) {
 			this.connexion();
 			$('#room').hide();
 			$('#logOut').hide();
 			$('#nameAppli').hide();
-		}else{
+		} else {
 			//Quand on actualise la page 
 			//on récupère le nom du service de stockage qui est contenu dans le local storage
-			if(currentHost == null){
+			if (currentHost == null) {
 				currentHost =  jQuery.parseJSON(localStorage.getItem('currentHost-backbone-0')).host;
 			}
 
@@ -38,12 +38,13 @@ var appRouter = Backbone.Router.extend({
 
 	},
 
-	// cette route sera appelée à chaque fois qu'une route est inexistante ainsi qu'au lancement de l'application
-	home: function () {
+	// Cette route sera appel�e � chaque fois qu'une route est inexistante
+	// ainsi qu'au lancement de l'application
+	home: function() {
 		console.log("Welcome back home!");
 	},
 
-	connexion: function () {
+	connexion: function() {
 		console.log("Welcome back connexion!");
 		this.connexionView = new ConnexionView();
 		$('#content').html(this.connexionView.el);
@@ -51,42 +52,43 @@ var appRouter = Backbone.Router.extend({
 		$('.header').html(this.headerView.el);
 	},
 
-	resa: function () {	
+	resa: function() {
 		console.log("Welcome back resa!");
-		this.calendarView = new CalendarView();
-		$('#content').html(this.calendarView.el);
-
 		chambresPourCalendrier = new Chambres(); 
-		
+		chambresPourCalendrier.fetch();
+
+		this.calendarView = new CalendarView();
+		$('#content').html(this.calendarView.template({rooms : chambresPourCalendrier}));
+
 		//Reservations
 		reservations = new Reservations();
-		
-		//Un calendrier possède un ensemble de réservations
+
+		//Un calendrier poss�de un ensemble de r�servations
 		calendar = new EventsView({el: $("#calendar"), collection: reservations}).render();
 		reservations.fetch();
 	},
 
-	firstConfigChambre: function () {	
+	firstConfigChambre: function() {
 		console.log("Welcome back firstConfig!");
 		this.selectChambreView = new SelectChambreView({model: 	Chambre});
 		$('#content').html(this.selectChambreView.el);
 
 	},
 
-	editChambre: function () {	
+	editChambre: function() {
 		console.log("Welcome back config!");
 		this.editChambreView = new EditChambreView();
 		$('#content').html(this.editChambreView.el);
 
 	},
 
-	editPrestation: function () {	
+	editPrestation: function() {
 		console.log("Welcome back prestationConfig!");
 		this.editPrestationView = new EditPrestationView();
 		$('#content').html(this.editPrestationView.el);
 	},
 
-	ficheSejour: function () {	
+	ficheSejour: function() {
 		console.log("Welcome back config!");
 		this.ficheSejourView = new ficheSejourView();
 		$('#content').html(this.ficheSejourView.el);
@@ -134,7 +136,7 @@ tpl = {
 				'path': '/drive/v2/files',
 				'method': 'GET',
 				'params': {
-					q : "title='"+fileName+"'"
+					q : "title='"+ fileName+ "'"
 				}	        
 			});	
 
@@ -151,7 +153,7 @@ tpl = {
 			var request = gapi.client.request({
 				'path': '/drive/v2/files',
 				'method': 'POST',
-				'body':{
+				'body': {
 					"title" : fileName,
 					"mimeType" : "application/json",
 					"description" : "Config file of the guest house"	     	          
@@ -159,7 +161,7 @@ tpl = {
 			});
 
 			request.execute(function(resp) { 
-				console.log("File created : id = "+ resp.id);
+				console.log("File created : id = " + resp.id);
 				//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
 				var houseConfig = new FichierConfig({'idFichier': resp.id});
 				houseConfig.save();
@@ -173,12 +175,13 @@ tpl = {
 			//gapi.client.load('drive', 'v2');
 
 			var request = gapi.client.request({
-				'path': '/upload/drive/v2/files/'+ fileId, 
+				'path': '/upload/drive/v2/files/' + fileId, 
 				'method': 'PUT',
 				'params': {'uploadType': 'media'},	    	        
-				'body': newContent});
+				'body': newContent
+			});
 
-			request.execute(function(resp){
+			request.execute(function(resp) {
 				callback(resp);
 			});	    	   
 		},
@@ -201,10 +204,10 @@ tpl = {
 			}
 		},
 
-		saveContentFileIntoLocalStorage : function (fileContent){
+		saveContentFileIntoLocalStorage : function (fileContent) {
 			var chambres = jQuery.parseJSON(fileContent);
 
-			for(var i=0; i<chambres.length;i++){
+			for(var i = 0; i < chambres.length; i++) {
 				var chambre = new Chambre(chambres[i]);
 				chambre.save();				
 			}
@@ -213,7 +216,9 @@ tpl = {
 
 
 
-tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView', 'ChambreView', 'ConnexionView', 'ficheSejourView','ServiceView','ModalView'], function() {
+tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView',
+		'ChambreView', 'ConnexionView', 'ficheSejourView','ServiceView',
+		'ModalView'], function() {
 
 	app = new appRouter();
 	Backbone.history.start();

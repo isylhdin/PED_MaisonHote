@@ -2,28 +2,30 @@ var Chambre = Backbone.Model.extend({
 	localStorage: new Backbone.LocalStorage("chambres-backbone"),
 
 	defaults: {
-		id:null,
+		id: null,
 		prixParJour: '',
 		litSimple: 0,
 		litDouble: 0,
 		litJumeau: 0,
-		tele : false,
-		internet : false,
-		baignoire : false,
-		douche : false
+		tele: false,
+		internet: false,
+		baignoire: false,
+		douche: false
 	},
 
-	initialize: function(){
+	initialize: function() {
 		console.log('Chambre créée !');
 	},
 
-	validate: function( attrs ) {
+	validate: function(attrs) {
 
 		var errors = [];
-		if ( !attrs.prixParJour.length ) errors.push('prixParJour');
+		if (!attrs.prixParJour.length) {
+			errors.push('prixParJour');
+		}
 
-		if ( errors.length ){
-			console.log("champ(s) qui provoque(nt) une erreur : "+errors);
+		if (errors.length) {
+			console.log("champ(s) qui provoque(nt) une erreur : " + errors);
 			return errors;
 		}
 	}
@@ -35,7 +37,7 @@ var Chambres = Backbone.Collection.extend({
 	sort_key: 'id', // default sort key
 
 	initialize : function() {
-		console.log('Collection de chambres crée');
+		console.log('Collection de chambres créée');
 
 	},
 
@@ -47,7 +49,5 @@ var Chambres = Backbone.Collection.extend({
 		this.sort();
 	}
 }); 
-
-
 
 var couleurs = ['','#3366CC','#FF0244','#02FF08','#FFF602','#FF9D02'];
