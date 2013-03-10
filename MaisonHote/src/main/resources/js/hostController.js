@@ -117,6 +117,7 @@ function getEntryPointFile(file){
 			$('#room').show();
 			$('#logOut').show();
 			$('#nameAppli').show();
+			$('#service').show();
 			//et on redirige sur la page des réservations
 			app.resa();
 		}

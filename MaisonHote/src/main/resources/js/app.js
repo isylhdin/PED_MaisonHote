@@ -18,6 +18,7 @@ var appRouter = Backbone.Router.extend({
 			$('#room').hide();
 			$('#logOut').hide();
 			$('#nameAppli').hide();
+			$('#service').hide();
 		} else {
 			//Quand on actualise la page 
 			//on récupère le nom du service de stockage qui est contenu dans le local storage
@@ -35,7 +36,7 @@ var appRouter = Backbone.Router.extend({
 		}
 	},
 
-	// Cette route sera appel�e � chaque fois qu'une route est inexistante
+	// Cette route sera appelée à chaque fois qu'une route est inexistante
 	// ainsi qu'au lancement de l'application
 	home: function() {
 		console.log("Welcome back home!");
@@ -67,7 +68,7 @@ var appRouter = Backbone.Router.extend({
 		reservations = new Reservations();
 		reservations.localStorage = new Backbone.LocalStorage("resas-backbone");
 
-		//Un calendrier poss�de un ensemble de r�servations
+		//Un calendrier possède un ensemble de réservations
 		calendar = new EventsView({el: $("#calendar"), collection: reservations}).render();
 		reservations.fetch();
 	},
