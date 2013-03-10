@@ -59,6 +59,7 @@ var appRouter = Backbone.Router.extend({
 
 		this.calendarView = new CalendarView();
 		$('#content').html(this.calendarView.template({rooms : chambresPourCalendrier}));
+		
 
 		//Reservations
 		reservations = new Reservations();

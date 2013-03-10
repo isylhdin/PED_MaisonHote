@@ -1,5 +1,5 @@
 window.CalendarView = Backbone.View.extend({
-	
+
 	events: {
 		"click #submit"   : "onSubmit"
 	},
@@ -11,6 +11,7 @@ window.CalendarView = Backbone.View.extend({
 	},
 
 	onSubmit: function() {
+		console.log('submit !');
 
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
@@ -65,7 +66,7 @@ window.EventsView = Backbone.View.extend({
 			/* possible !
 			roomNames: {first: "Chambre 1", snd: "Chambre 2", third: "Chambre 3"},
 			roomNames: ["Chambre 1", "Chambre 2", "Chambre 3"]
-			*/
+			 */
 		});
 	},
 	addAll: function() {
@@ -93,7 +94,7 @@ window.EventsView = Backbone.View.extend({
 	change: function(event) {
 		// Look up the underlying event in the calendar and update its details from the model
 		var fcEvent = this.$el.fullCalendar("clientEvents", event.get('id'))[0],
-			roomNum = event.get("room");
+		roomNum = event.get("room");
 		fcEvent.color = couleurs[roomNum];
 		fcEvent.lastName = event.get("lastName");
 		fcEvent.firstName = event.get("firstName");
@@ -144,27 +145,27 @@ window.EventsView = Backbone.View.extend({
 		chambresPourCalendrier.each(function(Chambre) {
 
 			$("#caption").append("<div id='popover" + Chambre.id +
-						"' class='span1' rel='popover'  style='background-color:" +
-						couleurs[Chambre.id]+";'></div>");
+					"' class='span1' rel='popover'  style='background-color:" +
+					couleurs[Chambre.id]+";'></div>");
 			var title ='Chambre '+ Chambre.id;
 			var content = "	<b>PrixParjour </b>: "+ Chambre.get('prixParJour') +
-						"<br> <b>Nombre de lit simple</b> : " +	Chambre.get('litSimple') +
-						"<br> <b>Nombre de lit double</b> : " +	Chambre.get('litDouble') +
-						"<br> <b>Nombre de lit jumeau</b> : " + Chambre.get('litJumeau');
+			"<br> <b>Nombre de lit simple</b> : " +	Chambre.get('litSimple') +
+			"<br> <b>Nombre de lit double</b> : " +	Chambre.get('litDouble') +
+			"<br> <b>Nombre de lit jumeau</b> : " + Chambre.get('litJumeau');
 
 			$("#popover" + Chambre.id).popover({
 				title: title, content: content, trigger: 'hover', html: true, placement: 'top'
 			});
 		});
 	},
-	
+
 	renderList: function() {
 		$("select[name=room]").empty();
 		chambresPourCalendrier.each(function(room) {
 			$("select[name=room]").append("<option value='" + room.get("id") +"'> Chambre" +  room.get("id") + "</option>");
 		});
 	},
-	
+
 	updateOnServer: function() {
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
@@ -175,7 +176,7 @@ window.EventsView = Backbone.View.extend({
 			}
 		});
 	}
-	
+
 });
 
 window.EventView = Backbone.View.extend({
@@ -244,8 +245,8 @@ window.EventView = Backbone.View.extend({
 			'firstName': firstName,
 			'phone': phone,
 			'email': (email.length > 0) ? email : '',
-			'room': room,
-			'nbPersons': nbPersons
+					'room': room,
+					'nbPersons': nbPersons
 		});
 
 		if (this.model.isNew()) {
@@ -277,7 +278,7 @@ window.EventView = Backbone.View.extend({
 		} else {
 			console.log("édition de réservation");
 			var self = this;
-			
+
 			this.model.save({}, {success: this.close});
 			var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 			updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {	
@@ -322,7 +323,7 @@ function getWindowHeight() {
 	}
 	return winHeight;
 }
-*/
+ */
 function getBodyPad() {
 	var body = $("body");
 	return parseInt(body.css("padding-top").replace("px", "")) +
