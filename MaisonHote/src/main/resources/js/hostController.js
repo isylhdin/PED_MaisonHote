@@ -67,7 +67,7 @@ function saveChambreIntoLocalStorage(fileContent){
 
 
 function saveresaIntoLocalStorage(fileContent){
-	window.reser = jQuery.parseJSON(fileContent);
+	var reser = jQuery.parseJSON(fileContent);
 	
 	for(var i=0; i<reser.length;i++){
 		window.indice = i;
@@ -83,7 +83,6 @@ function saveresaIntoLocalStorage(fileContent){
 
 
 function savehouse_config_prestationsIntoLocalStorage(fileContent){
-	console.log("prestation dans le cache !")
 	var prestations = jQuery.parseJSON(fileContent);
 
 	for(var i=0; i<prestations.length;i++){

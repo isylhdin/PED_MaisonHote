@@ -12,7 +12,7 @@ var appRouter = Backbone.Router.extend({
 
 	initialize: function() {
 		console.log("Initialize router !");
-
+		
 		if (localStorage.length === 0) {
 			this.connexion();
 			$('#room').hide();
@@ -22,7 +22,7 @@ var appRouter = Backbone.Router.extend({
 			//Quand on actualise la page 
 			//on récupère le nom du service de stockage qui est contenu dans le local storage
 			if (currentHost == null) {
-				currentHost =  jQuery.parseJSON(localStorage.getItem('currentHost-backbone-0')).host;
+				currentHost = jQuery.parseJSON(localStorage.getItem('currentHost-backbone-0')).host;
 			}
 
 			setToken();
@@ -33,15 +33,14 @@ var appRouter = Backbone.Router.extend({
 			$('.header').html(this.headerView.el);
 			this.resa();
 		}
-
-
-
 	},
 
 	// Cette route sera appel�e � chaque fois qu'une route est inexistante
 	// ainsi qu'au lancement de l'application
 	home: function() {
 		console.log("Welcome back home!");
+		if(typeof(chambresPourCalendrier) !== "undefined")
+		console.log(chambresPourCalendrier);
 	},
 
 	connexion: function() {
@@ -54,15 +53,19 @@ var appRouter = Backbone.Router.extend({
 
 	resa: function() {
 		console.log("Welcome back resa!");
-		chambresPourCalendrier = new Chambres(); 
+				
+		chambresPourCalendrier = new Chambres();
+		chambresPourCalendrier.localStorage = new Backbone.LocalStorage("chambres-backbone");
 		chambresPourCalendrier.fetch();
 
-		this.calendarView = new CalendarView();
-		$('#content').html(this.calendarView.template({rooms : chambresPourCalendrier}));
 		
+		this.calendarView = new CalendarView();
+		$('#content').html(this.calendarView.el);
+
 
 		//Reservations
 		reservations = new Reservations();
+		reservations.localStorage = new Backbone.LocalStorage("resas-backbone");
 
 		//Un calendrier poss�de un ensemble de r�servations
 		calendar = new EventsView({el: $("#calendar"), collection: reservations}).render();
@@ -137,7 +140,7 @@ tpl = {
 				'path': '/drive/v2/files',
 				'method': 'GET',
 				'params': {
-					q : "title='"+ fileName+ "'"
+					q : "title='"+ fileName + "'"
 				}	        
 			});	
 

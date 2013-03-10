@@ -44,7 +44,7 @@ window.EditChambreView = Backbone.View.extend({
 				});
 			}
 		});
-
+		
 		this.footpage();						
 		//met les id des chambres dans l'ordre, sinon ils sont en désordre pour les afficher dans les vues suivantes
 		chambres.sortByField('id');
