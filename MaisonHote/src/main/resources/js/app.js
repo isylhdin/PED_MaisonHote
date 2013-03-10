@@ -40,8 +40,6 @@ var appRouter = Backbone.Router.extend({
 	// ainsi qu'au lancement de l'application
 	home: function() {
 		console.log("Welcome back home!");
-		if(typeof(chambresPourCalendrier) !== "undefined")
-		console.log(chambresPourCalendrier);
 	},
 
 	connexion: function() {

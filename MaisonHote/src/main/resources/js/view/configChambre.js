@@ -143,6 +143,10 @@ window.EditChambreView = Backbone.View.extend({
 
 		this.template = _.template(tpl.get('ChambreView'));
 		$('#add').before(this.template(chambre.toJSON()));
+		
+		this.$el.find('#litSimple'+chambre.id).spinner({min: 0});
+		this.$el.find('#litDouble'+chambre.id).spinner({min: 0});
+		this.$el.find('#litJumeau'+chambre.id).spinner({min: 0});
 
 		chambre.bind('change', this.reRenderChambre);
 		chambre.bind('invalid ', this.onError);
