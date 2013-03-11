@@ -5,68 +5,48 @@
 	<h3><b><u>Informations client</u></b></h3>
 	<form class="form-horizontal">
       <div class="control-group">
-        <label class="control-label" for="labelName">Nom :</label>
-        <label class="control-label" for="name">nom</label>
+      	<div class="span6">
+        	<label class="control-label" for="labelName">Nom :</label>
+        	<input type="text" name="Nom" id="Nom" value="" >
+        </div>
       </div>
       <div class="control-group">
-        <label class="control-label" for="labelPhoneNumber">Numéro de téléphone :</label>
-        <label class="control-label" for="phoneNumber">00000000</label>
+      	<div class="span6">
+       		<label class="control-label" for="labelPhoneNumber">Numéro de téléphone :</label>
+       		<input type="text" name="telephone" id="telephone" value="" >
+        </div>
       </div>
       <div class="control-group">
-        <label class="control-label" for="labelAddress">Adresse postale:</label>
-        <label class="control-label" for="address">1 rue ..</label>
+      	<div class="span6">
+        	<label class="control-label" for="labelAddress">Adresse postale:</label>
+        	<input type="text" name="adresse" id="adresse" value="" >
+        </div>
       </div>
       <div class="control-group">
-        <label class="control-label" for="labelAddress">Mail :</label>
-        <label class="control-label" for="address">nom@mail.com</label>
+      	<div class="span6">
+        	<label class="control-label" for="labelAddress">Mail :</label>
+       		<input type="text" name="mail" id="mail" value="" >
+        </div>
       </div>
 	</form>
 	
 	<hr/>
 	
 	<h3><b><u>Informations chambres réservées</u></b></h3>
-	<form class="form-horizontal">
-      <div class="control-group">
-        <label class="control-label" for="labelRoom">Chambre 1 :</label>
-        <label class="control-label" for="multiply">prix</label>
-      </div>
-	  <div class="control-group">
-        <label class="control-label" for="labelRoom">Chambre 2 :</label>
-        <label class="control-label" for="multiply">prix</label>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="labelRoom">Chambre 3 :</label>
-        <label class="control-label" for="multiply">prix</label>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="multiply">Sous-total chambres :</label>
-        <label class="control-label" for="multiply">prix</label>
-      </div>
-	</form>
+	<div id="chambres"></div>
 	
 	<hr/>
 	
 	<h3><b><u>Informations prestations</u></b></h3>
-	<form class="form-horizontal">
-      <div class="control-group">
-        <label class="control-label" for="labelRoom">Prestation 1 :</label>
-        <label class="control-label" for="multiply">prix</label>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="labelRoom">Prestation 2 :</label>
-        <label class="control-label" for="multiply">prix</label>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="multiply">Sous-total prestation :</label>
-        <label class="control-label" for="multiply">prix</label>
-      </div>
-	</form>
+	<div id="prestations"></div>
 	
 	<hr/>
 	<form class="form-horizontal">
       <div class="control-group">
-        <label class="control-label" for="labelRoom"><b>Total :</b></label>
-        <label class="control-label" for="multiply">prix</label>
+      	<div class="span6">
+        	<label class="control-label" for="labelRoom"><b>Total :</b></label>
+        	<input type="text" name="prix" id="prix" disabled="disabled" >
+        </div>
       </div>
 	</form>
   </div>

@@ -2,11 +2,11 @@
 var appRouter = Backbone.Router.extend({
 
 	routes: {
-		"":	 				"home",  //index.html
-		"resa":  			"resa",	 //index.html#resa
-		"chambre":  		"editChambre", //index.html#chambre
-		"prestation":  		"editPrestation", //index.html#prestation
-		"ficheSejour":  	"ficheSejour" //index.html#ficheSejour
+		"":	 					"home",  //index.html
+		"resa":  				"resa",	 //index.html#resa
+		"chambre":  			"editChambre", //index.html#chambre
+		"prestation":	  		"editPrestation", //index.html#prestation
+		"ficheSejour/:id":  	"ficheSejour" //index.html#ficheSejour/id
 	},
 
 
@@ -91,8 +91,9 @@ var appRouter = Backbone.Router.extend({
 		$('#content').html(this.editPrestationView.el);
 	},
 
-	ficheSejour: function() {
+	ficheSejour: function(id, params) {
 		console.log("Welcome back config!");
+		console.log(id);
 		this.ficheSejourView = new ficheSejourView();
 		$('#content').html(this.ficheSejourView.el);
 	}
