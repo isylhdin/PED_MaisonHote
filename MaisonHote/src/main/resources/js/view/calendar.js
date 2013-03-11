@@ -238,6 +238,11 @@ window.EventView = Backbone.View.extend({
 		//var roomName = $('select[name=room] :selected').text();
 		var nbPersons = validateForm.getField('nbPersons').val();
 
+		console.log(lastName);
+		console.log(firstName);
+		console.log(room);
+		
+		
 		this.model.set({
 			'title': "",
 			'color': couleurs[room],
@@ -297,7 +302,7 @@ window.EventView = Backbone.View.extend({
 		this.model.destroy({success: this.close});
 	},
 	btnFicheSejour: function() {
-		app.ficheSejour();
+		app.navigate('ficheSejour/'+this.model.id, {trigger: true});
 		this.$el.dialog("close");
 	},
 	resetFormClasses: function() {

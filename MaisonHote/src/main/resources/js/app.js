@@ -2,6 +2,7 @@
 var appRouter = Backbone.Router.extend({
 
 	routes: {
+<<<<<<< HEAD
 		"":	 				"home",  //index.html
 		"resa":  			"resa",	 //index.html#resa
 		"chambre":  		"editChambre", //index.html#chambre
@@ -10,6 +11,13 @@ var appRouter = Backbone.Router.extend({
 		"listCustomer":  	"listCustomer" //index.html#listCustomer
 			
 			
+=======
+		"":	 					"home",  //index.html
+		"resa":  				"resa",	 //index.html#resa
+		"chambre":  			"editChambre", //index.html#chambre
+		"prestation":	  		"editPrestation", //index.html#prestation
+		"ficheSejour/:id":  	"ficheSejour" //index.html#ficheSejour/id
+>>>>>>> 411c8bebb7486de5586b5b310a78b3c495f08d75
 	},
 
 
@@ -95,6 +103,7 @@ var appRouter = Backbone.Router.extend({
 		$('#content').html(this.editPrestationView.el);
 	},
 
+<<<<<<< HEAD
 	listCustomer: function() {
 		console.log("Welcome back config!");
 		this.listCustomerView = new ListCustomerView();
@@ -102,7 +111,11 @@ var appRouter = Backbone.Router.extend({
 	},
 
 	ficheSejour: function() {
+=======
+	ficheSejour: function(id, params) {
+>>>>>>> 411c8bebb7486de5586b5b310a78b3c495f08d75
 		console.log("Welcome back config!");
+		console.log(id);
 		this.ficheSejourView = new ficheSejourView();
 		$('#content').html(this.ficheSejourView.el);
 	}
