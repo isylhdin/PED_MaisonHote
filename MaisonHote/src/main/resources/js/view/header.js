@@ -21,7 +21,8 @@ window.HeaderView = Backbone.View.extend({
     	app.connexion();
     	$('#room').hide();
 		$('#logOut').hide();
-		$('#nameAppli').hide();
+		//$('#nameAppli').hide();
+		document.getElementById('nameAppli').href = null;
 		$('#service').hide();
     	localStorage.clear();
     },
