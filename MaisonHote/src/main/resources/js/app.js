@@ -6,7 +6,10 @@ var appRouter = Backbone.Router.extend({
 		"resa":  			"resa",	 //index.html#resa
 		"chambre":  		"editChambre", //index.html#chambre
 		"prestation":  		"editPrestation", //index.html#prestation
-		"ficheSejour":  	"ficheSejour" //index.html#ficheSejour
+		"ficheSejour":  	"ficheSejour", //index.html#ficheSejour
+		"listCustomer":  	"listCustomer" //index.html#listCustomer
+			
+			
 	},
 
 
@@ -90,6 +93,12 @@ var appRouter = Backbone.Router.extend({
 		console.log("Welcome back prestationConfig!");
 		this.editPrestationView = new EditPrestationView();
 		$('#content').html(this.editPrestationView.el);
+	},
+
+	listCustomer: function() {
+		console.log("Welcome back config!");
+		this.listCustomerView = new ListCustomerView();
+		$('#content').html(this.listCustomerView.el);
 	},
 
 	ficheSejour: function() {
@@ -222,7 +231,7 @@ tpl = {
 
 tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView',
 		'ChambreView', 'ConnexionView', 'ficheSejourView','ServiceView',
-		'ModalView'], function() {
+		'ModalView','ListCustomerView'], function() {
 
 	app = new appRouter();
 	Backbone.history.start();

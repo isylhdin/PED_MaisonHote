@@ -1,4 +1,3 @@
-
 window.HeaderView = Backbone.View.extend({
 
 	events : {
