@@ -17,7 +17,8 @@ var appRouter = Backbone.Router.extend({
 			this.connexion();
 			$('#room').hide();
 			$('#logOut').hide();
-			$('#nameAppli').hide();
+			//$('#nameAppli').hide();
+			document.getElementById('nameAppli').href = null;
 			$('#service').hide();
 		} else {
 			//Quand on actualise la page 
