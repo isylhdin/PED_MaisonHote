@@ -22,6 +22,7 @@ window.HeaderView = Backbone.View.extend({
     	$('#room').hide();
 		$('#logOut').hide();
 		$('#nameAppli').hide();
+		$('#service').hide();
     	localStorage.clear();
     },
     
