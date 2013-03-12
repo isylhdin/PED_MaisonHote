@@ -100,9 +100,10 @@ var appRouter = Backbone.Router.extend({
 	},
 
 	ficheSejour: function(id, params) {
-		console.log("Welcome back config!");
-		console.log(id);
-		this.ficheSejourView = new ficheSejourView();
+		console.log("Welcome back sejour!");
+		//console.log(id);
+		var client = localStorage.getItem('resas-backbone-'+id);
+		this.ficheSejourView = new ficheSejourView({model : client});
 		$('#content').html(this.ficheSejourView.el);
 	}
 
