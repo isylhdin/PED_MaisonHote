@@ -59,19 +59,3 @@ var Reservations = Backbone.Collection.extend({
 		return this.last().get('id') + 1;
 	}
 });
-
-var Locataire = Backbone.Model.extend({
-	defaults: {
-		nom: '',
-		mail: '',
-		phone: 0    
-	},
-	initialize: function(){
-		console.log('Locataire créée !');
-	}
-});
-
-var Locataires = Backbone.Collection.extend({
-	model: Locataire,
-	//url: 'reservations'
-}); 
