@@ -5,7 +5,12 @@ window.ficheSejourView = Backbone.View.extend({
     },
 
     render: function () {
-        $(this.el).html(_.template(tpl.get('ficheSejourView')));
+//    	console.log(jQuery.parseJSON(this.model));
+//    	console.log(this.model);
+
+    	this.template = _.template(tpl.get('ficheSejourView'));
+    	$(this.el).html(this.template(this.model));
+		
         return this;
     },
 });
