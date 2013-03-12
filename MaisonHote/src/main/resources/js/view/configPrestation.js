@@ -5,7 +5,7 @@ window.EditPrestationView = Backbone.View.extend({
 		"click a.btn-primary" : "onAcceptDelete",
 		"click .btn-success"  : "onAdd",
 		"click #submit" 	  : "onSubmit",
-		//"focus input"	 : "onInputGetFocus",
+		"focus input"	 : "onInputGetFocus",
 	},
 
 	initialize: function () {
@@ -33,7 +33,7 @@ window.EditPrestationView = Backbone.View.extend({
 				prestations.each(function(Prestation){
 					//Quand une chambre est modifiée on la réaffiche pour que la vue soit à jour
 					Prestation.bind('change', self.reRenderPrestation);
-					//Prestation.bind('invalid ', self.onError);
+					Prestation.bind('invalid ', self.onError);
 					this.template = _.template(tpl.get('ServiceView'));
 					$(self.el).append(this.template(Prestation.toJSON()));
 					nbPrest++;
@@ -71,14 +71,7 @@ window.EditPrestationView = Backbone.View.extend({
 	 * => Les 3 types d'alert sont "hidden" et s'afficheront le moment voulu lors de l'appel à la méthode 'onSubmit'
 	 */
 	footpage : function(){
-
-		//si on a deja 5 chambres d'affichées, on disable le bouton add
-		// if(nbPrest == 5){
-			// $(this.el).append("<div class='row' id='add'> <button class='btn btn-success' disabled='disabled'><i class='icon-plus icon-white'></i> Ajouter</button></div>");
-		// }else{
 		$(this.el).append("<div class='row' id='add'> <button class='btn btn-success' ><i class='icon-plus icon-white'></i> Ajouter</button></div>");
-		// }
-
 		$(this.el).append("<div class='row'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
 		$(this.el).append("<div id='waitingResult' style='visibility:hidden' class='alert alert-info'>Sauvregarde en cours ... </div>");
 		$(this.el).append("<div id='goodResult' style='visibility:hidden' class='alert alert-success'>Vos données ont été sauvegardées avec succès ! </div>");
@@ -142,9 +135,8 @@ window.EditPrestationView = Backbone.View.extend({
 		$('#add').before(this.template(prestation.toJSON()));
 
 		prestation.bind('change', this.reRenderPrestation);
-		//prestation.bind('invalid ', this.onError);
+		prestation.bind('invalid ', this.onError);
 
-		//this.disableAddButton();
 	},
 
 	onSubmit: function(event){
@@ -154,23 +146,22 @@ window.EditPrestationView = Backbone.View.extend({
 
 		//enregistre toutes les chambres dans le cache
 		prestations.each(function(Prestation){
-			window.title = $('#inputTitleP'+Prestation.id).val();
-			window.price = $('#inputPriceP'+Prestation.id).val();
-			window.number = $('#inputNumberP'+Prestation.id).val();
-			window.comment = $('#inputCommentP'+Prestation.id).val();
+			window.title = $('#title'+Prestation.id).val();
+			window.price = $('#price'+Prestation.id).val();
+			window.comment = $('#comment'+Prestation.id).val();
 
-			Prestation.save({'title':title, 'price':price, 'number':number, 'comment':comment}, {
+			Prestation.save({'title':title, 'price':price, 'comment':comment}, {
 				success: function(model, response, options) {
 					nbPrestationsSauveesDansCache++;
 				},
 				silent: true //pour que la fonction reRenderChambre ne soit pas appelée à cause de la modif (les chambres sont bindées)
 			});
 		});
-		
+
 		if(!success){
 			return;
 		}
-		
+
 		$('#waitingResult').css('visibility','visible');
 		$('#waitingResult').show();
 
@@ -223,20 +214,13 @@ window.EditPrestationView = Backbone.View.extend({
 				console.log(prestation);
 			}
 		}
-	}
+	},
 
-	// disableAddButton: function(){
-		// //on ne peut avoir que 5 chambres max
-		// if(nbPrest == 5){
-			// $('.btn-success').attr("disabled", true);
-		// }
-	// },
-	
-	// onError: function( model, error) {
-		 // success = window.validateForm.onError(model, error, this);
-	// },
-// 
-	// onInputGetFocus: function( e ) {
-		 // window.validateForm.onInputGetFocus(e);
-	// }
+	onError: function( model, error) {
+		success = window.validateForm.onError(model, error, this);
+	},
+
+	onInputGetFocus: function( e ) {
+		window.validateForm.onInputGetFocus(e);
+	}
 });
