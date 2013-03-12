@@ -1,3 +1,84 @@
-
+<!-- 
 <div class="hero-unit">
+  <form class="form-horizontal">
+    <div class="control-group">
+      <label class="control-label" for="inputName">Nom</label>
+      <div class="controls">
+        <input type="text" id="inputName" placeholder="Nom">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputFirstname">Prénom</label>
+      <div class="controls">
+        <input type="text" id="inputFirstname" placeholder="Prénom">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputPhone">Téléphone</label>
+      <div class="controls">
+        <input type="tel" id="inputPhone" placeholder="Téléphone">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputAddress">Adresse</label>
+      <div class="controls">
+        <input type="text" id="inputAddress" placeholder="Adresse">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputEmail">Email</label>
+      <div class="controls">
+        <input type="email" id="inputEmail" placeholder="Email">
+      </div>
+    </div>
+  </form>
+</div> -->
+
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Informations client</h3>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
+    <div class="control-group">
+      <label class="control-label" for="inputName">Nom</label>
+      <div class="controls">
+        <input type="text" id="inputName" placeholder="Nom">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputFirstname">Prenom</label>
+      <div class="controls">
+        <input type="text" id="inputFirstname" placeholder="Prenom">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputPhone">Telephone</label>
+      <div class="controls">
+        <input type="tel" id="inputPhone" placeholder="Telephone">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputAddress">Adresse</label>
+      <div class="controls">
+        <input type="text" id="inputAddress" placeholder="Adresse">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputEmail">Email</label>
+      <div class="controls">
+        <input type="email" id="inputEmail" placeholder="Email">
+      </div>
+    </div>
+  </form>
+  </div>
+  <div class="modal-footer">
+    <a id="btnClose" href="#" class="btn">Fermer</a>
+    <a id="btnSave" href="#" class="btn btn-primary">Enregistrer</a>
+   
+   	<div id='waitingResultCustomer' style='visibility:hidden' class='alert alert-info'>Sauvegarde en cours ... </div>
+	<div id='goodResultCustomer' style='visibility:hidden' class='alert alert-success'>Vos données ont été sauvegardées avec succès ! </div>
+	<div id='badResultCustomer'  style='visibility:hidden' class='alert alert-error'>Une erreur est survenue lors de la sauvegarde. Veuillez vérifier que vous êtes connecté à Internet et que vous utilisez un navigateur récent puis réésayez </div>
+  </div> 
 </div>

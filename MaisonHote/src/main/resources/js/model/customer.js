@@ -11,7 +11,7 @@ var Customer = Backbone.Model.extend({
 	},
 
 	initialize: function(){
-		console.log('Client créée !');
+		console.log('Client créé !');
 	}
 
 	// validate: function( attrs ) {
@@ -33,7 +33,7 @@ var Customers = Backbone.Collection.extend({
 	sort_key: 'id', // default sort key
 
 	initialize : function() {
-		console.log('Collection de clients crée');
+		console.log('Collection de clients créée');
 
 	},
 

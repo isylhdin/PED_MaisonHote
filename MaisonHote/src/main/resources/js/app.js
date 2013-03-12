@@ -230,7 +230,7 @@ tpl = {
 
 tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView',
 		'ChambreView', 'ConnexionView', 'ficheSejourView','ServiceView',
-		'ModalView','ListCustomerView'], function() {
+		'ModalView','ListCustomerView','DataCustomerView'], function() {
 
 	app = new appRouter();
 	Backbone.history.start();

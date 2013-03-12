@@ -1,16 +1,35 @@
-<div class="span4">
+
+<style>
+.table td{
+	border-top: 0px;
+}
+</style>
+
+
+<div class="span5">
   <div class="hero-unit">
-  	<button class="btn btn-large" type="submit" id="btnAddCustomer">+</button>
-  	<form class="form-search">
-  	  <input type="text" class="input-medium search-query" id="inputSearch">
-      <button type="submit" class="btn" id="btnSearchCustomer"><i class="icon-search"></i></button>	
-      </form>
-    <select id="selectCustomer" multiple="multiple">
-      <option id="1">1</option>
-      <option id="2">2</option>
-      <option id="3">3</option>
-      <option id="4">4</option>
-    </select>
+  	<table class="table">
+	  <tr>
+	    <td>
+  	      <!-- <button class="btn btn-large" type="submit" id="btnAddCustomer">+</button> -->
+  	      <a id="btnAddCustomer" role="button" class="btn" data-toggle="modal">+</a>
+  	    </td>
+  	    <td></td>
+  	    <td>
+  	      <!-- Barre de recherche dans la liste ˆ mettre en place plus tard
+  	      <form class="form-search">
+  	        <input type="text" class="input-medium search-query" id="inputSearch">
+            <button type="submit" class="btn" id="btnSearchCustomer"><i class="icon-search"></i></button>	
+          </form> -->
+          <select id="selectCustomer" multiple="multiple">
+            <option id="1">1</option>
+            <option id="2">2</option>
+            <option id="3">3</option>
+            <option id="4">4</option>
+          </select>
+        </td>
+      </tr>
+	</table>
   </div>
 </div>
 <div id="dataCustomer" class="span5">
