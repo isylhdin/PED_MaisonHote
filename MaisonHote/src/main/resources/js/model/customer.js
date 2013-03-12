@@ -7,7 +7,7 @@ var Customer = Backbone.Model.extend({
 		firstname: '',
 		phone: '',
 		address: '',
-		mail: '',
+		mail: ''
 	},
 
 	initialize: function(){
@@ -40,6 +40,7 @@ var Customers = Backbone.Collection.extend({
 	comparator: function(item) {
 		return item.get(this.sort_key);
 	},
+	
 	sortByField: function(fieldName) {
 		this.sort_key = fieldName;
 		this.sort();
