@@ -92,6 +92,18 @@ function savehouse_config_prestationsIntoLocalStorage(fileContent){
 
 }
 
+function savecustomersIntoLocalStorage(fileContent){
+	var cust = jQuery.parseJSON(fileContent);
+	
+	for(var i=0; i<cust.length;i++){
+		window.indice = i;
+		var customer = new Customer(cust[i]);
+		customer.save();
+		
+		customers.add(customer);
+	}
+}
+
 
 /**
  * Cette méthode sert à récupérer les métadonnées du fichier house_config.json qui est le seul fichier véritablement
@@ -132,7 +144,7 @@ function getEntryPointFile(file){
  */
 function downloadRequiredFiles(){
 
-	window.requiredFiles = ['house_config_chambres.json','house_config_prestations.json','resa.json'];
+	window.requiredFiles = ['house_config_chambres.json','house_config_prestations.json','resa.json','customers.json'];
 
 	getEntryPointFile(requiredFiles[0]);
 
