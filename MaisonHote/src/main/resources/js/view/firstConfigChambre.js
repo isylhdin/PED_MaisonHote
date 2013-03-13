@@ -59,9 +59,12 @@ window.SelectChambreView = Backbone.View.extend({
 
 	constructFormService: function () {
 		nbPrest = nbPrest+1;
-		if(nbPrest==1)
+		if(nbPrest==1){
 			prestations = new Prestations();
+		}
 		window["prestation"+nbPrest] = new Prestation({'id':nbPrest});
+		window["prestation"+nbPrest].bind('invalid ', this.onError);
+		
 		prestations.add(window["prestation"+nbPrest]);
 		this.template = _.template(tpl.get('ServiceView'));
 		$('#prestation').append(this.template(window["prestation"+nbPrest].toJSON()));
@@ -105,13 +108,12 @@ window.SelectChambreView = Backbone.View.extend({
 	saveDataService: function(){
 		for(i=1;i<=nbPrest;i++){
 			console.log("passage dans la boucle");
-			var titleP = $('#inputTitleP'+i).val();
-			var priceP = $('#inputPriceP'+i).val();
-			var numberP = $('#inputNumberP'+i).val();
-			var commentP = $('#inputCommentP'+i).val();
+			var titleP = $('#title'+i).val();
+			var priceP = $('#price'+i).val();
+			var commentP = $('#comment'+i).val();
 
 			//set les chambres dans la collection et les sauvegarde une par une dans le cache
-			window["prestation"+i].save({'title':titleP,'price':priceP, 'number':numberP, 'comment':commentP}); 
+			window["prestation"+i].save({'title':titleP,'price':priceP, 'comment':commentP}); 
 		}
 	},
 
