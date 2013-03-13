@@ -137,7 +137,7 @@ window.SelectChambreView = Backbone.View.extend({
 
 
 	createFileClient: function(){
-		createNewFile('house_clients.json', function(reponse){	
+		createNewFile('customers.json', function(reponse){	
 			window.idClient = reponse.id;
 
 			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
@@ -164,14 +164,9 @@ window.SelectChambreView = Backbone.View.extend({
 		this.createFileChambre();
 
 		this.createFileService();
-<<<<<<< HEAD
-		
-		//this.createFileClient();
-=======
 
 		this.createFileClient();
->>>>>>> 41d86cfd616c99e3889e66c1e9fd3989d17d3499
-
+		
 		//on charge le menu
 		this.headerView = new HeaderView();
 		$('.header').html(this.headerView.el);
