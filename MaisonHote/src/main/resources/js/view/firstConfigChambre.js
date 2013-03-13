@@ -22,10 +22,6 @@ window.SelectChambreView = Backbone.View.extend({
 		return this;
 	},
 
-	// submit : function(){
-	// $('#maison').append("<div class='row'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
-	// },
-
 	//Quand on clique sur un numéro de la liste on construit l'ui (avec les id pas encore définis).
 	//Chaque "input" doit avoir un id modifié dynamiquement
 	constructForm: function(nbChambre){
@@ -64,7 +60,7 @@ window.SelectChambreView = Backbone.View.extend({
 		}
 		window["prestation"+nbPrest] = new Prestation({'id':nbPrest});
 		window["prestation"+nbPrest].bind('invalid ', this.onError);
-		
+
 		prestations.add(window["prestation"+nbPrest]);
 		this.template = _.template(tpl.get('ServiceView'));
 		$('#prestation').append(this.template(window["prestation"+nbPrest].toJSON()));
@@ -107,7 +103,6 @@ window.SelectChambreView = Backbone.View.extend({
 
 	saveDataService: function(){
 		for(i=1;i<=nbPrest;i++){
-			console.log("passage dans la boucle");
 			var titleP = $('#title'+i).val();
 			var priceP = $('#price'+i).val();
 			var commentP = $('#comment'+i).val();
@@ -137,7 +132,7 @@ window.SelectChambreView = Backbone.View.extend({
 
 
 	createFileClient: function(){
-		createNewFile('house_clients.json', function(reponse){	
+		createNewFile('customers.json', function(reponse){	
 			window.idClient = reponse.id;
 
 			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)

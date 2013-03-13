@@ -59,7 +59,7 @@ function saveChambreIntoLocalStorage(fileContent){
 	for(var i=0; i<chambres.length;i++){
 		var chambre = new Chambre(chambres[i]);
 		chambre.save();	
-		
+
 		//nécessaire pour afficher la légende du calendrier
 		chambresPourCalendrier.add(chambre);
 	}
@@ -68,7 +68,7 @@ function saveChambreIntoLocalStorage(fileContent){
 
 function saveresaIntoLocalStorage(fileContent){
 	var reser = jQuery.parseJSON(fileContent);
-	
+
 	for(var i=0; i<reser.length;i++){
 		window.indice = i;
 		var resa = new Reservation(reser[i]);
@@ -102,7 +102,7 @@ function savehouse_config_prestationsIntoLocalStorage(fileContent){
 function getEntryPointFile(file){
 
 	window.file = file;
-	
+
 	retrieveFile(window.file, function(reponse){
 		if (reponse.items.length == 0 ) {
 			alert("PREMIERE UTILISATION");
@@ -133,28 +133,30 @@ function getEntryPointFile(file){
 function downloadRequiredFiles(){
 
 	window.requiredFiles = ['house_config_chambres.json','house_config_prestations.json','resa.json'];
+	//window.requiredFiles = ['house_config_chambres.json'];//,'house_config_prestations.json','resa.json'];
 
 	getEntryPointFile(requiredFiles[0]);
 
-
+//faire quelque chose pour qu'on ne passe dans la boucle que si ce n'est pas la premiere utilisation, car les fichiers seront déjà crées 
+// dans firstConfigChambre.js
+	
 	for (var i= 1; i < requiredFiles.length; i++) {  
-
 		window.fichier = requiredFiles[i];
 
 		retrieveFile(fichier, function(reponse){
 			//s'il n'existe pas sur le serveur
 			if (reponse.items.length == 0 ) {
-				
+
 				// on le crée sur le serveur
 				createNewFile(fichier, function(reponse){	
 					window.idFichier = reponse.id;
 					console.log("un fichier a été créé sur le serveur, il a l'id "+idFichier);
 				});
-				
+
 			}
 			else{
 				console.log("le fichier "+reponse.items[0].title+" était deja sur le serveur, il a l'id "+reponse.items[0].id);
-				
+
 				//pour appeler la bonne méthode qui va sauvagegarder dans le cache, on retire .json au nom du fichier
 				var reg=new RegExp("[.]+", "g"); 
 				var tableau=reponse.items[0].title.split(reg);
