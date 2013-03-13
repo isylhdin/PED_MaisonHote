@@ -2283,7 +2283,7 @@ function BasicView(element, calendar, viewName) {
 					"</div>" +
 					"</td>";
 			}
-			s += //"</div>"
+			s +=
 				"</tr>";
 		}
 		s +=
