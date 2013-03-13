@@ -106,7 +106,6 @@ function savecustomersIntoLocalStorage(fileContent){
 }
 
 
-
 /**
  * Cette méthode vérifie que le fichier house_config.json est présent sur le serveur. A parti de là on
  * peut déterminer si c'est une première utilisation de l'application. Ce fichier est primordial pour
@@ -153,6 +152,7 @@ function downloadRequiredFiles(){
  */
 function retrieveAndStoreOtherFiles(requiredFiles){
 	for (var i= 0; i < requiredFiles.length; i++) {  
+
 		window.fichier = requiredFiles[i];
 
 		retrieveFile(fichier, function(reponse){

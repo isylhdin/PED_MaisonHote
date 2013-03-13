@@ -96,6 +96,8 @@ var appRouter = Backbone.Router.extend({
 
 	listCustomer: function() {
 		console.log("Welcome back config!");
+		customers = new Customers();
+		customers.localStorage = new Backbone.LocalStorage("customers-backbone");
 		this.listCustomerView = new ListCustomerView();
 		$('#content').html(this.listCustomerView.el);
 	},
