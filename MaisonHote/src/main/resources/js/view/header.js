@@ -23,6 +23,7 @@ window.HeaderView = Backbone.View.extend({
 		//$('#nameAppli').hide();
 		document.getElementById('nameAppli').href = null;
 		$('#service').hide();
+		$('#listCustomer').hide();
 		localStorage.clear();	
     },
     
