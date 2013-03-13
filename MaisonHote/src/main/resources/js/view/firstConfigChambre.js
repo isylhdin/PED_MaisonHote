@@ -141,6 +141,17 @@ window.SelectChambreView = Backbone.View.extend({
 
 		});
 	},
+	
+	createFileResa: function(){
+		createNewFile('resa.json', function(reponse){	
+			window.idResa = reponse.id;
+
+			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
+			var resaFile = new FichierConfig({'id':reponse.title, 'idFichier': idResa });
+			resaFile.save();
+
+		});
+	},
 
 	onSubmit: function(e){
 		success = true;
@@ -156,16 +167,20 @@ window.SelectChambreView = Backbone.View.extend({
 			return;
 		}
 
+		/*********** crée tous les fichiers dont l'appli a besoin pour la suite ***********/
+		
 		this.createFileChambre();
 
 		this.createFileService();
 
 		this.createFileClient();
 		
-		//on charge le menu
+		this.createFileResa();
+		
+		/**********************************************************************************/
+		
 		this.headerView = new HeaderView();
 		$('.header').html(this.headerView.el);
-		//et on redirige sur la page des réservations
 		app.resa();
 	},
 

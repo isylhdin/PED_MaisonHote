@@ -67,59 +67,78 @@ function saveChambreIntoLocalStorage(fileContent){
 
 
 function saveresaIntoLocalStorage(fileContent){
-	var reser = jQuery.parseJSON(fileContent);
+	if(fileContent != ""){
+		var reser = jQuery.parseJSON(fileContent);
 
-	for(var i=0; i<reser.length;i++){
-		window.indice = i;
-		var resa = new Reservation(reser[i]);
-		resa.save();
+		for(var i=0; i<reser.length;i++){
+			window.indice = i;
+			var resa = new Reservation(reser[i]);
+			resa.save();
 
-		//remplit la collections de calendar.js avec les reservations téléchargées pour qu'elles soient directement affichées dans
-		//le calendrier
-		reservations.add(resa);
-
+			//remplit la collections de calendar.js avec les reservations téléchargées pour qu'elles soient directement affichées dans
+			//le calendrier
+			reservations.add(resa);
+		}
 	}
 }
 
 
 function savehouse_config_prestationsIntoLocalStorage(fileContent){
-	var prestations = jQuery.parseJSON(fileContent);
+	if(fileContent != ""){
+		var prestations = jQuery.parseJSON(fileContent);
 
-	for(var i=0; i<prestations.length;i++){
-		var prestation = new Prestation(prestations[i]);
-		prestation.save();	
+		for(var i=0; i<prestations.length;i++){
+			var prestation = new Prestation(prestations[i]);
+			prestation.save();	
+		}
 	}
+}
 
+function savecustomersIntoLocalStorage(fileContent){
+	if(fileContent != ""){
+		var customers = jQuery.parseJSON(fileContent);
+
+		for(var i=0; i<customers.length;i++){
+			var customer = new Customer(customers[i]);
+			customer.save();	
+		}
+	}
 }
 
 
+
 /**
- * Cette méthode sert à récupérer les métadonnées du fichier house_config.json qui est le seul fichier véritablement
- *  requis pour utiliser l'application. Ca détermine ensuite si on doit configurer les chambres pour la première fois où
- *  si on est redirigé sur la page des réservations
- * @param file = le fichier à récupérer, en l'occurence le fichier house_config.json
+ * Cette méthode vérifie que le fichier house_config.json est présent sur le serveur. A parti de là on
+ * peut déterminer si c'est une première utilisation de l'application. Ce fichier est primordial pour
+ * l'application, elle ne peut pas fonctionner sans ce dernier.
+ * Si c'est la première utilisation l'utilisateur est dirigé sur la page de configuration des chambres, 
+ * sinon on récupère tous les autres fichiers et on stocke leur contenu dans le cache.
  */
-function getEntryPointFile(file){
+function downloadRequiredFiles(){
 
-	window.file = file;
+	window.requiredFiles = ['house_config_prestations.json','resa.json', 'customers.json'];
 
-	retrieveFile(window.file, function(reponse){
+
+	retrieveFile('house_config_chambres.json', function(reponse){
 		if (reponse.items.length == 0 ) {
 			alert("PREMIERE UTILISATION");
 			app.firstConfigChambre();
 		}
 		else{
+
+			retrieveAndStoreOtherFiles(requiredFiles);
+
 			tpl.downloadFile(reponse.items[0] , saveChambreIntoLocalStorage);
 
-			var houseConfig = new FichierConfig({'id': window.file, 'idFichier': reponse.items[0].id});
+			var houseConfig = new FichierConfig({'id': 'house_config_chambres.json', 'idFichier': reponse.items[0].id});
 			houseConfig.save();
 
 			$('#room').show();
 			$('#logOut').show();
-			//$('#nameAppli').show();
 			document.getElementById('nameAppli').href = "#resa";
 			$('#service').show();
 			$('#listCustomer').show();
+
 			//et on redirige sur la page des réservations
 			app.resa();
 		}
@@ -128,19 +147,12 @@ function getEntryPointFile(file){
 
 
 /**
- * Télécharge les métadonnées de tous les fichiers utilisés par l'application
+ * Recupère tous les autres fichiers (non vitaux pour le bon fonctionnement de l'appli) et stocke 
+ * le contenu dans le cache
+ * @param requiredFiles
  */
-function downloadRequiredFiles(){
-
-	window.requiredFiles = ['house_config_chambres.json','house_config_prestations.json','resa.json'];
-	//window.requiredFiles = ['house_config_chambres.json'];//,'house_config_prestations.json','resa.json'];
-
-	getEntryPointFile(requiredFiles[0]);
-
-//faire quelque chose pour qu'on ne passe dans la boucle que si ce n'est pas la premiere utilisation, car les fichiers seront déjà crées 
-// dans firstConfigChambre.js
-	
-	for (var i= 1; i < requiredFiles.length; i++) {  
+function retrieveAndStoreOtherFiles(requiredFiles){
+	for (var i= 0; i < requiredFiles.length; i++) {  
 		window.fichier = requiredFiles[i];
 
 		retrieveFile(fichier, function(reponse){
@@ -172,6 +184,3 @@ function downloadRequiredFiles(){
 		});        
 	}
 }
-
-
-
