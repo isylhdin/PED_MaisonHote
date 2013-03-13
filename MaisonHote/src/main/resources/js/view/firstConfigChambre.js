@@ -161,7 +161,7 @@ window.SelectChambreView = Backbone.View.extend({
 		this.createFileService();
 
 		this.createFileClient();
-
+		
 		//on charge le menu
 		this.headerView = new HeaderView();
 		$('.header').html(this.headerView.el);

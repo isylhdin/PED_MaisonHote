@@ -27,9 +27,9 @@ window.ListCustomerView = Backbone.View.extend({
 		var customer = new Customer({'id': window.nbCustomers});
 		customers.add(customer);
 		
-		var obj = JSON.parse(localStorage.getItem("fichier-backbone-customers.json"));
-		if(obj==null)
-			this.createFileClient();
+//		var obj = JSON.parse(localStorage.getItem("fichier-backbone-customers.json"));
+//		if(obj==null)
+//			this.createFileClient();
 		
 		this.template = _.template(tpl.get('DataCustomerView'));
 		$('#dataCustomer').before(this.template(customer.toJSON()));
@@ -106,21 +106,21 @@ window.ListCustomerView = Backbone.View.extend({
 		});
 	},
 	
-	createFileClient: function(){
-		createNewFile('customers.json', function(reponse){
-			window.idCustomer = reponse.id;
-
-			console.log("dans createNewFile");
-			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
-			var fileCustomer = new FichierConfig({'id':reponse.title, 'idFichier': idCustomer });
-			fileCustomer.save();
-
-			updateFile(reponse.id,  JSON.stringify(customers.toJSON()),function(reponse){	
-				console.log(reponse);
-			});
-
-		});
-	}
+//	createFileClient: function(){
+//		createNewFile('customers.json', function(reponse){
+//			window.idCustomer = reponse.id;
+//
+//			console.log("dans createNewFile");
+//			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
+//			var fileCustomer = new FichierConfig({'id':reponse.title, 'idFichier': idCustomer });
+//			fileCustomer.save();
+//
+//			updateFile(reponse.id,  JSON.stringify(customers.toJSON()),function(reponse){	
+//				console.log(reponse);
+//			});
+//
+//		});
+//	}
     
     
 //    searchCustomer: function (){
