@@ -2049,7 +2049,7 @@ function BasicWeekView(element, calendar) {
 	}
 	/* Pour retrouver la fonction render originale :
 	 * enlever var rowCnt = opt('roomsNb') et remplacer
-	 * l'appel à renderBasic par : renderBasic(1, 1, weekends ? 7 : 5, false);
+	 * l'appel ï¿½ renderBasic par : renderBasic(1, 1, weekends ? 7 : 5, false);
 	 */
 }
 
@@ -2156,6 +2156,7 @@ function BasicView(element, calendar, viewName) {
 	var viewWidth;
 	var viewHeight;
 	var colWidth;
+	var roomColWidth;
 	var maxEventHeight;
 	
 	var rowCnt, colCnt;
@@ -2242,13 +2243,13 @@ function BasicView(element, calendar, viewName) {
 		for (i=0; i<rowCnt; i++) {
 
 			s +=
-				"<tr class='fc-week0'>" +
+				"<tr>" +
 				"<th id='room" + i + "' class='room-th'>"
 				 /*opt('roomNames')[i]*/ +
 				 "<div>" +
 					"<div style='position:relative'>Chambre " + (i + 1) + "</div>" +
 				 "</div>" +
-				 "</th>";
+				 "</th>" + "<div class='fc-week0'>";
 			for (j=0; j<colCnt; j++) {
 				s +=
 					"<td class='fc- " + contentClass + " fc-day" + j + "'>" + // need fc- for setDayID
@@ -2263,7 +2264,7 @@ function BasicView(element, calendar, viewName) {
 					"</div>" +
 					"</td>";
 			}
-			s +=
+			s += "</div>"
 				"</tr>";
 		}
 		s +=
@@ -2283,7 +2284,8 @@ function BasicView(element, calendar, viewName) {
 
 		markFirstLast(head.add(head.find('tr'))); // marks first+last tr/th's
 		markFirstLast(bodyRows); // marks first+last td's
-		bodyRows.eq(0).addClass('fc-first'); // fc-last is done in updateCells
+		bodyRows.find("td").eq(0).addClass('fc-first'); // fc-last is done in updateCells
+		//bodyRows.eq(0).
 
 		dayBind(bodyCells);
 
@@ -2358,7 +2360,7 @@ function BasicView(element, calendar, viewName) {
 
 
 	function updateCells(firstTime) {
-		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
+		var dowDirty = firstTime || isBasicWeek() || rowCnt == 1; // could the cells' day-of-weeks need updating?
 		var month = t.start.getMonth();
 		var today = clearTime(new Date());
 		var cell;
@@ -2376,7 +2378,11 @@ function BasicView(element, calendar, viewName) {
 		
 		bodyCells.each(function(i, _cell) {
 			cell = $(_cell);
-			date = indexDate(i);
+			if (isBasicWeek()) {
+				date = indexDate(i % 7);
+			} else {
+				date = indexDate(i);
+			}
 			if (date.getMonth() == month) {
 				cell.removeClass('fc-other-month');
 			}else{
@@ -2659,7 +2665,7 @@ function BasicView(element, calendar, viewName) {
 	
 	function allDayBounds(i) {
 		return {
-			left: 0,
+			left: isBasicWeek() ? roomColWidth : 0,
 			right: viewWidth
 		};
 	}
@@ -2699,7 +2705,7 @@ function BasicEventRenderer() {
 	var getColCnt = t.getColCnt;
 	var renderDaySegs = t.renderDaySegs;
 	var resizableDayEvent = t.resizableDayEvent;
-	
+	var isBasicWeek = t.isBasicWeek;
 	
 	
 	/* Rendering
@@ -2728,19 +2734,33 @@ function BasicEventRenderer() {
 			j, level,
 			k, seg,
 			segs=[];
-		for (i=0; i<rowCnt; i++) {
+			
+		if (isBasicWeek()) {
 			row = stackSegs(sliceSegs(events, visEventsEnds, d1, d2));
 			for (j=0; j<row.length; j++) {
 				level = row[j];
 				for (k=0; k<level.length; k++) {
 					seg = level[k];
-					seg.row = i;
-					seg.level = j; // not needed anymore
+					seg.row = seg.event.room - 1;
+					seg.level = j;
 					segs.push(seg);
 				}
 			}
-			addDays(d1, 7);
-			addDays(d2, 7);
+		} else {
+			for (i=0; i<rowCnt; i++) {
+				row = stackSegs(sliceSegs(events, visEventsEnds, d1, d2));
+				for (j=0; j<row.length; j++) {
+					level = row[j];
+					for (k=0; k<level.length; k++) {
+						seg = level[k];
+						seg.row = i;
+						seg.level = j; // not needed anymore
+						segs.push(seg);
+					}
+				}
+				addDays(d1, 7);
+				addDays(d2, 7);
+			}
 		}
 		return segs;
 	}
@@ -4724,7 +4744,7 @@ function DayEventRenderer() {
 				if (seg.isEnd) {
 					classes.push('fc-corner-right');
 				}
-				leftCol = dayOfWeekCol(seg.start.getDay());
+				leftCol = dayOfWeekCol(seg.start.getDay());			
 				rightCol = dayOfWeekCol(seg.end.getDay()-1);
 				left = seg.isStart ? colContentLeft(leftCol) : minLeft;
 				right = seg.isEnd ? colContentRight(rightCol) : maxLeft;
