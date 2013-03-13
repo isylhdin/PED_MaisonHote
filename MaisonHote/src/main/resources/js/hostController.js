@@ -119,6 +119,7 @@ function getEntryPointFile(file){
 			//$('#nameAppli').show();
 			document.getElementById('nameAppli').href = "#resa";
 			$('#service').show();
+			$('#listCustomer').show();
 			//et on redirige sur la page des réservations
 			app.resa();
 		}
