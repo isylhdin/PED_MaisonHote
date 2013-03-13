@@ -44,6 +44,7 @@ window.EventsView = Backbone.View.extend({
 		
 	},
 	render: function() {
+		var roomTitles = chambresPourCalendrier.pluck("id").map(function(room) {return "Chambre " + room});
 		$(this.el).fullCalendar({
 			header: {
 				left: 'prev,next',
@@ -63,11 +64,8 @@ window.EventsView = Backbone.View.extend({
 			roomsNb: chambresPourCalendrier.length,
 			roomColWidth: 0.1,
 			rowHeightForEvents: true,
-			eventContentToDisplay: this.eventContentToDisplay
-			/* possible !
-			roomNames: {first: "Chambre 1", snd: "Chambre 2", third: "Chambre 3"},
-			roomNames: ["Chambre 1", "Chambre 2", "Chambre 3"]
-			 */
+			eventContentToDisplay: this.eventContentToDisplay,
+			ordinateTitles: roomTitles
 		});
 	},
 	addAll: function() {

@@ -2049,7 +2049,7 @@ function BasicWeekView(element, calendar) {
 	}
 	/* Pour retrouver la fonction render originale :
 	 * enlever var rowCnt = opt('roomsNb') et remplacer
-	 * l'appel ï¿½ renderBasic par : renderBasic(1, 1, weekends ? 7 : 5, false);
+	 * l'appel à renderBasic par : renderBasic(1, 1, weekends ? 7 : 5, false);
 	 */
 }
 
@@ -2219,13 +2219,32 @@ function BasicView(element, calendar, viewName) {
 		colFormat = opt('columnFormat');
 	}
 
+	function getOrdinateTitles() {
+		var titles = calendar.options.ordinateTitles,
+			ordinateTitles = [],
+			idx = roomColWidth; // undefined; TODO: affecter roomColWidth plus tôt
+
+		for (var i in titles) {
+			title = titles[i];
+			//ordinateTitles.push(title.slice(0, idx) + "<br />" + title.slice(idx));
+			ordinateTitles.push(title);
+		}
+		return ordinateTitles;
+	}
 
 	function buildSkeletonBasicWeek(showNumbers) {
 		var s;
 		var headerClass = tm + "-widget-header";
 		var contentClass = tm + "-widget-content";
 		var i, j;
-		var table;
+		var table,
+			ordinateTitles,
+			ordinatesHaveName = false;
+
+		if (calendar.options.ordinateTitles) {
+			ordinateTitles = getOrdinateTitles();
+			ordinatesHaveName = true;
+		}
 		
 		s =
 			"<table class='fc-border-separate' style='width:100%' cellspacing='0'>" +
@@ -2243,13 +2262,13 @@ function BasicView(element, calendar, viewName) {
 		for (i=0; i<rowCnt; i++) {
 
 			s +=
-				"<tr>" +
-				"<th id='room" + i + "' class='room-th'>"
-				 /*opt('roomNames')[i]*/ +
+				"<tr class='fc-week0'>" +
+				"<th id='room" + i + "' class='room-th'>" +
 				 "<div>" +
-					"<div style='position:relative'>Chambre " + (i + 1) + "</div>" +
+					"<div style='position:relative'>" +
+					(ordinatesHaveName ? ordinateTitles[i] : (i + 1)) + "</div>" +
 				 "</div>" +
-				 "</th>" + "<div class='fc-week0'>";
+				 "</th>";
 			for (j=0; j<colCnt; j++) {
 				s +=
 					"<td class='fc- " + contentClass + " fc-day" + j + "'>" + // need fc- for setDayID
@@ -2264,7 +2283,7 @@ function BasicView(element, calendar, viewName) {
 					"</div>" +
 					"</td>";
 			}
-			s += "</div>"
+			s += //"</div>"
 				"</tr>";
 		}
 		s +=
