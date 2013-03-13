@@ -2,7 +2,7 @@ window.validateForm = {
 
 		onError: function(model, error, a) {
 			success = false;
-			_.each( error, function(fieldName) {	
+			_.each( error, function(fieldName) {
 				$('input[name=' + fieldName + model.id + ']').parents('.control-group').addClass('error');
 			}, a );
 

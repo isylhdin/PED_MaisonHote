@@ -21,6 +21,7 @@ var appRouter = Backbone.Router.extend({
 			//$('#nameAppli').hide();
 			document.getElementById('nameAppli').href = null;
 			$('#service').hide();
+			$('#listCustomer').hide();
 		} else {
 			//Quand on actualise la page 
 			//on récupère le nom du service de stockage qui est contenu dans le local storage

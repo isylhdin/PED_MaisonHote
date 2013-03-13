@@ -4,7 +4,7 @@ var Prestation = Backbone.Model.extend({
 	defaults: {
 		id:null,
 		title: '',
-		price: 0,
+		price: '',
 		number: 0,
 		comment: '',
 	},
@@ -14,6 +14,7 @@ var Prestation = Backbone.Model.extend({
 	},
 
 	validate: function( attrs ) {
+		console.log(attrs);
 		var errors = [];
 		if ( !attrs.title.length ) errors.push('title');
 		if ( !attrs.price.length ) errors.push('price');
