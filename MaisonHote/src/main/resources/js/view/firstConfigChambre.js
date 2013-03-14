@@ -1,10 +1,11 @@
 window.SelectChambreView = Backbone.View.extend({
 
 	events : {
+		"click .btn-danger"   		: "onDelete",
 		"click .dropdown-menu a"	: "displayRoomConfigForms",
-		"click #submit"  : "onSubmit",
-		"focus input"	 : "onInputGetFocus",
-		"click #btnAddServ" : "constructFormService"
+		"click #submit" 			: "onSubmit",
+		"focus input"	 			: "onInputGetFocus",
+		"click #btnAddServ" 		: "constructFormService"
 	},
 
 
@@ -15,6 +16,7 @@ window.SelectChambreView = Backbone.View.extend({
 		var chambres;
 		var success = true;
 		this.render();
+		document.getElementById('nameAppli').href = '#';
 	},
 
 	render: function () {
@@ -38,9 +40,9 @@ window.SelectChambreView = Backbone.View.extend({
 			this.template = _.template(tpl.get('ChambreView'));
 			//injecte l'id de la chambre dans le code html
 			$('#maison').append(this.template(window["chambre" + i].toJSON()));	
-			$('#litSimple'+i).spinner();
-			$('#litDouble'+i).spinner();
-			$('#litJumeau'+i).spinner();
+			$('#litSimple'+i).spinner({min: 0});
+			$('#litDouble'+i).spinner({min: 0});
+			$('#litJumeau'+i).spinner({min: 0});
 			$('#'+i).remove();
 
 			window["chambre"+i].bind('invalid ', this.onError);
@@ -50,6 +52,7 @@ window.SelectChambreView = Backbone.View.extend({
 
 	displayRoomConfigForms: function(event){
 		nbChambre = $(event.currentTarget).text();
+		$('#submit').removeAttr("disabled");
 		this.constructForm(nbChambre);
 	},
 
@@ -64,7 +67,17 @@ window.SelectChambreView = Backbone.View.extend({
 		prestations.add(window["prestation"+nbPrest]);
 		this.template = _.template(tpl.get('ServiceView'));
 		$('#prestation').append(this.template(window["prestation"+nbPrest].toJSON()));
-		$('#'+nbPrest).remove();
+	},
+	
+	onDelete: function(event){
+		var id = $(event.currentTarget).data('id');
+		console.log(id);
+		var prestation =  window.prestations.get(id);
+		prestations.remove(prestation);
+		prestation.destroy();
+		console.log(prestation);
+		
+		$('#rowPrestation'+id).remove();	
 	},
 
 	saveDataRoom: function(){
@@ -85,6 +98,17 @@ window.SelectChambreView = Backbone.View.extend({
 		}	
 	},
 
+	saveDataService: function(){
+		for(i=1;i<=nbPrest;i++){
+			var titleP = $('#title'+i).val();
+			var priceP = $('#price'+i).val();
+			var commentP = $('#comment'+i).val();
+
+			//set les chambres dans la collection et les sauvegarde une par une dans le cache
+			window["prestation"+i].save({'title':titleP,'price':priceP, 'comment':commentP}); 
+		}
+	},
+	
 	//creation du fichier house_config_chambres
 	createFileChambre: function(){	
 		createNewFile('house_config_chambres.json', function(reponse){	
@@ -99,17 +123,6 @@ window.SelectChambreView = Backbone.View.extend({
 			});
 
 		});
-	},
-
-	saveDataService: function(){
-		for(i=1;i<=nbPrest;i++){
-			var titleP = $('#title'+i).val();
-			var priceP = $('#price'+i).val();
-			var commentP = $('#comment'+i).val();
-
-			//set les chambres dans la collection et les sauvegarde une par une dans le cache
-			window["prestation"+i].save({'title':titleP,'price':priceP, 'comment':commentP}); 
-		}
 	},
 
 	//creation du fichier house_config_prestations

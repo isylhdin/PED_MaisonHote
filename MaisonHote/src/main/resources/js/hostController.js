@@ -125,7 +125,10 @@ function downloadRequiredFiles(){
 		}
 		else{
 
-			retrieveAndStoreOtherFiles(requiredFiles);
+			for (var i = 0; i < requiredFiles.length; i++) {
+				retrieveAndStoreOtherFiles(requiredFiles[i]);
+			}
+
 
 			tpl.downloadFile(reponse.items[0] , saveChambreIntoLocalStorage);
 
@@ -146,41 +149,70 @@ function downloadRequiredFiles(){
 
 
 /**
- * Recupère tous les autres fichiers (non vitaux pour le bon fonctionnement de l'appli) et stocke 
- * le contenu dans le cache
+ * Recupère le fichier passé en paramètre (non vital pour le bon fonctionnement de l'appli) et stocke 
+ * le contenu dans le cache. S'il n'existe pas on le crée
  * @param requiredFiles
  */
 function retrieveAndStoreOtherFiles(requiredFiles){
-	for (var i= 0; i < requiredFiles.length; i++) {  
 
-		window.fichier = requiredFiles[i];
 
-		retrieveFile(fichier, function(reponse){
-			//s'il n'existe pas sur le serveur
-			if (reponse.items.length == 0 ) {
+	console.log("à l'entrée : "+requiredFiles);
+	window.file = requiredFiles;
+	retrieveFile(file, function(reponse){
+		//s'il n'existe pas sur le serveur
+		if (reponse.items.length == 0 ) {
 
-				// on le crée sur le serveur
-				createNewFile(fichier, function(reponse){	
-					window.idFichier = reponse.id;
-					console.log("un fichier a été créé sur le serveur, il a l'id "+idFichier);
-				});
+			console.log("creation du fichier "+file);
+			// on le crée sur le serveur
+			createNewFile(file, function(reponse){	
+				window.idFichier = reponse.id;
+				console.log("un fichier a été créé sur le serveur, il a l'id "+idFichier);
+			});
 
-			}
-			else{
-				console.log("le fichier "+reponse.items[0].title+" était deja sur le serveur, il a l'id "+reponse.items[0].id);
+		}
+		else{
+			console.log("le fichier "+reponse.items[0].title+" était deja sur le serveur, il a l'id "+reponse.items[0].id);
 
-				//pour appeler la bonne méthode qui va sauvagegarder dans le cache, on retire .json au nom du fichier
-				var reg=new RegExp("[.]+", "g"); 
-				var tableau=reponse.items[0].title.split(reg);
-				var name = tableau[0]; //contient "resa" par exemple
+			//pour appeler la bonne méthode qui va sauvagegarder dans le cache, on retire .json au nom du fichier
+			var reg=new RegExp("[.]+", "g"); 
+			var tableau=reponse.items[0].title.split(reg);
+			var name = tableau[0]; //contient "resa" par exemple
 
-				tpl.downloadFile(reponse.items[0] , eval("save"+name+"IntoLocalStorage"));
+			tpl.downloadFile(reponse.items[0] , eval("save"+name+"IntoLocalStorage"));
 
-				//stocke l'id du fichier récupéré du serveur, dans le cache
-				var fichierConfig = new FichierConfig({'id': reponse.items[0].title,'idFichier': reponse.items[0].id});
-				fichierConfig.save();
+			//stocke l'id du fichier récupéré du serveur, dans le cache
+			var fichierConfig = new FichierConfig({'id': reponse.items[0].title,'idFichier': reponse.items[0].id});
+			fichierConfig.save();
 
-			}
-		});        
-	}
+		}
+	}); 
+
+
+
+/** C'est ce code qu'il faudra utiliser à terme. Il utilise une closure qui permet de conserver la bonne valeur l'indice de boucle
+ * et ainsi de prendre en compte le bon fichier, plutot que de sauvegarder plusieurs fois le même fichier 
+ * **/
+	
+//	for (var i = 0; i < requiredFiles.length; i++) {
+
+//	retrieveFile(requiredFiles[i], (function (index) { 
+
+//	console.log(index); //works
+//	var index = index; // index is still not accessible with that
+//	return function (response) { // function(response, index) is not possible, i must have only one parameter
+//	console.log(index); // index is not defined
+//	if (response.items.length == 0) {
+//	console.log(response);
+//	createNewFile(requiredFiles[index], function (response) {
+
+//	});
+//	}
+
+//	}
+
+//	})(i));
+//	}
+
+
+
 }

@@ -1,7 +1,7 @@
  <!-- Example row of columns -->
  <div align="center">
 	<div class="hero-unit">
-		<h4 class="selectRoom">Veuillez indiquer combien de chambres vous possédez</h4>
+		<h4 class="selectRoom">Veuillez indiquer combien de chambres vous possédez  <span class="badge badge-important" data-toggle='tooltip' title='Obligatoire'>1</span></h4>
 
 	    <div class="btn-group">
 			<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
@@ -32,16 +32,18 @@
 	<hr />
 	<div>
 		<div class="hero-unit" align="center">
-		<h4>Veuillez indiquer les différentes prestations que votre maison d'hôte propose !</h4>
+		<h4>Veuillez indiquer les différentes prestations que votre maison d'hôte propose !  <span class="badge badge-info" data-toggle='tooltip' title='Optionnel'>2</span></h4>
 		</div>
 		<div class="row">
 		  <div class="span2">
 			<!-- <a href="#" class="btn btn-large" type="image" id="addServ">+</a> -->
-			<button class="btn btn-large" type="submit" id="btnAddServ">+</button>
+			<button class="btn btn-success" type="submit" id="btnAddServ"><i class='icon-plus icon-white'></i></button>
 		  </div>
 		  <div class="span8">
 		    <div id="prestation"></div>
-		    <button type="submit" class="btn" id="submit">Enregistrer</button>
 		  </div>
 		</div>
 	</div>
+	  <div style="margin-top:80px" align="center">
+	 	<button type="submit" class="btn btn-primary" id="submit" disabled='disabled'>Enregistrer</button>
+	 </div>
