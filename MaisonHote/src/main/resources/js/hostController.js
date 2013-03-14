@@ -97,8 +97,10 @@ function savehouse_config_prestationsIntoLocalStorage(fileContent){
 function savecustomersIntoLocalStorage(fileContent){
 	if(fileContent != ""){
 		var customers = jQuery.parseJSON(fileContent);
+		window.nbCustomers = 0;
 
 		for(var i=0; i<customers.length;i++){
+			window.nbCustomers++;
 			var customer = new Customer(customers[i]);
 			customer.save();	
 		}
