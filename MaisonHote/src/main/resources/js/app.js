@@ -7,7 +7,8 @@ var appRouter = Backbone.Router.extend({
 		"chambre":  		"editChambre", //index.html#chambre
 		"prestation":  		"editPrestation", //index.html#prestation
 		"ficheSejour/:id":  	"ficheSejour", //index.html#ficheSejour/id
-		"listCustomer":  	"listCustomer" //index.html#listCustomer
+		"listCustomer":  	"listCustomer", //index.html#listCustomer
+		"facturation":  	"facturation" //index.html#facturation
 	},
 
 
@@ -103,6 +104,15 @@ var appRouter = Backbone.Router.extend({
 		$('#content').html(this.listCustomerView.el);
 	},
 
+	facturation: function() {
+		console.log("Welcome back config facturation!");
+		factures = new Factures();
+		factures.localStorage = new Backbone.LocalStorage("factures-backbone");
+		factures.fetch();
+		this.facturation = new FacturationView();
+		$('#content').html(this.facturation.el);
+	},
+	
 	ficheSejour: function(id, params) {
 		console.log("Welcome back sejour!");
 		//console.log(id);
@@ -235,7 +245,7 @@ tpl = {
 
 tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView',
 		'ChambreView', 'ConnexionView', 'ficheSejourView','ServiceView',
-		'ModalView','ListCustomerView','DataCustomerView'], function() {
+	'ModalView','ListCustomerView','FacturationView','DataCustomerView'], function() {
 
 	app = new appRouter();
 	Backbone.history.start();
