@@ -151,6 +151,8 @@ window.SelectChambreView = Backbone.View.extend({
 			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
 			var clientFile = new FichierConfig({'id':reponse.title, 'idFichier': idClient });
 			clientFile.save();
+			
+			window.nbCustomers = 0;
 
 		});
 	},

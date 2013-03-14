@@ -12,17 +12,21 @@ window.ListCustomerView = Backbone.View.extend({
     },
 
     render: function () {
-        window.nbCustomers = 0;
-        window.customers = new Customers();
-		window.customers.localStorage = new Backbone.LocalStorage("customers-backbone");
-
         $(this.el).html(_.template(tpl.get('ListCustomerView')));
+        if(customers!=null)
+        {
+        	customers.each(function(Customer){
+        		// à compléter
+        	}
+        }
         return this;
     },
     
     constructFormCustomer: function(){
     	console.log("clic add !");
-		nbCustomers++;
+    	console.log("nbCustomers avant ++ : "+window.nbCustomers);
+    	window.nbCustomers++;
+    	console.log("nbCustomers après ++ : "+window.nbCustomers);
 
 		customer = new Customer({'id': window.nbCustomers});
 		customers.add(customer);
@@ -83,6 +87,7 @@ window.ListCustomerView = Backbone.View.extend({
 
 		//update le fichier sur le serveur
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-customers.json"));
+		console.log("dans collection customers"+customers);
 		updateFile(obj.idFichier, JSON.stringify(customers.toJSON()), function(reponse) {	
 			console.log(reponse);
 		});
