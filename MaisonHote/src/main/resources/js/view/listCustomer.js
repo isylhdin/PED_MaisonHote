@@ -72,7 +72,7 @@ window.ListCustomerView = Backbone.View.extend({
 				// à cause de la modif (les clients sont bindées)
 				silent: true
 			});
-	//	});
+		//});
 		
 //		if(!success) {
 //			return;
