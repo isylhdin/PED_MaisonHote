@@ -17,6 +17,7 @@ window.SelectChambreView = Backbone.View.extend({
 		var success = true;
 		this.render();
 		document.getElementById('nameAppli').href = '#';
+		$('#logOut').show();
 	},
 
 	render: function () {
@@ -47,7 +48,6 @@ window.SelectChambreView = Backbone.View.extend({
 
 			window["chambre"+i].bind('invalid ', this.onError);
 		}
-		// this.submit();
 	},
 
 	displayRoomConfigForms: function(event){
