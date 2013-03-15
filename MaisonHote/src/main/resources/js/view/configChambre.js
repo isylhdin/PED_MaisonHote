@@ -59,7 +59,6 @@ window.EditChambreView = Backbone.View.extend({
 	reRenderChambre: function() {
 		var chambre = this;
 		var addition = parseInt(chambre.id) + 1;
-		console.log($('#row' + addition));
 		$('#row'+addition).replaceWith(window.template(chambre.toJSON()));
 	},
 
@@ -74,7 +73,7 @@ window.EditChambreView = Backbone.View.extend({
 	 * => Les 3 types d'alert sont "hidden" et s'afficheront le moment voulu lors de l'appel à la méthode 'onSubmit'
 	 */
 	footpage: function() {
-		
+
 		//si on a deja 5 chambres d'affichées, on disable le bouton add
 		if(nbChambres == 5){
 			this.$('#chambre').append("<div class='row' id='add'> <button class='btn btn-success' disabled='disabled'><i class='icon-plus icon-white'></i> Ajouter</button></div>");
@@ -82,9 +81,9 @@ window.EditChambreView = Backbone.View.extend({
 			this.$('#chambre').append("<div class='row' id='add'> <button class='btn btn-success' ><i class='icon-plus icon-white'></i> Ajouter</button></div>");
 		}
 
-		
+
 		this.$el.append("<div class='row'><div class='hero-unit' align='center'><h4>Edition des arrhes</h4> Arrhes : <input class='input-small' id='arrhes' /> % </div></div>");
-		
+
 		window.arrhes = new Arrhes();
 		arrhes.localStorage = new Backbone.LocalStorage("arrhes-backbone");
 		var self = this;
@@ -93,7 +92,7 @@ window.EditChambreView = Backbone.View.extend({
 				self.$('#arrhes').val(arrhes.get(0).montant);
 			}
 		});		
-		
+
 		this.$el.append("<div id='rowSubmit' class='row' align='center'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
 		this.$el.append("<div id='waitingResult' style='visibility:hidden' class='alert alert-info'>Sauvegarde en cours ... </div>");
 		this.$el.append("<div id='goodResult' style='visibility:hidden' class='alert alert-success'>Vos données ont été sauvegardées avec succès ! </div>");
@@ -156,7 +155,7 @@ window.EditChambreView = Backbone.View.extend({
 		var previous = parseInt(nbChambres) - 1;
 		this.template = _.template(tpl.get('ChambreView'));
 		$('#row'+previous).after(this.template(chambre.toJSON()));
-		
+
 		this.$el.find('#litSimple'+chambre.id).spinner({min: 0});
 		this.$el.find('#litDouble'+chambre.id).spinner({min: 0});
 		this.$el.find('#litJumeau'+chambre.id).spinner({min: 0});
@@ -184,11 +183,9 @@ window.EditChambreView = Backbone.View.extend({
 			window.litSimple = $('#litSimple' + Chambre.id).val();
 			window.litDouble = $('#litDouble' + Chambre.id).val();
 			window.litJumeau = $('#litJumeau' + Chambre.id).val();
-			
+
 			window.avance = $('#arrhes').val();
-			
-			var arrhes = new Arrhes();
-			arrhes.save({'id':0, 'montant':avance});
+
 
 			Chambre.save({
 				'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie,
@@ -206,10 +203,22 @@ window.EditChambreView = Backbone.View.extend({
 			});
 		});
 		
+		var arrhes = new Arrhes();
+		arrhes.save({'id':0, 'montant':avance});
+
 		if(!success) {
 			return;
 		}
 		
+		//supprime les chambres en trop dans le cache
+		window.tab = localStorage.getItem('chambres-backbone');
+		var index = parseInt(nbChambres) + 1;
+		while(tab.contains(index)){
+			console.log("l'index "+index+" est dedans ! : "  +"chambres-backbone-"+index);
+			localStorage.removeItem("chambres-backbone-"+index);
+			index++;
+		}
+
 		$('#waitingResult').css('visibility','visible');
 		$('#waitingResult').show();
 
@@ -226,8 +235,8 @@ window.EditChambreView = Backbone.View.extend({
 				});
 			} else {
 				console.log("ERROR § " + nbChambresSauveesDansCache +
-							" chambres sur " + nbChambres +
-							" ont été sauvegardées dans le cache");
+						" chambres sur " + nbChambres +
+				" ont été sauvegardées dans le cache");
 				$('#badResult').css('visibility','visible');
 				$('#badResult').show();
 				$('#badResult').fadeOut(15000, function() {
@@ -255,15 +264,15 @@ window.EditChambreView = Backbone.View.extend({
 	 * les chambres suivantes
 	 */
 	deleteFromCache: function() {
+		
 		console.log("id de la chambre supprimée = " + id +
-					" et nbChambre = " + nbChambres);
+				" et nbChambre = " + nbChambres);
 		if (id <= nbChambres) {
-			localStorage.removeItem("chambres-backbone-"+window.id);
+			//localStorage.removeItem("chambres-backbone-"+window.id);
 			for (var i = window.id + 1; i <= nbChambres; i++){
-				localStorage.removeItem("chambres-backbone-" + i);
+				//localStorage.removeItem("chambres-backbone-" + i);
 				var chambre =  window.chambres.get(i);
-				chambre.set({'id': i-1});
-				console.log(chambre);
+				chambre.set({'id': i-1},{validate:false});
 			}
 		}
 	},
@@ -274,12 +283,12 @@ window.EditChambreView = Backbone.View.extend({
 			$('.btn-success').attr("disabled", true);
 		}
 	},
-	
+
 	onError: function(model, error) {
-		 success = window.validateForm.onError(model, error, this);
+		success = window.validateForm.onError(model, error, this);
 	},
 
 	onInputGetFocus: function(e) {
-		 window.validateForm.onInputGetFocus(e);
+		window.validateForm.onInputGetFocus(e);
 	}
 });

@@ -75,8 +75,8 @@ window.SelectChambreView = Backbone.View.extend({
 		console.log(id);
 		var prestation =  window.prestations.get(id);
 		prestations.remove(prestation);
-		prestation.destroy();
-		console.log(prestation);
+
+		nbPrest--;
 
 		$('#rowPrestation'+id).remove();	
 	},
@@ -105,6 +105,7 @@ window.SelectChambreView = Backbone.View.extend({
 			var priceP = $('#price'+i).val();
 			var commentP = $('#comment'+i).val();
 
+			console.log(window["prestation"+i]);
 			//set les prestations dans la collection et les sauvegarde une par une dans le cache
 			window["prestation"+i].save({'title':titleP,'price':priceP, 'comment':commentP}); 
 		}
