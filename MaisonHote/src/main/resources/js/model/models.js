@@ -2,7 +2,6 @@ var Token = Backbone.Model.extend({
 	localStorage: new Backbone.LocalStorage("token-backbone"),
 });
 
-
 var FichierConfig = Backbone.Model.extend({
 	localStorage: new Backbone.LocalStorage("fichier-backbone")
 });
@@ -13,7 +12,6 @@ var CurrentHost = Backbone.Model.extend({
 	},
 	localStorage: new Backbone.LocalStorage("currentHost-backbone")
 });
-
 
 var Reservation = Backbone.Model.extend({
 	localStorage: new Backbone.LocalStorage("resas-backbone"),
@@ -32,20 +30,6 @@ var Reservation = Backbone.Model.extend({
 		console.log('Réservation créée !');
 		//this.on('doReset', this.reset);
 	}
-/*
-	validate: function(attrs) {
-		var errors = [];
-		if (!attrs.lastName.length) errors.push('lastName');
-		if (!attrs.firstName.length) errors.push('firstName');
-		if (!attrs.phone.length) errors.push('phone');
-		if (!attrs.room.length) errors.push('room');
-		if (errors.length) return errors;
-	}*/
-/*	reset: function() {
-		this.clear({ silent:true });
-		this.set(this.defaults, { silent:true });
-		this.trigger("reset");
-	}*/
 });
 
 var Reservations = Backbone.Collection.extend({
@@ -59,3 +43,8 @@ var Reservations = Backbone.Collection.extend({
 		return this.last().get('id') + 1;
 	}
 });
+
+var Arrhes = Backbone.Model.extend({
+	localStorage: new Backbone.LocalStorage("arrhes-backbone")
+});
+

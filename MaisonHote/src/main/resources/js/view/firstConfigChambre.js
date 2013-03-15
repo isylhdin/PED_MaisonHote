@@ -53,6 +53,7 @@ window.SelectChambreView = Backbone.View.extend({
 	displayRoomConfigForms: function(event){
 		nbChambre = $(event.currentTarget).text();
 		$('#submit').removeAttr("disabled");
+		$('#arrhes').removeAttr("disabled");
 		this.constructForm(nbChambre);
 	},
 
@@ -68,7 +69,7 @@ window.SelectChambreView = Backbone.View.extend({
 		this.template = _.template(tpl.get('ServiceView'));
 		$('#prestation').append(this.template(window["prestation"+nbPrest].toJSON()));
 	},
-	
+
 	onDelete: function(event){
 		var id = $(event.currentTarget).data('id');
 		console.log(id);
@@ -76,7 +77,7 @@ window.SelectChambreView = Backbone.View.extend({
 		prestations.remove(prestation);
 		prestation.destroy();
 		console.log(prestation);
-		
+
 		$('#rowPrestation'+id).remove();	
 	},
 
@@ -104,11 +105,31 @@ window.SelectChambreView = Backbone.View.extend({
 			var priceP = $('#price'+i).val();
 			var commentP = $('#comment'+i).val();
 
-			//set les chambres dans la collection et les sauvegarde une par une dans le cache
+			//set les prestations dans la collection et les sauvegarde une par une dans le cache
 			window["prestation"+i].save({'title':titleP,'price':priceP, 'comment':commentP}); 
 		}
 	},
-	
+
+
+	saveArrhes: function(){
+		var arrhes = new Arrhes();
+		
+		if($('#arrhes').val() != ""){
+			//on sauvegarde le montant dans le cache
+			arrhes.save({'montant':$('#arrhes').val()});
+			
+			//on set la chambre 1 avec le montant
+			//comme on ne va pas stocker les arrhes dans un fichier à part
+			//on pourra les récupérer à la prochaine connexion depuis la
+			//chambre 1
+			chambre1.save({'arrhes':$('#arrhes').val()});
+		}else{
+			arrhes.save({'montant':0});
+			chambre1.save({'arrhes':0});
+		}
+	},
+
+
 	//creation du fichier house_config_chambres
 	createFileChambre: function(){	
 		createNewFile('house_config_chambres.json', function(reponse){	
@@ -130,10 +151,10 @@ window.SelectChambreView = Backbone.View.extend({
 		createNewFile('house_config_prestations.json', function(reponse){	
 			window.idHouseConfig = reponse.id;
 
-			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
 			var houseConfig = new FichierConfig({'id':reponse.title, 'idFichier': idHouseConfig });
 			houseConfig.save();
 
+			//Si l'utilisateur configure des prestations
 			if (typeof(prestations) !== 'undefined'){
 				updateFile(reponse.id,  JSON.stringify(prestations.toJSON()),function(reponse){	
 					console.log(reponse);
@@ -148,20 +169,18 @@ window.SelectChambreView = Backbone.View.extend({
 		createNewFile('customers.json', function(reponse){	
 			window.idClient = reponse.id;
 
-			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
 			var clientFile = new FichierConfig({'id':reponse.title, 'idFichier': idClient });
 			clientFile.save();
-			
+
 			window.nbCustomers = 0;
 
 		});
 	},
-	
+
 	createFileResa: function(){
 		createNewFile('resa.json', function(reponse){	
 			window.idResa = reponse.id;
 
-			//on conserve l'id du fichier dans le cache pour pouvoir utiliser le web service d'update dessus (a besoin de son id)
 			var resaFile = new FichierConfig({'id':reponse.title, 'idFichier': idResa });
 			resaFile.save();
 
@@ -178,22 +197,25 @@ window.SelectChambreView = Backbone.View.extend({
 		//partie prestation
 		this.saveDataService();
 
+		this.saveArrhes();
+
+
 		if(!success){
 			return;
 		}
 
 		/*********** crée tous les fichiers dont l'appli a besoin pour la suite ***********/
-		
+
 		this.createFileChambre();
 
 		this.createFileService();
 
 		this.createFileClient();
-		
+
 		this.createFileResa();
-		
+
 		/**********************************************************************************/
-		
+
 		this.headerView = new HeaderView();
 		$('.header').html(this.headerView.el);
 		app.resa();

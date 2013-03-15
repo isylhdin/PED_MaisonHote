@@ -77,12 +77,12 @@ window.EditChambreView = Backbone.View.extend({
 
 		//si on a deja 5 chambres d'affichées, on disable le bouton add
 		if(nbChambres == 5){
-			this.$el.append("<div class='row' id='add'> <button class='btn btn-success' disabled='disabled'><i class='icon-plus icon-white'></i> Ajouter</button></div>");
+			this.$('#chambre').append("<div class='row' id='add'> <button class='btn btn-success' disabled='disabled'><i class='icon-plus icon-white'></i> Ajouter</button></div>");
 		}else{
-			this.$el.append("<div class='row' id='add'> <button class='btn btn-success' ><i class='icon-plus icon-white'></i> Ajouter</button></div>");
+			this.$('#chambre').append("<div class='row' id='add'> <button class='btn btn-success' ><i class='icon-plus icon-white'></i> Ajouter</button></div>");
 		}
 
-		this.$el.append("<div class='row'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
+		this.$el.append("<div class='row hero-unit' align='center'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
 		this.$el.append("<div id='waitingResult' style='visibility:hidden' class='alert alert-info'>Sauvegarde en cours ... </div>");
 		this.$el.append("<div id='goodResult' style='visibility:hidden' class='alert alert-success'>Vos données ont été sauvegardées avec succès ! </div>");
 		this.$el.append("<div id='badResult'  style='visibility:hidden' class='alert alert-error'>Une erreur est survenue lors de la sauvegarde. Veuillez vérifier que vous êtes connecté à Internet et que vous utilisez un navigateur récent puis réésayez</div>");
@@ -141,8 +141,9 @@ window.EditChambreView = Backbone.View.extend({
 		var chambre = new Chambre({'id': window.nbChambres});
 		chambres.add(chambre);
 
+		var previous = parseInt(nbChambres) - 1;
 		this.template = _.template(tpl.get('ChambreView'));
-		$('#add').before(this.template(chambre.toJSON()));
+		$('#row'+previous).after(this.template(chambre.toJSON()));
 		
 		this.$el.find('#litSimple'+chambre.id).spinner({min: 0});
 		this.$el.find('#litDouble'+chambre.id).spinner({min: 0});

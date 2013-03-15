@@ -131,6 +131,8 @@ function downloadRequiredFiles(){
 				retrieveAndStoreOtherFiles(requiredFiles[i]);
 			}
 
+//			retrieveAndStoreOtherFiles(requiredFiles);
+
 
 			tpl.downloadFile(reponse.items[0] , saveChambreIntoLocalStorage);
 
@@ -191,29 +193,39 @@ function retrieveAndStoreOtherFiles(requiredFiles){
 
 
 
-/** C'est ce code qu'il faudra utiliser à terme. Il utilise une closure qui permet de conserver la bonne valeur l'indice de boucle
- * et ainsi de prendre en compte le bon fichier, plutot que de sauvegarder plusieurs fois le même fichier 
- * **/
-	
+	/** C'est ce code qu'il faudra utiliser à terme. Il utilise une closure qui permet de conserver la bonne valeur l'indice de boucle
+	 * et ainsi de prendre en compte le bon fichier, plutot que de sauvegarder plusieurs fois le même fichier 
+	 * **/
+
 //	for (var i = 0; i < requiredFiles.length; i++) {
-
-//	retrieveFile(requiredFiles[i], (function (index) { 
-
-//	console.log(index); //works
-//	var index = index; // index is still not accessible with that
+//	var i = i;
+//	retrieveFile(requiredFiles[i], 
+//	(function (index) { 
+//	console.log(index); //works	
 //	return function (response) { // function(response, index) is not possible, i must have only one parameter
-//	console.log(index); // index is not defined
+//	//console.log(index); // index is not defined
 //	if (response.items.length == 0) {
 //	console.log(response);
 //	createNewFile(requiredFiles[index], function (response) {
-
 //	});
 //	}
-
-//	}
-
+//	};
 //	})(i));
 //	}
+
+
+//	for(var i = 0; i < requiredFiles.length; i++) {
+//	retrieveFile(requiredFiles[i],
+//	( function(arg1) {
+
+//	return function(reponse) {
+
+//	console.log(requiredFiles[arg1]);
+//	};
+//	} ) ( i )
+//	);
+//	}
+
 
 
 

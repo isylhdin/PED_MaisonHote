@@ -103,15 +103,6 @@ var appRouter = Backbone.Router.extend({
 		this.listCustomerView = new ListCustomerView();
 		$('#content').html(this.listCustomerView.el);
 	},
-
-	facturation: function() {
-		console.log("Welcome back config facturation!");
-		factures = new Factures();
-		factures.localStorage = new Backbone.LocalStorage("factures-backbone");
-		factures.fetch();
-		this.facturation = new FacturationView();
-		$('#content').html(this.facturation.el);
-	},
 	
 	ficheSejour: function(id, params) {
 		console.log("Welcome back sejour!");
