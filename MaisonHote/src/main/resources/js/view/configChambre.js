@@ -74,7 +74,7 @@ window.EditChambreView = Backbone.View.extend({
 	 * => Les 3 types d'alert sont "hidden" et s'afficheront le moment voulu lors de l'appel à la méthode 'onSubmit'
 	 */
 	footpage: function() {
-
+		
 		//si on a deja 5 chambres d'affichées, on disable le bouton add
 		if(nbChambres == 5){
 			this.$('#chambre').append("<div class='row' id='add'> <button class='btn btn-success' disabled='disabled'><i class='icon-plus icon-white'></i> Ajouter</button></div>");
@@ -82,7 +82,19 @@ window.EditChambreView = Backbone.View.extend({
 			this.$('#chambre').append("<div class='row' id='add'> <button class='btn btn-success' ><i class='icon-plus icon-white'></i> Ajouter</button></div>");
 		}
 
-		this.$el.append("<div class='row hero-unit' align='center'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
+		
+		this.$el.append("<div class='row'><div class='hero-unit' align='center'><h4>Edition des arrhes</h4> Arrhes : <input class='input-small' id='arrhes' /> % </div></div>");
+		
+		window.arrhes = new Arrhes();
+		arrhes.localStorage = new Backbone.LocalStorage("arrhes-backbone");
+		var self = this;
+		arrhes.fetch({
+			success: function() {
+				self.$('#arrhes').val(arrhes.get(0).montant);
+			}
+		});		
+		
+		this.$el.append("<div id='rowSubmit' class='row' align='center'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
 		this.$el.append("<div id='waitingResult' style='visibility:hidden' class='alert alert-info'>Sauvegarde en cours ... </div>");
 		this.$el.append("<div id='goodResult' style='visibility:hidden' class='alert alert-success'>Vos données ont été sauvegardées avec succès ! </div>");
 		this.$el.append("<div id='badResult'  style='visibility:hidden' class='alert alert-error'>Une erreur est survenue lors de la sauvegarde. Veuillez vérifier que vous êtes connecté à Internet et que vous utilisez un navigateur récent puis réésayez</div>");
@@ -172,12 +184,17 @@ window.EditChambreView = Backbone.View.extend({
 			window.litSimple = $('#litSimple' + Chambre.id).val();
 			window.litDouble = $('#litDouble' + Chambre.id).val();
 			window.litJumeau = $('#litJumeau' + Chambre.id).val();
+			
+			window.avance = $('#arrhes').val();
+			
+			var arrhes = new Arrhes();
+			arrhes.save({'id':0, 'montant':avance});
 
 			Chambre.save({
 				'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie,
 				'tele':tele, 'internet':internet, 'baignoire':baignoire,
 				'douche':douche, 'litSimple': litSimple, 'litDouble': litDouble,
-				'litJumeau': litJumeau
+				'litJumeau': litJumeau, 'arrhes':avance
 			},
 			{
 				success: function(model, response, options) {

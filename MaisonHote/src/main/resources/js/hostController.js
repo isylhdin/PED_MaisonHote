@@ -63,6 +63,10 @@ function saveChambreIntoLocalStorage(fileContent){
 		//nécessaire pour afficher la légende du calendrier
 		chambresPourCalendrier.add(chambre);
 	}
+	
+	//récupère le % d'arrhes depuis la première chambre
+	var arrhes = new Arrhes();
+	arrhes.save({'id':0,'montant':chambres[0].arrhes});
 }
 
 

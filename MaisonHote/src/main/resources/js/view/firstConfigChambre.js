@@ -116,7 +116,7 @@ window.SelectChambreView = Backbone.View.extend({
 		
 		if($('#arrhes').val() != ""){
 			//on sauvegarde le montant dans le cache
-			arrhes.save({'montant':$('#arrhes').val()});
+			arrhes.save({'id':0, 'montant':$('#arrhes').val()});
 			
 			//on set la chambre 1 avec le montant
 			//comme on ne va pas stocker les arrhes dans un fichier à part
@@ -124,7 +124,7 @@ window.SelectChambreView = Backbone.View.extend({
 			//chambre 1
 			chambre1.save({'arrhes':$('#arrhes').val()});
 		}else{
-			arrhes.save({'montant':0});
+			arrhes.save({'id':0, 'montant':0});
 			chambre1.save({'arrhes':0});
 		}
 	},
