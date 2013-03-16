@@ -1,5 +1,5 @@
 window.ListCustomerView = Backbone.View.extend({
-	
+
 	events: {
 		//"click #btnSearchCustomer"   : "searchCustomer"
 		"click #btnAddCustomer": "constructFormCustomer",
@@ -7,81 +7,81 @@ window.ListCustomerView = Backbone.View.extend({
 		"click #btnSave" : "saveCustomer"
 	},
 
-    initialize: function () {
-        this.render();
-    },
+	initialize: function () {
+		this.render();
+	},
 
-    render: function () {
-        $(this.el).html(_.template(tpl.get('ListCustomerView')));
-        if(customers!=null)
-        {
-        	customers.each(function(Customer){
-        		// à compléter
-        	}
-        }
-        return this;
-    },
-    
-    constructFormCustomer: function(){
-    	console.log("clic add !");
-    	console.log("nbCustomers avant ++ : "+window.nbCustomers);
-    	window.nbCustomers++;
-    	console.log("nbCustomers après ++ : "+window.nbCustomers);
+	render: function () {
+		$(this.el).html(_.template(tpl.get('ListCustomerView')));
+		if(customers!=null)
+		{
+//			customers.each(function(Customer){
+//				// à compléter
+//			}
+		}
+		return this;
+	},
+
+	constructFormCustomer: function(){
+		console.log("clic add !");
+		console.log("nbCustomers avant ++ : "+window.nbCustomers);
+		window.nbCustomers++;
+		console.log("nbCustomers après ++ : "+window.nbCustomers);
 
 		customer = new Customer({'id': window.nbCustomers});
 		customers.add(customer);
-		
+
 //		var obj = JSON.parse(localStorage.getItem("fichier-backbone-customers.json"));
 //		if(obj==null)
-//			this.createFileClient();
-		
+//		this.createFileClient();
+
 		this.template = _.template(tpl.get('DataCustomerView'));
 		$('#dataCustomer').before(this.template(customer.toJSON()));
-    	$('#myModal').modal('show');
-    },
-    
-    closeModal: function(){
-    	$('#myModal').modal('hide');
-    },
-    
-    saveCustomer: function(){
-		
-		 this.saveDataCustomer();
-		 
-		 this.closeModal();    	
-    },
-	
+		$('#myModal').modal('show');
+	},
+
+	closeModal: function(){
+		$('#myModal').modal('hide');
+	},
+
+	saveCustomer: function(){
+
+		this.saveDataCustomer();
+
+		this.closeModal();    	
+	},
+
 	saveDataCustomer: function(){
 		console.log("clic enregister!");
 		success = true;
 
 		//enregistre tous les clients dans le cache
 		//customers.each(function(Customer){
-			console.log($('#inputName').val());
-			window.name = $('#inputName').val();
-			window.firstname = $('#inputFirstname').val();
-			window.address = $('#inputAddress').val();
-			window.phone = $('#inputPhone').val();
-			window.mail = $('#inputEmail').val();
+		console.log($('#inputName').val());
+		window.name = $('#inputName').val();
+		window.firstname = $('#inputFirstname').val();
+		window.address = $('#inputAddress').val();
+		window.phone = $('#inputPhone').val();
+		window.mail = $('#inputEmail').val();
 
-			customer.save({
-				'name':name, 'firstname':firstname, 'address':address,
-				'phone':phone, 'mail':mail
-			},
-			{
-//				success: function(model, response, options) {
-//					nbCustomersSauveesDansCache++;
-//				},
-				//pour que la fonction reRenderChambre ne soit pas appelée
-				// à cause de la modif (les clients sont bindées)
-				silent: true
-			});
-	//	});
-		
+		customer.save({
+			'name':name, 'firstname':firstname, 'address':address,
+			'phone':phone, 'mail':mail
+		},
+		{
+//			success: function(model, response, options) {
+//			nbCustomersSauveesDansCache++;
+//			},
+			//pour que la fonction reRenderChambre ne soit pas appelée
+			// à cause de la modif (les clients sont bindées)
+			silent: true
+		});
+		//	});
+
 //		if(!success) {
-//			return;
+//		return;
 //		}
-		
+
 		$('#waitingResult').css('visibility','visible');
 		$('#waitingResult').show();
 
@@ -92,19 +92,19 @@ window.ListCustomerView = Backbone.View.extend({
 			console.log(reponse);
 		});
 	}
-    
-//    searchCustomer: function (){
-//    	var size = document.getElementById('selectCustomer').options.length;
-//    	for(i=0;i<size;i++){	
-////    		console.log(document.getElementById('i').text);
-////			console.log(document.getElementById('inputSearch').value);
-//    		if(document.getElementById("'"+i+"'").text == document.getElementById('inputSearch').value){
-//    			console.log("dans boucle");
-//    			document.getElementById('i').active();
-//    		}
-//    	  }
-//    	
-//    }
-    
+
+//	searchCustomer: function (){
+//	var size = document.getElementById('selectCustomer').options.length;
+//	for(i=0;i<size;i++){	
+////	console.log(document.getElementById('i').text);
+////	console.log(document.getElementById('inputSearch').value);
+//	if(document.getElementById("'"+i+"'").text == document.getElementById('inputSearch').value){
+//	console.log("dans boucle");
+//	document.getElementById('i').active();
+//	}
+//	}
+
+//	}
+
 });
 
