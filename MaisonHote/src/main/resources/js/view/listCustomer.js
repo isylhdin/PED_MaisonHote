@@ -17,7 +17,7 @@ window.ListCustomerView = Backbone.View.extend({
         {
         	customers.each(function(Customer){
         		// à compléter
-        	}
+        	});
         }
         return this;
     },
