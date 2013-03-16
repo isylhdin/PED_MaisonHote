@@ -126,7 +126,6 @@ function downloadRequiredFiles(){
 
 	retrieveFile('house_config_chambres.json', function(reponse){
 		if (reponse.items.length == 0 ) {
-			alert("PREMIERE UTILISATION");
 			app.firstConfigChambre();
 		}
 		else{
