@@ -82,7 +82,7 @@ window.EditChambreView = Backbone.View.extend({
 		}
 
 
-		this.$el.append("<div class='row'><div class='hero-unit' align='center'><h4>Edition des arrhes</h4> Arrhes : <input class='input-small' id='arrhes' /> % </div></div>");
+		this.$el.append("<div class='row'><div class='hero-unit' align='center'><h2>Edition des arrhes</h2> Arrhes : <input class='input-small' id='arrhes' /> % </div></div>");
 
 		window.arrhes = new Arrhes();
 		arrhes.localStorage = new Backbone.LocalStorage("arrhes-backbone");
@@ -94,7 +94,7 @@ window.EditChambreView = Backbone.View.extend({
 		});		
 
 		this.$el.append("<div id='rowSubmit' class='row' align='center'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
-		this.$el.append("<div id='waitingResult' style='visibility:hidden' class='alert alert-info'>Sauvegarde en cours ... </div>");
+		this.$el.append("<div id='waitingResult' style='visibility:hidden' class='alert alert-info'><i class='icon-spinner icon-spin'></i> Sauvegarde en cours ... </div>");
 		this.$el.append("<div id='goodResult' style='visibility:hidden' class='alert alert-success'>Vos données ont été sauvegardées avec succès ! </div>");
 		this.$el.append("<div id='badResult'  style='visibility:hidden' class='alert alert-error'>Une erreur est survenue lors de la sauvegarde. Veuillez vérifier que vous êtes connecté à Internet et que vous utilisez un navigateur récent puis réésayez</div>");
 	},
@@ -250,7 +250,7 @@ window.EditChambreView = Backbone.View.extend({
 	 * Contenu de la pop-up de suppression
 	 */
 	modal: function(id) {
-		$('#row' + id).append(_.template(tpl.get('ModalView')));
+		$('#row' + id).append(_.template(tpl.get('DeleteModalView')));
 		$('h3').text("Suppression");
 		$('h4').text("Vous êtes sur le point de supprimer la chambre " + id);
 		$("#modal").modal({

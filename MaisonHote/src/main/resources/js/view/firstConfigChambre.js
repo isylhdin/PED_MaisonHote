@@ -18,6 +18,7 @@ window.SelectChambreView = Backbone.View.extend({
 		this.render();
 		document.getElementById('nameAppli').href = '#';
 		$('#logOut').show();
+		this.modal();
 	},
 
 	render: function () {
@@ -219,6 +220,7 @@ window.SelectChambreView = Backbone.View.extend({
 
 		this.headerView = new HeaderView();
 		$('.header').html(this.headerView.el);
+		$("#modal").remove();
 		app.resa();
 	},
 
@@ -228,5 +230,12 @@ window.SelectChambreView = Backbone.View.extend({
 
 	onInputGetFocus: function( e ) {
 		window.validateForm.onInputGetFocus(e);
-	}
+	},
+	
+	modal: function() {
+		$('#content').before(_.template(tpl.get('FirstConfigModalView')));
+		$('h3').text("Première utilisation");
+		$('h4').text("C'est votre première utilisation, vous allez configurer vos chambres !");
+		$("#modal").modal(); 		
+	},
 });
