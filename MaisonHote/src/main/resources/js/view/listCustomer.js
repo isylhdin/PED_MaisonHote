@@ -15,9 +15,9 @@ window.ListCustomerView = Backbone.View.extend({
 		$(this.el).html(_.template(tpl.get('ListCustomerView')));
 		if(customers!=null)
 		{
-//			customers.each(function(Customer){
-//				// à compléter
-//			}
+			customers.each(function(Customer){
+				// à compléter
+			}
 		}
 		return this;
 	},
