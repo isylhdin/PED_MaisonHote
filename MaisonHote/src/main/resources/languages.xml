@@ -20,4 +20,8 @@
     	<fr>Déconnexion</fr>
         <en>Log out</en>
     </translation>
+    <translation id="share">
+    	<fr>Partager</fr>
+    	<en>Share</en>
+    </translation>
 </translations>

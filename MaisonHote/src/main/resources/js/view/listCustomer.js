@@ -7,26 +7,26 @@ window.ListCustomerView = Backbone.View.extend({
 		"click #btnSave" : "saveCustomer"
 	},
 
-	initialize: function () {
-		this.render();
-	},
+    initialize: function () {
+        this.render();
+    },
 
-	render: function () {
-		$(this.el).html(_.template(tpl.get('ListCustomerView')));
-		if(customers!=null)
-		{
-			customers.each(function(Customer){
-				// à compléter
-			}
-		}
-		return this;
-	},
-
-	constructFormCustomer: function(){
-		console.log("clic add !");
-		console.log("nbCustomers avant ++ : "+window.nbCustomers);
-		window.nbCustomers++;
-		console.log("nbCustomers après ++ : "+window.nbCustomers);
+    render: function () {
+        $(this.el).html(_.template(tpl.get('ListCustomerView')));
+        if(customers!=null)
+        {
+        	customers.each(function(Customer){
+        		// à compléter
+        	});
+        }
+        return this;
+    },
+    
+    constructFormCustomer: function(){
+    	console.log("clic add !");
+    	console.log("nbCustomers avant ++ : "+window.nbCustomers);
+    	window.nbCustomers++;
+    	console.log("nbCustomers après ++ : "+window.nbCustomers);
 
 		customer = new Customer({'id': window.nbCustomers});
 		customers.add(customer);
