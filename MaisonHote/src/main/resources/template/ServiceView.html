@@ -1,7 +1,14 @@
    		<div class="row" id="rowPrestation<%= id %>">
             <!-- first span -->
-            <div class="span6">
+            <div class="span6 offset3">
+            	
+            	<div class="row">
+            	<center>
                 <h2>Prestation</h2>
+                <a class="btn btn-danger" id="<%= id %>" data-id="<%= id %>" ><i class="icon-trash icon-white"></i></a>
+                </center>
+                <hr>
+                </div>	
  
             <div class="row-fluid">
 			  <div class="span12">
@@ -25,7 +32,6 @@
                     </div>
                   </div>
 
-                   <a class="btn btn-danger" id="<%= id %>" data-id="<%= id %>" ><i class="icon-trash icon-white"></i> Delete</a>
                  </form>
                </div>
              </div>

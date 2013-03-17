@@ -71,9 +71,9 @@ window.EditPrestationView = Backbone.View.extend({
 	 * => Les 3 types d'alert sont "hidden" et s'afficheront le moment voulu lors de l'appel à la méthode 'onSubmit'
 	 */
 	footpage : function(){
-		$(this.el).append("<div class='row' id='add'> <button class='btn btn-success' ><i class='icon-plus icon-white'></i> Ajouter</button></div>");
-		$(this.el).append("<div class='row'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
-		$(this.el).append("<div id='waitingResult' style='visibility:hidden' class='alert alert-info'>Sauvregarde en cours ... </div>");
+		this.$('#prestation').append("<div class='row' id='add'> <button class='btn btn-success' ><i class='icon-plus icon-white'></i> Ajouter</button></div>");
+		$(this.el).append("<hr><div class='row' align='center'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
+		$(this.el).append("<div id='waitingResult' style='visibility:hidden' class='alert alert-info'><i class='icon-spinner icon-spin'></i> Sauvegarde en cours ... </div>");
 		$(this.el).append("<div id='goodResult' style='visibility:hidden' class='alert alert-success'>Vos données ont été sauvegardées avec succès ! </div>");
 		$(this.el).append("<div id='badResult'  style='visibility:hidden' class='alert alert-error'>Une erreur est survenue lors de la sauvegarde. Veuillez vérifier que vous êtes connecté à Internet et que vous utilisez un navigateur récent puis réésayez</div>");
 	},
@@ -87,15 +87,13 @@ window.EditPrestationView = Backbone.View.extend({
 
 		event.preventDefault();
 		window.id = $(event.currentTarget).data('id');
-
 		this.modal(window.id);
 	},
 
 	/**
-	 * Sur l'acceptation de la suppression de la chambre via la pop-up on:
+	 * Sur l'acceptation de la suppression de la prestation via la pop-up on:
 	 * - supprime la chambre de la collection
 	 * - supprime la chambre de la vue
-	 * - supprime la chambre du cache
 	 */
 	onAcceptDelete: function(event){
 		console.log("clic accept !");
@@ -105,20 +103,15 @@ window.EditPrestationView = Backbone.View.extend({
 		prestations.remove(prestation);
 
 		//supprime la chambre de la vue
-		$('#row'+window.id).fadeOut(1000, function() {
-			$('#row'+window.id).remove();	
+		$('#rowPrestation'+window.id).fadeOut(1000, function() {
+			$('#rowPrestation'+window.id).remove();	
 		});	
 		$("#modal").remove();
 
 		//supprime toutes les chambres qui la suivent du cache
 		this.deleteFromCache();
 
-		nbPrest--;
-
-		//on rend accessible le bouton "add" s'il était grisé
-		if($('.btn-success').attr('disabled')=='disabled'){
-			$('.btn-success').removeAttr("disabled");
-		}		
+		nbPrest--;	
 	},
 
 	/**
@@ -132,7 +125,13 @@ window.EditPrestationView = Backbone.View.extend({
 		prestations.add(prestation);
 
 		this.template = _.template(tpl.get('ServiceView'));
-		$('#add').before(this.template(prestation.toJSON()));
+
+		if(parseInt(nbPrest) == 1){
+			$('#prestation').after(this.template(prestation.toJSON()));
+		}else{
+			var previous = parseInt(nbPrest) - 1;
+			$('#rowPrestation'+previous).after(this.template(prestation.toJSON()));
+		}	
 
 		prestation.bind('change', this.reRenderPrestation);
 		prestation.bind('invalid ', this.onError);
@@ -191,7 +190,7 @@ window.EditPrestationView = Backbone.View.extend({
 	 * Contenu de la pop-up de suppression
 	 */
 	modal : function(id){
-		$('#row'+id).append(_.template(tpl.get('ModalView')));
+		$('#rowPrestation'+id).append(_.template(tpl.get('DeleteModalView')));
 		$('h3').text("Suppression");
 		$('h4').text("Vous êtes sur le point de supprimer la prestation"+id);
 		$("#modal").modal({
@@ -206,9 +205,7 @@ window.EditPrestationView = Backbone.View.extend({
 	deleteFromCache : function(){
 		console.log("id de la prestation supprimée = "+id + " et nbPrestaion = "+nbPrest);
 		if(id <= nbPrest){
-			localStorage.removeItem("prestations-backbone-"+window.id);
 			for(var i= window.id + 1; i<=nbPrest; i++){
-				localStorage.removeItem("prestations-backbone-"+i);
 				var prestation =  window.prestations.get(i);
 				prestation.set({'id': i-1});
 				console.log(prestation);

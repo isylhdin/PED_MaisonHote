@@ -73,7 +73,6 @@ window.SelectChambreView = Backbone.View.extend({
 
 	onDelete: function(event){
 		var id = $(event.currentTarget).data('id');
-		console.log(id);
 		var prestation =  window.prestations.get(id);
 		prestations.remove(prestation);
 
