@@ -39,13 +39,21 @@ window.EventsView = Backbone.View.extend({
 		this.eventView = new EventView({el: $('#eventDialog')});
 		chambresPourCalendrier.bind('replace reset add remove', this.caption);
 		chambresPourCalendrier.bind('replace reset add remove', this.renderList);
+		chambresPourCalendrier.bind('replace reset add remove', this.reRenderWeekView);
 		//si on refresh la page ça va chercher les chambres dans le localstorage
 		chambresPourCalendrier.fetch();
 		this.nbRooms = chambresPourCalendrier.length;
 		this.eventView.nbRooms = this.nbRooms;
 	},
+	
+	reRenderWeekView: function() {
+		this.nbRooms = chambresPourCalendrier.length;
+		$(this.el).empty();
+		this.render();
+	},
 
 	render: function() {
+		$(this.el).empty();
 		var roomTitles = chambresPourCalendrier.pluck('id').map(function(room) {return 'Chambre ' + room});
 		$(this.el).fullCalendar({
 			header: {
@@ -84,7 +92,7 @@ window.EventsView = Backbone.View.extend({
 			this.eventView.model.set({
 				room: chambresPourCalendrier.get(roomNum).id,
 				color: couleurs[roomNum]
-			});
+			});	
 		}
 		this.eventView.render();
 	},

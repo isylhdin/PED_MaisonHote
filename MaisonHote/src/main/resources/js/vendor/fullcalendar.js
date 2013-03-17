@@ -2049,7 +2049,7 @@ function BasicWeekView(element, calendar) {
 	}
 	/* Pour retrouver la fonction render originale :
 	 * enlever var rowCnt = opt('roomsNb') et remplacer
-	 * l'appel à renderBasic par : renderBasic(1, 1, weekends ? 7 : 5, false);
+	 * l'appel ï¿½ renderBasic par : renderBasic(1, 1, weekends ? 7 : 5, false);
 	 */
 }
 
@@ -2222,7 +2222,7 @@ function BasicView(element, calendar, viewName) {
 	function getOrdinateTitles() {
 		var titles = calendar.options.ordinateTitles,
 			ordinateTitles = [],
-			idx = roomColWidth; // undefined; TODO: affecter roomColWidth plus tôt
+			idx = roomColWidth; // undefined; TODO: affecter roomColWidth plus tï¿½t
 
 		for (var i in titles) {
 			title = titles[i];
