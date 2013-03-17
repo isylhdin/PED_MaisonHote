@@ -19,7 +19,7 @@
 			<div class="controls">
 				<input name="phone" class="field" type="tel">
 			</div>
-					<!--format � changer selon le pays/la langue
+					<!--format à changer selon le pays/la langue
 					title="Num&eacute;ro de t&eacute;l&eacute;phone (Format : +99(99)9999-9999)"
 					pattern='[\+]\d{2}[\(]\d{2}[\)]\d{4}[\-]\d{4}'
 					-->
@@ -30,14 +30,19 @@
 				<input type="text" name="email" maxlength="255">
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="room">Chambre :</label>
-			<div class="controls">
-				<select name="room">
-					<% chambresPourCalendrier.each(function(room) { %>
-						<option value="<%= room.get('id') %>"><%= room.get('id') %></option>
-					<% }); %>
-				</select>
+		<div id="rooms">
+			<div class="row-fluid">
+				<div class="control-group">
+					<label class="control-label" for="room">Chambre :</label>
+					<div class="form-horizontal">
+						<select id="roomSelect1">
+							<% chambresPourCalendrier.each(function(room) { %>
+								<option value="<%= room.get('id') %>">Chambre <%= room.get('id') %></option>
+							<% }); %>
+						</select>
+						<button id="addRoom" class="btn"><i class='icon-plus icon-black'></i></button>
+		        	</div>
+		        </div>
 			</div>
 		</div>
 		<div class="control-group">
@@ -46,6 +51,9 @@
 				<input class="resaDialogSpinner" name="nbPersons" value="1">
 			</div>
 		</div>
+		<label class="checkbox">
+			<input type="checkbox">Arrhes payées
+		</label>
 	</form>
 	<button id="btnFicheSejour" type="submit" class="btn btn-link">Fiche séjour</button>
 </div> 

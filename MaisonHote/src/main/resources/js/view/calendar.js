@@ -1,7 +1,7 @@
 window.CalendarView = Backbone.View.extend({
 
 	events: {
-		"click #submit"   : "onSubmit"
+		'click #submit' : 'onSubmit'
 	},
 
 	initialize: function() {
@@ -41,10 +41,12 @@ window.EventsView = Backbone.View.extend({
 		chambresPourCalendrier.bind('replace reset add remove', this.renderList);
 		//si on refresh la page ça va chercher les chambres dans le localstorage
 		chambresPourCalendrier.fetch();
-		
+		this.nbRooms = chambresPourCalendrier.length;
+		this.eventView.nbRooms = this.nbRooms;
 	},
+
 	render: function() {
-		var roomTitles = chambresPourCalendrier.pluck("id").map(function(room) {return "Chambre " + room});
+		var roomTitles = chambresPourCalendrier.pluck('id').map(function(room) {return 'Chambre ' + room});
 		$(this.el).fullCalendar({
 			header: {
 				left: 'prev,next',
@@ -52,7 +54,7 @@ window.EventsView = Backbone.View.extend({
 				right: 'basicWeek,month'
 			},
 			selectable: true,
-			unselectCancel: ".unselectCanceled",
+			unselectCancel: '.unselectCanceled',
 			editable: true,
 			ignoreTimezone: false,
 			firstDay: 1,
@@ -61,7 +63,7 @@ window.EventsView = Backbone.View.extend({
 			eventDrop: this.eventDropOrResize,
 			eventResize: this.eventDropOrResize,
 			height: $(document).height() - getBodyPad(),
-			roomsNb: chambresPourCalendrier.length,
+			roomsNb: this.nbRooms,
 			roomColWidth: 0.1,
 			rowHeightForEvents: true,
 			eventContentToDisplay: this.eventContentToDisplay,
@@ -69,15 +71,15 @@ window.EventsView = Backbone.View.extend({
 		});
 	},
 	addAll: function() {
-		this.$el.fullCalendar("addEventSource", this.collection.toJSON(), true);
+		this.$el.fullCalendar('addEventSource', this.collection.toJSON(), true);
 	},
 	addOne: function(event) {
-		this.$el.fullCalendar("renderEvent", event.toJSON(), true);
+		this.$el.fullCalendar('renderEvent', event.toJSON(), true);
 	},        
 	select: function(startDate, endDate, allDay, ev, origRow) {
 		this.eventView.collection = this.collection;
 		this.eventView.model = new Reservation({start: startDate, end: endDate});
-		if (this.$el.fullCalendar("getView").name === "basicWeek") {
+		if (this.$el.fullCalendar('getView').name === 'basicWeek') {
 			var roomNum = origRow + 1;
 			this.eventView.model.set({
 				room: chambresPourCalendrier.get(roomNum).id,
@@ -161,7 +163,7 @@ window.EventsView = Backbone.View.extend({
 	renderList: function() {
 		$("select[name=room]").empty();
 		chambresPourCalendrier.each(function(room) {
-			$("select[name=room]").append("<option value='" + room.get("id") +"'> Chambre" +  room.get("id") + "</option>");
+			$("select[name=room]").append("<option value='" + room.get("id") +"'> Chambre " +  room.get("id") + "</option>");
 		});
 	},
 
@@ -180,8 +182,14 @@ window.EventsView = Backbone.View.extend({
 
 window.EventView = Backbone.View.extend({
 	events: {
-		"click #btnFicheSejour" : "btnFicheSejour"
+		'click #addRoom' : 'addRoomForResa',
+		'click #removeRoom' : 'removeRoomForResa',
+		'focus #rooms select' : 'storeOldValue',
+		'change #rooms select' : 'updateRoomOptions',
+		'click #btnFicheSejour' : 'btnFicheSejour'
 	},
+	nbRoomSelects: 1,
+
 	initialize: function() {
 		_.bindAll(this);
 		initResaDialog();
@@ -189,27 +197,23 @@ window.EventView = Backbone.View.extend({
 
 	render: function() {
 		var isNewModel = this.model.isNew();
-		if (isNewModel && this.model.get('room')) {
-			//document.getElementById("room").disabled = true;
-			//$("#room").prop('disabled', true);
-		}
-		var buttons = {'Ok' : {text: "Ok", click: this.save,
+		var buttons = {'Ok': {text: 'Ok', click: this.save,
 			class: "btn btn-primary"}};
 		if (!isNewModel) {
-			_.extend(buttons, {'Delete': {text: "Delete",
-				click: this.destroy, class: "btn"}});
+			_.extend(buttons, {'Delete': {text: 'Delete',
+				click: this.destroy, class: 'btn'}});
 		}
-		_.extend(buttons, {'Cancel': {text: "Cancel",
-			click: this.close, class: "btn"}});            
+		_.extend(buttons, {'Cancel': {text: 'Cancel',
+			click: this.close, class: 'btn'}});
 
 		this.resetFormClasses();
 		this.$el.dialog({
-			modal: true,
-			title: (isNewModel ? "New" : "Edit") + " Event",
+			//modal: true,
+			title: (isNewModel ? 'New' : 'Edit') + ' Event',
 			buttons: buttons,
 			open: this.open
 		});
-		$('body').addClass("unselectCanceled");
+		$('body').addClass('unselectCanceled');
 
 		return this;
 	},
@@ -219,14 +223,15 @@ window.EventView = Backbone.View.extend({
 		validateForm.getField('firstName').val(this.model.get('firstName'));
 		validateForm.getField('phone').val(this.model.get('phone'));
 		validateForm.getField('email').val(this.model.get('email'));
-		$('select[name=room]').val(this.model.get('room'));
+		$('#roomSelect1').val(this.model.get('room'));
 		var nbPersons = this.model.get('nbPersons');
 		validateForm.getField('nbPersons').val(nbPersons ? nbPersons : 1);
 	},
 
 	save: function() {
-		if (!$('#resa-form').validate().form())
+		if (!$('#resa-form').validate().form()) {
 			return;
+		}
 
 		var lastName = validateForm.getField('lastName').val();
 		var firstName = validateForm.getField('firstName').val();
@@ -237,22 +242,16 @@ window.EventView = Backbone.View.extend({
 		//var roomName = $('select[name=room] :selected').text();
 		var nbPersons = validateForm.getField('nbPersons').val();
 
-		console.log(lastName);
-		console.log(firstName);
-		console.log(room);
-		
-		
 		this.model.set({
-			'title': "",
+			'title': '',
 			'color': couleurs[room],
 			'lastName': lastName,
 			'firstName': firstName,
 			'phone': phone,
 			'email': (email.length > 0) ? email : '',
-					'room': room,
-					'nbPersons': nbPersons
+			'room': room,
+			'nbPersons': nbPersons
 		});
-		
 
 		if (this.model.isNew()) {
 			console.log("nouvelle réservation détectée");
@@ -267,12 +266,10 @@ window.EventView = Backbone.View.extend({
 
 					var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 					updateFile(obj.idFichier, JSON.stringify(self.collection.toJSON()), function(reponse) {	
-						if (!reponse.error){
+						if (!reponse.error) {
 							console.log("réservation sauvegardée sur le serveur");
 						}
 					});
-
-
 				},
 				error: function() {
 					console.log("une erreur s'est produite lors de la sauvegarde dans le cache");
@@ -286,7 +283,7 @@ window.EventView = Backbone.View.extend({
 
 			this.model.save({}, {success: this.close});
 			var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
-			updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {	
+			updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
 				if (!reponse.error) {
 					console.log("réservation sauvegardée sur le serveur");
 				}
@@ -294,41 +291,103 @@ window.EventView = Backbone.View.extend({
 		}
 	},
 	close: function() {
-		$("body").removeClass("unselectCanceled");
-		this.$el.dialog("close");
+		$('body').removeClass('unselectCanceled');
+		this.$el.dialog('close');
 	},
 	destroy: function() {
 		this.model.destroy({success: this.close});
 	},
 	btnFicheSejour: function() {
-		app.navigate('ficheSejour/'+this.model.id, {trigger: true});
-		this.$el.dialog("close");
+		app.navigate('ficheSejour/' + this.model.id, {trigger: true});
+		this.$el.dialog('close');
 	},
 	resetFormClasses: function() {
-		var form = $("#resa-form");
+		var form = $('#resa-form');
 		form.validate().resetForm();
-		form.find(".success").removeClass("success");
-		form.find(".error").removeClass("error");
-		form.find(".valid").removeClass("valid");
+		form.find('.success').removeClass('success');
+		form.find('.error').removeClass('error');
+		form.find('.valid').removeClass('valid');
+	},
+
+	// Remove the option tags corresponding to room "room" except in
+	// the "excepted" select
+	removeRoomOpt: function(room, excepted) {
+		var i;
+		for (i = 1; i <= this.nbRoomSelects; i++) {
+			if (i != excepted) {
+				$('#roomSelect' + i + ' option[value=' + room + ']').remove();
+			}
+		}
+	},
+	addRoomOpt: function(room, excepted) {
+		var i;
+		for (i = 1; i <= this.nbRoomSelects; i++) {
+			if (i != excepted) {
+				$('#roomSelect' + i).append(
+		     		$('<option></option>')
+		     			.attr('value', room)
+		     			.text('Chambre ' + room)
+			     );
+			}
+		}
+	},
+	storeOldValue: function(e) {
+		var select = e.currentTarget;
+		select.previous = select.value;
+	},
+	updateRoomOptions: function(e) {
+		var i,
+			select = e.currentTarget,
+			$select = $(select),
+			idSelect = $select.attr('id'),
+			excepted = idSelect.charAt(idSelect.length - 1),
+			selectedRoom = $select.val();
+
+			this.removeRoomOpt(selectedRoom, excepted);
+			this.addRoomOpt(select.previous, excepted);
+	},
+	updateSelectIds: function() {
+		var i = 1;
+		$('#rooms select').each(function(index, select) {
+			$(select).attr('id', 'roomSelect' + i);
+			i++;
+		});
+	},
+	addRoomForResa: function(e) {
+		e.preventDefault();
+		if (this.nbRoomSelects >= this.nbRooms) {
+			return;
+		}
+		var i, unselectedRooms, alrdySelected = [];
+
+		for (i = 1; i <= this.nbRoomSelects; i++) {
+			alrdySelected.push(parseInt($('#roomSelect' + i).val()));
+		}
+		unselectedRooms =
+			_.reject(chambresPourCalendrier.pluck('id'), function(idRoom) {
+				return $.inArray(idRoom, alrdySelected) !== -1;
+			});
+
+		this.nbRoomSelects++;
+		
+		var roomRow = _.template(tpl.get('RoomForResaView'), {
+			idSelect: this.nbRoomSelects, rooms: unselectedRooms
+		});
+		this.removeRoomOpt(unselectedRooms[0]);
+		$('#rooms').append(roomRow);
+	},
+	removeRoomForResa: function(e) {
+		e.preventDefault();
+		var select = $(e.currentTarget).prev(),
+			idRoom = select.val();
+
+		select.closest('.row-fluid').remove();
+		this.nbRoomSelects--;
+		this.updateSelectIds();
+		this.addRoomOpt(idRoom);
 	}
 });
-/*
-function getWindowHeight() {
-	if (window.innerHeight) { 
-		//Other than IE
-		var winHeight = window.innerHeight;
-	}
-	else if (document.documentElement && document.documentElement.clientHeight) {
-		//IE standard mode
-		var winHeight = document.documentElement.clientHeight;
-	}
-	else if (document.body && document.body.clientHeight) {
-		//IE quirks mode
-		var winHeight = document.body.clientHeight;
-	}
-	return winHeight;
-}
- */
+
 function getBodyPad() {
 	var body = $("body");
 	return parseInt(body.css("padding-top").replace("px", "")) +

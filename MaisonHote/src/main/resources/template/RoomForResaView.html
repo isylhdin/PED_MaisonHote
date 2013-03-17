@@ -1,0 +1,12 @@
+<div class="row-fluid">
+	<div class="control-group">
+		<div class="form-horizontal">
+			<select id="roomSelect<%= obj.idSelect %>">
+				<% for (i in obj.rooms) { %>
+					<option value="<%= obj.rooms[i] %>">Chambre <%= obj.rooms[i] %></option>
+				<% } %>
+			</select>
+			<button id="removeRoom" class="btn"><i class='icon-minus icon-black'></i></button>
+		</div>
+	</div>
+</div>
