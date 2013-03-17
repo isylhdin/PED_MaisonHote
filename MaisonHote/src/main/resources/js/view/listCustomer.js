@@ -4,7 +4,8 @@ window.ListCustomerView = Backbone.View.extend({
 		//"click #btnSearchCustomer"   : "searchCustomer"
 		"click #btnAddCustomer": "constructFormCustomer",
 		"click #btnClose" : "closeModal",
-		"click #btnSave" : "saveCustomer"
+		"click #btnSave" : "saveCustomer",
+		"click #selectCustomer" : "showCustomer"
 	},
 
     initialize: function () {
@@ -12,13 +13,19 @@ window.ListCustomerView = Backbone.View.extend({
     },
 
     render: function () {
-        $(this.el).html(_.template(tpl.get('ListCustomerView')));
+       // $(this.el).html(_.template(tpl.get('ListCustomerView')));
+              
+    	var list = "<div class='span5'><a id='btnAddCustomer' role='button' class='btn' data-toggle='modal'>+</a><select id='selectCustomer' size='10'>";
         if(customers!=null)
         {
         	customers.each(function(Customer){
-        		// à compléter
+        		list += "<option value='" + Customer.get('id') + "'>" + Customer.get('name').toUpperCase() + " " + Customer.get('firstname') + "</option>";
         	});
-        }
+        }        
+        list += "</select></div><div id='dataCustomer' class='span5'></div>";
+        
+        $(this.el).append(list);       
+        
         return this;
     },
     
@@ -46,8 +53,7 @@ window.ListCustomerView = Backbone.View.extend({
     
     saveCustomer: function(){
 		
-		 this.saveDataCustomer();
-		 
+		 this.saveDataCustomer();		 
 		 this.closeModal();    	
     },
 	
@@ -84,13 +90,34 @@ window.ListCustomerView = Backbone.View.extend({
 		
 		$('#waitingResult').css('visibility','visible');
 		$('#waitingResult').show();
-
+		
 		//update le fichier sur le serveur
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-customers.json"));
 		console.log("dans collection customers"+customers);
 		updateFile(obj.idFichier, JSON.stringify(customers.toJSON()), function(reponse) {	
 			console.log(reponse);
 		});
+	},
+	
+	showCustomer : function (){
+		var idCustomer = document.getElementById('selectCustomer').value ;
+		var customer = JSON.parse( localStorage['customers-backbone-'+idCustomer] ) ;
+			
+		// charge les infos dans le div
+		var infos = customer.name.toUpperCase() + "<br/>"
+					+ customer.firstname + "<br/>"
+					+ customer.phone + "<br/>"
+					+ customer.address + "<br/>"
+					+ customer.mail + "<br/>" ;		
+		document.getElementById("dataCustomer").innerHTML =  infos ;
+		
+		// charge les infos dans le modal et l'ouvre
+		$("#inputName").val( customer.name );
+		$("#inputFirstname").val( customer.firstname );
+		$("#inputPhone").val( customer.phone );
+		$("#inputAdress").val( customer.address );
+		$("#inputEmail").val( customer.mail );			
+		$('#myModal').modal('show');
 	}
     
 //    searchCustomer: function (){
