@@ -5,8 +5,7 @@ window.ListCustomerView = Backbone.View.extend({
 		"click #btnAddCustomer": "constructFormCustomer",
 		"click #btnClose" : "closeModal",
 		"click #btnSave" : "saveCustomer",
-		"click #selectCustomer" : "showCustomer",
-		"click #inputAutocompletion" : "Autocompletion"
+		"click #selectCustomer" : "showCustomer"
 	},
 
     initialize: function () {
@@ -25,37 +24,11 @@ window.ListCustomerView = Backbone.View.extend({
         }
         list += "</select></div><div id='dataCustomer' class='span5'></div>";
         
-        $(this.el).append(list);
-        
-        /* champ pour tester l'autocompetion */
-        var testAuto = '<input id="inputAutocompletion" type="text">' ;                
-        $(this.el).append(testAuto);
+        $(this.el).append(list);      
        
         return this;
     },
-    
-    Autocompletion : function (){
-    	/*var testValue = {}, i;      
-    	if(customers!=null)
-        {
-        	customers.each(function(Customer){
-        		i = Customer.get('id');
-        		testValue[i] = Customer.get('name') + " " + Customer.get('firstname') ;
-        	});
-        }	  	        
-    	console.log(testValue);*/ 
-    	
-    	var namesArray = new Array();
-    	if(customers!=null)
-        {
-        	customers.each(function(Customer){        		
-        		namesArray.push( Customer.get('name') + " " + Customer.get('firstname')  );
-        	});
-        }
-        	
-    	$('#inputAutocompletion').typeahead({ source: namesArray}) ;
-    },
-    
+
     constructFormCustomer: function(){
     	console.log("clic add !");
     	console.log("nbCustomers avant ++ : "+window.nbCustomers);

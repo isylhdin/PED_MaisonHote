@@ -196,7 +196,8 @@ window.EventView = Backbone.View.extend({
 		'click #removeRoom' : 'removeRoomForResa',
 		'focus #rooms select' : 'storeOldValue',
 		'change #rooms select' : 'updateRoomOptions',
-		'click #btnFicheSejour' : 'btnFicheSejour'
+		'click #btnFicheSejour' : 'btnFicheSejour',
+		'click #inputLastName' : 'autoCompletion'
 	},
 	nbRoomSelects: 1,
 
@@ -204,7 +205,7 @@ window.EventView = Backbone.View.extend({
 		_.bindAll(this);
 		initResaDialog();
 	},
-
+	
 	render: function() {
 		var isNewModel = this.model.isNew();
 		var buttons = {'Ok': {text: 'Ok', click: this.addResas,
@@ -418,7 +419,30 @@ window.EventView = Backbone.View.extend({
 		this.nbRoomSelects--;
 		this.updateSelectIds();
 		this.addRoomOpt(idRoom);
-	}
+	},
+	
+	 autoCompletion : function (){
+	    	/*var testValue = {}, i;      
+	    	if(customers!=null)
+	        {
+	        	customers.each(function(Customer){
+	        		i = Customer.get('id');
+	        		testValue[i] = Customer.get('name') + " " + Customer.get('firstname') ;
+	        	});
+	        }	  	        
+	    	console.log(testValue);*/ 
+	    	
+	    	var namesArray = new Array();
+	    	if(customers!=null)
+	        {
+	        	customers.each(function(Customer){        		
+	        		namesArray.push( Customer.get('name') + " " + Customer.get('firstname')  );
+	        	});
+	        }
+	        
+	    	console.log(namesArray);
+	    	$('#inputLastName').typeahead({ source: namesArray}) ;
+	 }
 });
 
 function getBodyPad() {
