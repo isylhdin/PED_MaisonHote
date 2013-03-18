@@ -138,7 +138,7 @@ window.EventsView = Backbone.View.extend({
 	eventContentToDisplay: function(fcEvent) {
 		var view = this.$el.fullCalendar("getView");
 
-		if (view.name === "basicWeek") {
+		if (view.name === 'basicWeek') {
 			return "M/Mme " + fcEvent.lastName + "\n" + fcEvent.nbPersons +
 			(fcEvent.nbPersons > 1 ? " personnes" : " personne") +
 			(fcEvent.phone ? "\n☎ " + fcEvent.phone : "");
@@ -163,15 +163,17 @@ window.EventsView = Backbone.View.extend({
 			"<br> <b>Nombre de lit jumeau</b> : " + Chambre.get('litJumeau');
 
 			$("#popover" + Chambre.id).popover({
-				title: title, content: content, trigger: 'hover', html: true, placement: 'top'
+				title: title, content: content, trigger: 'hover',
+				html: true, placement: 'top'
 			});
 		});
 	},
 
 	renderList: function() {
-		$("select[name=room]").empty();
+		$('#roomSelect1').empty();
 		chambresPourCalendrier.each(function(room) {
-			$("select[name=room]").append("<option value='" + room.get("id") +"'> Chambre " +  room.get("id") + "</option>");
+			$('#roomSelect1').append('<option value="' + room.get('id') +
+				'"> Chambre ' +  room.get('id') + '</option>');
 		});
 	},
 
@@ -205,7 +207,7 @@ window.EventView = Backbone.View.extend({
 
 	render: function() {
 		var isNewModel = this.model.isNew();
-		var buttons = {'Ok': {text: 'Ok', click: this.save,
+		var buttons = {'Ok': {text: 'Ok', click: this.addResas,
 			class: "btn btn-primary"}};
 		if (!isNewModel) {
 			_.extend(buttons, {'Delete': {text: 'Delete',
@@ -227,8 +229,20 @@ window.EventView = Backbone.View.extend({
 	},
 
 	open: function() {
-		validateForm.getField('lastName').val(this.model.get('lastName'));
-		validateForm.getField('firstName').val(this.model.get('firstName'));
+		// enlevé pour faciliter les tests 
+		//validateForm.getField('lastName').val(this.model.get('lastName'));
+		//validateForm.getField('firstName').val(this.model.get('firstName'));
+		var lastName = this.model.get('lastName');
+		var firstName = this.model.get('firstName');
+		if (lastName) {
+			validateForm.getField('lastName').val(lastName);
+			validateForm.getField('firstName').val(firstName);
+		}
+		else {
+			validateForm.getField('firstName').val('Ernest');
+			validateForm.getField('lastName').val('Le Marcassin');
+		}
+
 		validateForm.getField('phone').val(this.model.get('phone'));
 		validateForm.getField('email').val(this.model.get('email'));
 		$('#roomSelect1').val(this.model.get('room'));
@@ -236,37 +250,47 @@ window.EventView = Backbone.View.extend({
 		validateForm.getField('nbPersons').val(nbPersons ? nbPersons : 1);
 	},
 
-	save: function() {
+	newAttributes: function(selectNum) {
+		//if (!this.commonResaAttrs) {
+		var email = validateForm.getField('email').val(),
+			room = $('#roomSelect' + selectNum + ' :selected').val();
+		return {
+			title: '',
+			lastName: validateForm.getField('lastName').val(),
+			firstName: validateForm.getField('firstName').val(),
+			phone: validateForm.getField('phone').val(),
+			email: (email.length > 0) ? email : '',
+			nbPersons: validateForm.getField('nbPersons').val(),
+			room: room,
+			color: couleurs[room]
+		};
+	},
+
+	addResas: function() {
 		if (!$('#resa-form').validate().form()) {
 			return;
 		}
+		var i,
+			initialStartDate = this.model.get('start'),
+			initialEndDate = this.model.get('end');
 
-		var lastName = validateForm.getField('lastName').val();
-		var firstName = validateForm.getField('firstName').val();
-		var phone = validateForm.getField('phone').val();
-		var email = validateForm.getField('email').val();
-		// roomNum
-		var room = $('select[name=room]').val();
-		//var roomName = $('select[name=room] :selected').text();
-		var nbPersons = validateForm.getField('nbPersons').val();
+		this.model.set(this.newAttributes(1));
+		this.save();
 
-		this.model.set({
-			'title': '',
-			'color': couleurs[room],
-			'lastName': lastName,
-			'firstName': firstName,
-			'phone': phone,
-			'email': (email.length > 0) ? email : '',
-			'room': room,
-			'nbPersons': nbPersons
-		});
+		for (i = 2; i <= this.nbRoomSelects; i++) {
+			this.model = new Reservation(this.newAttributes(i));
+			this.model.set({ start: initialStartDate, end: initialEndDate });
+			console.log(this.model);
+			this.save();
+		}
+	},
 
+	save: function() {
 		if (this.model.isNew()) {
 			console.log("nouvelle réservation détectée");
-			this.model.set({'id': this.collection.nextId()});
+			this.model.set({ id: this.collection.nextId() });
 
 			var self = this;
-
 			this.model.save(null, {
 				success: function() {
 					self.collection.add(self.model);
@@ -298,6 +322,7 @@ window.EventView = Backbone.View.extend({
 			});
 		}
 	},
+
 	close: function() {
 		$('body').removeClass('unselectCanceled');
 		this.$el.dialog('close');
