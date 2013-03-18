@@ -102,21 +102,10 @@ window.ListCustomerView = Backbone.View.extend({
 			'phone':phone, 'mail':mail
 		},
 		{
-//			success: function(model, response, options) {
-//			nbCustomersSauveesDansCache++;
-//			},
-			//pour que la fonction reRenderChambre ne soit pas appelée
-			// à cause de la modif (les clients sont bindées)
+
 			silent: true
 		});
-		//	});
 
-//		if(!success) {
-//		return;
-//		}
-
-		$('#waitingResult').css('visibility','visible');
-		$('#waitingResult').show();
 		
 		//update le fichier sur le serveur
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-customers.json"));
@@ -146,19 +135,6 @@ window.ListCustomerView = Backbone.View.extend({
 		$("#inputEmail").val( customer.mail );			
 		$('#myModal').modal('show');
 	}
-
-//	searchCustomer: function (){
-//	var size = document.getElementById('selectCustomer').options.length;
-//	for(i=0;i<size;i++){	
-////	console.log(document.getElementById('i').text);
-////	console.log(document.getElementById('inputSearch').value);
-//	if(document.getElementById("'"+i+"'").text == document.getElementById('inputSearch').value){
-//	console.log("dans boucle");
-//	document.getElementById('i').active();
-//	}
-//	}
-
-//	}
 
 });
 
