@@ -2,7 +2,7 @@ window.ListCustomerView = Backbone.View.extend({
 
 	events: {
 		//"click #btnSearchCustomer"   : "searchCustomer"
-		"click #btnAddCustomer": "constructFormCustomer",
+		"click #btnAddCustomer": "addCustomer",
 		"click #btnClose" : "closeModal",
 		"click #btnSave" : "saveCustomer",
 		"click #selectCustomer" : "showCustomer"
@@ -13,37 +13,35 @@ window.ListCustomerView = Backbone.View.extend({
     },
 
     render: function () {
-       // $(this.el).html(_.template(tpl.get('ListCustomerView')));
+       //$(this.el).html(_.template(tpl.get('ListCustomerView')));
               
-    	var list = "<div class='span5'><a id='btnAddCustomer' role='button' class='btn' data-toggle='modal'>+</a><select id='selectCustomer' size='10'>";
+    	var list = "<div class='span5'><a id='btnAddCustomer' role='button' class='btn' data-toggle='modal'>+</a><select id='selectCustomer' size='10' >";
         if(customers!=null)
         {
         	customers.each(function(Customer){
-        		list += "<option value='" + Customer.get('id') + "'>" + Customer.get('name').toUpperCase() + " " + Customer.get('firstname') + "</option>";
+        		list += "<option value='" + Customer.get('id') + "' >" + Customer.get('name').toUpperCase() + " " + Customer.get('firstname') + "</option>";
         	});
         }
-        list += "</select></div><div id='dataCustomer' class='span5'></div>";
+        list += "</select></div><div id='dataCustomer' class='span5'>" + customers.length + " clients dans votre annuaire </div>";
         
         $(this.el).append(list);      
        
         return this;
     },
-
-    constructFormCustomer: function(){
-    	console.log("clic add !");
-    	console.log("nbCustomers avant ++ : "+window.nbCustomers);
-    	window.nbCustomers++;
-    	console.log("nbCustomers après ++ : "+window.nbCustomers);
-
-		customer = new Customer({'id': window.nbCustomers});
+    
+    addCustomer: function(){
+		customer = new Customer({'id': eval(customers.length+1)});
 		customers.add(customer);
-
-//		var obj = JSON.parse(localStorage.getItem("fichier-backbone-customers.json"));
-//		if(obj==null)
-//		this.createFileClient();
-
+		
 		this.template = _.template(tpl.get('DataCustomerView'));
 		$('#dataCustomer').before(this.template(customer.toJSON()));
+    	
+      	// vide les infos du modal
+		$("#inputName").val( "" );
+		$("#inputFirstname").val( "" );
+		$("#inputPhone").val( "" );
+		$("#inputAdress").val( "" );
+		$("#inputEmail").val( "" );	
     	$('#myModal').modal('show');
     },
     
@@ -85,7 +83,7 @@ window.ListCustomerView = Backbone.View.extend({
 		console.log("dans collection customers"+customers);
 		updateFile(obj.idFichier, JSON.stringify(customers.toJSON()), function(reponse) {	
 			console.log(reponse);
-		});
+				});
 	},
 	
 	showCustomer : function (){
@@ -99,7 +97,11 @@ window.ListCustomerView = Backbone.View.extend({
 					+ customer.address + "<br/>"
 					+ customer.mail + "<br/>" ;		
 		document.getElementById("dataCustomer").innerHTML =  infos ;
-		
+
+		console.log(customers);
+    	
+		this.template = _.template(tpl.get('DataCustomerView'));
+		$('#dataCustomer').before(this.template());
 		// charge les infos dans le modal et l'ouvre
 		$("#inputName").val( customer.name );
 		$("#inputFirstname").val( customer.firstname );
