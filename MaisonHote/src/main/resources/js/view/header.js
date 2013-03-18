@@ -29,8 +29,6 @@ window.HeaderView = Backbone.View.extend({
     
     buttonLanguage : function(l) {
     var language = l.currentTarget.id;
-    console.log(l);
-    //alert("test : " + language);
       $.ajax({
         url: 'languages.xml',
         success: function(xml) {
@@ -41,6 +39,9 @@ window.HeaderView = Backbone.View.extend({
           });
         }
       });
+
+     // change the flag on the header according the current language
+     document.getElementById('testFlag').src = "css/img/flag" + language.toUpperCase() + ".gif";
     }
        
      // fr : function() {

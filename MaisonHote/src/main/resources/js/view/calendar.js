@@ -420,29 +420,28 @@ window.EventView = Backbone.View.extend({
 		this.updateSelectIds();
 		this.addRoomOpt(idRoom);
 	},
-	
-	 autoCompletion : function (){
-	    	/*var testValue = {}, i;      
-	    	if(customers!=null)
-	        {
-	        	customers.each(function(Customer){
-	        		i = Customer.get('id');
-	        		testValue[i] = Customer.get('name') + " " + Customer.get('firstname') ;
-	        	});
-	        }	  	        
-	    	console.log(testValue);*/ 
-	    	
-	    	var namesArray = new Array();
-	    	if(customers!=null)
-	        {
-	        	customers.each(function(Customer){        		
-	        		namesArray.push( Customer.get('name') + " " + Customer.get('firstname')  );
-	        	});
-	        }
-	        
-	    	console.log(namesArray);
-	    	$('#inputLastName').typeahead({ source: namesArray}) ;
-	 }
+
+	autoCompletion: function() {
+		/*var testValue = {}, i;      
+		if(customers!=null)
+	    {
+	    	customers.each(function(Customer){
+	    		i = Customer.get('id');
+	    		testValue[i] = Customer.get('name') + " " + Customer.get('firstname') ;
+	    	});
+	    }	  	        
+		console.log(testValue);*/ 
+		
+		var namesArray = new Array();
+		if(customers!=null)
+	    {
+	    	customers.each(function(Customer){        		
+	    		namesArray.push( Customer.get('name') + " " + Customer.get('firstname')  );
+	    	});
+	    }
+	    
+		$('#inputLastName').typeahead({ source: namesArray}) ;
+	}	 
 });
 
 function getBodyPad() {
