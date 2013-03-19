@@ -478,13 +478,13 @@ window.EventView = Backbone.View.extend({
 		this.addRoomOpt(idRoom);
 	},
 
-// TODO: Modifier l'input et mettre --- en début de liste
+// TODO: Améliorer les input (bootstrap...) et mettre --- en début de select
 	addPresta: function(e) {
 		var $prestaOpt = $(e.currentTarget).find('option:selected'),
-			idPresta = $prestaOpt.attr('value'),
-			presta = $prestaOpt.val(),
+			prestaId = $prestaOpt.attr('value'),
+			prestaTitle = $prestaOpt.val(),
 			prestaRow = _.template(tpl.get('PrestaForResaView'), {
-				id: idPresta, title: presta
+				id: prestaId, title: prestaTitle
 			});
 		$prestaOpt.remove();
 		$('#prestas').append(prestaRow);
