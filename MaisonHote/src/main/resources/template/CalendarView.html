@@ -20,10 +20,6 @@
 			<div class="controls">
 				<input name="phone" class="field" type="tel">
 			</div>
-					<!--format à changer selon le pays/la langue
-					title="Num&eacute;ro de t&eacute;l&eacute;phone (Format : +99(99)9999-9999)"
-					pattern='[\+]\d{2}[\(]\d{2}[\)]\d{4}[\-]\d{4}'
-					-->
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="email">Email Address</label>
@@ -45,6 +41,18 @@
 		        	</div>
 		        </div>
 			</div>
+		</div>
+		<div id="prestas">
+			<div class="control-group">
+				<label class="control-label" for="room">Prestations :</label>
+				<div class="controls">
+					<select id="prestaSelect">
+						<% prestasPourCalendrier.each(function(presta) { %>
+							<option value="<%= presta.get('id') %>"><%= presta.get('title') %></option>
+						<% }); %>
+					</select>
+				</div>
+	        </div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="nbPersons">Nombre de personnes :</label>

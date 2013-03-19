@@ -61,6 +61,8 @@ var appRouter = Backbone.Router.extend({
 		chambresPourCalendrier.localStorage = new Backbone.LocalStorage("chambres-backbone");
 		chambresPourCalendrier.fetch();
 
+		prestasPourCalendrier = new Prestations();
+		prestasPourCalendrier.localStorage = new Backbone.LocalStorage("prestations-backbone");
 		
 		this.calendarView = new CalendarView();
 		$('#content').html(this.calendarView.el);
@@ -237,7 +239,8 @@ tpl = {
 tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView',
 		'ChambreView', 'ConnexionView', 'ficheSejourView', 'ServiceView',
 		'DeleteModalView', 'FirstConfigModalView', 'ListCustomerView',
-		'FacturationView', 'DataCustomerView', 'RoomForResaView'], function() {
+		'FacturationView', 'DataCustomerView', 'RoomForResaView',
+		'PrestaForResaView'], function() {
 
 	app = new appRouter();
 	Backbone.history.start();

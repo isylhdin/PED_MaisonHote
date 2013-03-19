@@ -196,6 +196,8 @@ window.EventView = Backbone.View.extend({
 		'click #removeRoom' : 'removeRoomForResa',
 		'focus #rooms select' : 'storeOldValue',
 		'change #rooms select' : 'updateRoomOptions',
+		'change #prestaSelect' : 'addPresta',
+		'click #removePresta' : 'removePresta',
 		'click #btnFicheSejour' : 'btnFicheSejour',
 		'click #inputLastName' : 'autoCompletion'
 	},
@@ -203,9 +205,11 @@ window.EventView = Backbone.View.extend({
 
 	initialize: function() {
 		_.bindAll(this);
-		initResaDialog();
+		this.initDialog();
+		prestasPourCalendrier.bind('replace reset add remove', this.renderPrestaList);
+		prestasPourCalendrier.fetch();
 	},
-	
+
 	render: function() {
 		var isNewModel = this.model.isNew();
 		var buttons = {'Ok': {text: 'Ok', click: this.addResas,
@@ -227,6 +231,59 @@ window.EventView = Backbone.View.extend({
 		$('body').addClass('unselectCanceled');
 
 		return this;
+	},
+
+	renderPrestaList: function() {
+		$('#prestaSelect').empty();
+		prestasPourCalendrier.each(function(presta) {
+			$('#prestaSelect').append('<option value="' + presta.get('id') +
+				'">' +  presta.get('title') + '</option>');
+		});
+	},
+
+	initDialog: function() {
+		$("input[name=nbPersons]").spinner({min: 1});
+	
+	    jQuery.validator.addMethod('nbPersons', function(value, element) {
+	        return value > 0;
+	    }, 'The number of persons must be positive');
+	
+	    jQuery.validator.addMethod('phone', function(value, element) {
+	        if (value.length == 0) {
+	        	return true;
+	        }
+	        return /^0\d \d\d \d\d \d\d \d\d$/i.test(value);
+	    }, 'Expected phone number format: <i>0X XX XX XX XX</i>');
+	
+		$('#resa-form').validate({
+			rules: {
+				lastName: {
+					required: true
+				},
+				firstName: {
+					required: true
+				},
+				phone: {
+					phone: true
+				},
+				email: {
+					email: true
+				},
+				room: {
+					required: true
+				},
+				nbPersons: {
+					nbPersons: true
+				}
+			},
+			highlight: function(element) {
+				$(element).closest('.control-group').removeClass('success').addClass('error');
+			},
+			success: function(element) {
+				element.text('OK!').addClass('valid')
+					.closest('.control-group').removeClass('error').addClass('success');
+			}
+		});
 	},
 
 	open: function() {
@@ -412,13 +469,37 @@ window.EventView = Backbone.View.extend({
 	},
 	removeRoomForResa: function(e) {
 		e.preventDefault();
-		var select = $(e.currentTarget).prev(),
-			idRoom = select.val();
+		var $select = $(e.currentTarget).prev(),
+			idRoom = $select.val();
 
-		select.closest('.row-fluid').remove();
+		$select.closest('.row-fluid').remove();
 		this.nbRoomSelects--;
 		this.updateSelectIds();
 		this.addRoomOpt(idRoom);
+	},
+
+// TODO: Modifier l'input et mettre --- en début de liste
+	addPresta: function(e) {
+		var $prestaOpt = $(e.currentTarget).find('option:selected'),
+			idPresta = $prestaOpt.attr('value'),
+			presta = $prestaOpt.val(),
+			prestaRow = _.template(tpl.get('PrestaForResaView'), {
+				id: idPresta, title: presta
+			});
+		$prestaOpt.remove();
+		$('#prestas').append(prestaRow);
+	},
+	removePresta: function(e) {
+		var $prestaField = $(e.currentTarget).prev(),
+			$prestaRow = $prestaField.closest('.row-fluid'),
+			prestaId = $prestaField.attr('value'),
+			prestaTitle = $prestaField.val();
+		$('#prestaSelect').append(
+			$('<option></option>')
+				.attr('value', prestaId)
+				.text(prestaTitle)
+		);
+		$prestaRow.remove();
 	},
 
 	autoCompletion: function() {
