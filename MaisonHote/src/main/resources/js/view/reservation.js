@@ -325,7 +325,7 @@ window.ReservationView = Backbone.View.extend({
 		if(customers!=null)
 	    {
 	    	customers.each(function(Customer){        		
-	    		namesArray.push( Customer.get('name') + " " + Customer.get('firstname')  );
+	    		namesArray.push( Customer.get('name') + ' ' + Customer.get('firstname')  );
 	    	});
 	    }
 	    

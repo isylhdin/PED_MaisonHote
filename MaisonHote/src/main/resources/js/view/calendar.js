@@ -13,7 +13,7 @@ window.CalendarView = Backbone.View.extend({
 	onSubmit: function() {
 		console.log('submit !');
 
-		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
+		var obj = JSON.parse(localStorage.getItem('fichier-backbone-resa.json'));
 		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
 			if (!reponse.error) {
 				$('#SaveRow').html(
@@ -89,8 +89,8 @@ window.EventsView = Backbone.View.extend({
 	addAll: function() {
 		this.$el.fullCalendar('addEventSource', this.collection.toJSON(), true);
 	},
-	addOne: function(event) {
-		this.$el.fullCalendar('renderEvent', event.toJSON(), true);
+	addOne: function(resa) {
+		this.$el.fullCalendar('renderEvent', resa.toJSON(), true);
 	},        
 	select: function(startDate, endDate, allDay, ev, origRow) {
 		this.resaView.collection = this.collection;
@@ -108,17 +108,17 @@ window.EventsView = Backbone.View.extend({
 		this.resaView.model = this.collection.get(fcEvent.id);
 		this.resaView.render();
 	},
-	change: function(event) {
+	change: function(resa) {
 		// Look up the underlying event in the calendar and update its details from the model
-		var fcEvent = this.$el.fullCalendar("clientEvents", event.get('id'))[0],
-		roomNum = event.get("room");
+		var fcEvent = this.$el.fullCalendar('clientEvents', resa.get('id'))[0],
+		roomNum = resa.get('room');
 		fcEvent.color = couleurs[roomNum];
-		fcEvent.lastName = event.get("lastName");
-		fcEvent.firstName = event.get("firstName");
-		fcEvent.phone = event.get("phone");
-		fcEvent.email = event.get("email");
-		fcEvent.room = event.get("room");
-		fcEvent.nbPersons = event.get("nbPersons");
+		fcEvent.lastName = resa.get('lastName');
+		fcEvent.firstName = resa.get('firstName');
+		fcEvent.phone = resa.get('phone');
+		fcEvent.email = resa.get('email');
+		fcEvent.room = resa.get('room');
+		fcEvent.nbPersons = resa.get('nbPersons');
 		fcEvent.title = this.eventContentToDisplay(fcEvent);
 
 		this.$el.fullCalendar("updateEvent", fcEvent, true); 
@@ -155,7 +155,7 @@ window.EventsView = Backbone.View.extend({
 		if (view.name === 'basicWeek') {
 			return 'M/Mme ' + fcEvent.lastName + '\n' + fcEvent.nbPersons +
 			(fcEvent.nbPersons > 1 ? ' personnes' : ' personne') +
-			(fcEvent.phone ? '\n☎ ' + fcEvent.phone : "");
+			(fcEvent.phone ? '\n☎ ' + fcEvent.phone : '');
 		} else if (view.name === 'month') {
 			return 'Chambre ' + fcEvent.room + ' | ' + fcEvent.lastName;
 		} else {
@@ -170,15 +170,15 @@ window.EventsView = Backbone.View.extend({
 			$('#caption').append(
 				'<div id="popover' + Chambre.id +
 				'" class="span1" rel="popover" style="background-color:' +
-				couleurs[Chambre.id] + '; width:50px; height:30px;"></div>'
-			);
+				couleurs[Chambre.id] + '; width:50px; height:30px;"></div>');
 			var title = 'Chambre ' + Chambre.id,
-				content = '	<b>PrixParjour </b>: ' + Chambre.get('prixParJour') +
-			'<br> <b>Nombre de lit simple</b> : ' + Chambre.get('litSimple') +
-			'<br> <b>Nombre de lit double</b> : ' + Chambre.get('litDouble') +
-			'<br> <b>Nombre de lit jumeau</b> : ' + Chambre.get('litJumeau');
+				content =
+				'<b>PrixParjour </b>: ' + Chambre.get('prixParJour') +
+				'<br> <b>Nombre de lit simple</b> : ' + Chambre.get('litSimple') +
+				'<br> <b>Nombre de lit double</b> : ' + Chambre.get('litDouble') +
+				'<br> <b>Nombre de lit jumeau</b> : ' + Chambre.get('litJumeau');
 
-			$("#popover" + Chambre.id).popover({
+			$('#popover' + Chambre.id).popover({
 				title: title, content: content, trigger: 'hover',
 				html: true, placement: 'top'
 			});
@@ -194,7 +194,7 @@ window.EventsView = Backbone.View.extend({
 	},
 
 	updateOnServer: function() {
-		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
+		var obj = JSON.parse(localStorage.getItem('fichier-backbone-resa.json'));
 		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
 			if (!reponse.error) {
 				console.log('réservations mises à jour sur le serveur'); 
@@ -205,8 +205,6 @@ window.EventsView = Backbone.View.extend({
 	}
 
 });
-
-
 
 function getBodyPad() {
 	var body = $('body');
