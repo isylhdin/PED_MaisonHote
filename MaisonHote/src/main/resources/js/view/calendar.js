@@ -16,12 +16,20 @@ window.CalendarView = Backbone.View.extend({
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
 			if (!reponse.error) {
-				$('#SaveRow').html("<div id='goodResult' class='alert alert-success'>Vos modifications ont été sauvegardées avec succès !</div>");
+				$('#SaveRow').html(
+					'<div id="goodResult" class="alert alert-success">' +
+					'Vos modifications ont été sauvegardées avec succès !</div>'
+				);
 				$('#SaveRow').fadeOut(3000, function() {
 					$('#SaveRow').remove();
 				});	
 			} else if (!$('#badResult').length) {
-				$('#SaveRow').append("<div id='badResult' class='alert alert-error span2'><strong>Sauvegarde échouée</strong>, veuillez vérifier que vous êtes connecté à Internet et réessayez</div>");
+				$('#SaveRow').append(
+					'<div id="badResult" class="alert alert-error span2">' +
+					'<strong>Sauvegarde échouée</strong>, ' +
+					'veuillez vérifier que vous êtes connecté à Internet et réessayez' +
+					'</div>'
+				);
 			}
 		});
 	}
@@ -40,7 +48,7 @@ window.EventsView = Backbone.View.extend({
 		chambresPourCalendrier.bind('replace reset add remove', this.caption);
 		chambresPourCalendrier.bind('replace reset add remove', this.renderList);
 		chambresPourCalendrier.bind('replace reset add remove', this.reRenderWeekView);
-		//si on refresh la page ça va chercher les chambres dans le localstorage
+		//si on refresh la page Ã§a va chercher les chambres dans le localstorage
 		chambresPourCalendrier.fetch();
 		this.nbRooms = chambresPourCalendrier.length;
 		this.resaView.nbRooms = this.nbRooms;
@@ -119,12 +127,18 @@ window.EventsView = Backbone.View.extend({
 		// Lookup the model that has the ID of the event and update its attributes
 		this.collection.get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});
 
-		// Affiche le bouton pour sauvegarder la réservation sur le serveur
-		// après que ses dates de début/fin aient changé
+		// Affiche le bouton pour sauvegarder la rÃ©servation sur le serveur
+		// aprÃ¨s que ses dates de dÃ©but/fin aient changÃ©
 		if (!$('#SaveRow').length) {
-			var text = "Veuillez <strong>sauvegarder</strong> pour que vos modifications soient prises en compte sur le serveur <i id='infoSave' class='icon-info-sign' data-toggle='tooltip'></i>";
-			var contentSaveForm = "<div class='control-group'><label class='control-label'>" + text + "</label>" +
-			"<div class='controls'><button type='submit' id='submit' class='btn btn-warning'>Sauvegarder</button></div></div></div>"; 
+			var text =
+				'Veuillez <strong>sauvegarder</strong> pour que vos ' +
+				'modifications soient prises en compte sur le serveur ' +
+				'<i id="infoSave" class="icon-info-sign" data-toggle="tooltip"></i>',
+				contentSaveForm =
+				'<div class="control-group"><label class="control-label">' +
+				text + '</label><div class="controls">' +
+				'<button type="submit" id="submit" class="btn btn-warning">' +
+				'Sauvegarder</button></div></div></div>'; 
 
 			$('#calendar').before("<div id='SaveRow' class='row'> <div class='span4 offset4 text-center alert'>" + contentSaveForm + "</div></div>");
 			$('#infoSave').tooltip({'title' : 'Si vous ne sauvegardez pas, vos modifications ne seront pas prises en compte lors de votre prochaine connexion'});
@@ -141,7 +155,7 @@ window.EventsView = Backbone.View.extend({
 		if (view.name === 'basicWeek') {
 			return "M/Mme " + fcEvent.lastName + "\n" + fcEvent.nbPersons +
 			(fcEvent.nbPersons > 1 ? " personnes" : " personne") +
-			(fcEvent.phone ? "\n☎ " + fcEvent.phone : "");
+			(fcEvent.phone ? "\nâ˜Ž " + fcEvent.phone : "");
 		} else if (view.name === "month") {
 			return "Chambre " + fcEvent.room + " | " + fcEvent.lastName;
 		} else {
@@ -181,9 +195,9 @@ window.EventsView = Backbone.View.extend({
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
 			if (!reponse.error) {
-				console.log("réservations mises à jour sur le serveur"); 
+				console.log("rÃ©servations mises Ã  jour sur le serveur"); 
 			} else {
-				console.log("les réservations n'ont pas pu être mises à jour sur le serveur"); 
+				console.log("les rÃ©servations n'ont pas pu Ãªtre mises Ã  jour sur le serveur"); 
 			}
 		});
 	}
