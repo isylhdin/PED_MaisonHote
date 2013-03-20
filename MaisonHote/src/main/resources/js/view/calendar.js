@@ -145,36 +145,38 @@ window.EventsView = Backbone.View.extend({
 		}
 	},
 	destroy: function(event) {
-		this.$el.fullCalendar("removeEvents", event.id, true);
+		this.$el.fullCalendar('removeEvents', event.id, true);
 		this.updateOnServer();
 	},
 
 	eventContentToDisplay: function(fcEvent) {
-		var view = this.$el.fullCalendar("getView");
+		var view = this.$el.fullCalendar('getView');
 
 		if (view.name === 'basicWeek') {
-			return "M/Mme " + fcEvent.lastName + "\n" + fcEvent.nbPersons +
-			(fcEvent.nbPersons > 1 ? " personnes" : " personne") +
-			(fcEvent.phone ? "\nâ˜Ž " + fcEvent.phone : "");
-		} else if (view.name === "month") {
-			return "Chambre " + fcEvent.room + " | " + fcEvent.lastName;
+			return 'M/Mme ' + fcEvent.lastName + '\n' + fcEvent.nbPersons +
+			(fcEvent.nbPersons > 1 ? ' personnes' : ' personne') +
+			(fcEvent.phone ? '\n☎ ' + fcEvent.phone : "");
+		} else if (view.name === 'month') {
+			return 'Chambre ' + fcEvent.room + ' | ' + fcEvent.lastName;
 		} else {
 			return fcEvent.title;
 		}
 	},
 
 	caption: function() {
-		$("#caption").empty();
-		chambresPourCalendrier.each(function(Chambre) {
+		$('#caption').empty();
 
-			$("#caption").append("<div id='popover" + Chambre.id +
-					"' class='span1' rel='popover'  style='background-color:" +
-					couleurs[Chambre.id]+"; width:50px; height:30px;'></div>");
-			var title ='Chambre '+ Chambre.id;
-			var content = "	<b>PrixParjour </b>: "+ Chambre.get('prixParJour') +
-			"<br> <b>Nombre de lit simple</b> : " +	Chambre.get('litSimple') +
-			"<br> <b>Nombre de lit double</b> : " +	Chambre.get('litDouble') +
-			"<br> <b>Nombre de lit jumeau</b> : " + Chambre.get('litJumeau');
+		chambresPourCalendrier.each(function(Chambre) {
+			$('#caption').append(
+				'<div id="popover' + Chambre.id +
+				'" class="span1" rel="popover" style="background-color:' +
+				couleurs[Chambre.id] + '; width:50px; height:30px;"></div>'
+			);
+			var title = 'Chambre ' + Chambre.id,
+				content = '	<b>PrixParjour </b>: ' + Chambre.get('prixParJour') +
+			'<br> <b>Nombre de lit simple</b> : ' + Chambre.get('litSimple') +
+			'<br> <b>Nombre de lit double</b> : ' + Chambre.get('litDouble') +
+			'<br> <b>Nombre de lit jumeau</b> : ' + Chambre.get('litJumeau');
 
 			$("#popover" + Chambre.id).popover({
 				title: title, content: content, trigger: 'hover',
@@ -195,9 +197,9 @@ window.EventsView = Backbone.View.extend({
 		var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
 		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
 			if (!reponse.error) {
-				console.log("rÃ©servations mises Ã  jour sur le serveur"); 
+				console.log('réservations mises à jour sur le serveur'); 
 			} else {
-				console.log("les rÃ©servations n'ont pas pu Ãªtre mises Ã  jour sur le serveur"); 
+				console.log('les réservations n\'ont pas pu être mises à jour sur le serveur'); 
 			}
 		});
 	}
@@ -207,7 +209,7 @@ window.EventsView = Backbone.View.extend({
 
 
 function getBodyPad() {
-	var body = $("body");
-	return parseInt(body.css("padding-top").replace("px", "")) +
-	parseInt(body.css("padding-bottom").replace("px", ""));
+	var body = $('body');
+	return parseInt(body.css('padding-top').replace('px', '')) +
+	parseInt(body.css('padding-bottom').replace('px', ''));
 }
