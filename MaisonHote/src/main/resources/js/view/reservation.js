@@ -116,12 +116,11 @@ window.ReservationView = Backbone.View.extend({
 		validateForm.getField('nbPersons').val(nbPersons ? nbPersons : 1);
 	},
 
-	newAttributes: function(selectNum) {
-		//if (!this.commonResaAttrs) {
+	newAttributes: function(selectNum, idResaGroup) {
 		var email = validateForm.getField('email').val(),
 			room = $('#roomSelect' + selectNum + ' :selected').val();
 		return {
-			title: '',
+			idResaGroup: idResaGroup,
 			lastName: validateForm.getField('lastName').val(),
 			firstName: validateForm.getField('firstName').val(),
 			phone: validateForm.getField('phone').val(),
@@ -138,13 +137,14 @@ window.ReservationView = Backbone.View.extend({
 		}
 		var i,
 			initialStartDate = this.model.get('start'),
-			initialEndDate = this.model.get('end');
+			initialEndDate = this.model.get('end'),
+			idResaGroup = this.collection.nextGroupId();
 
-		this.model.set(this.newAttributes(1));
+		this.model.set(this.newAttributes(1, idResaGroup));
 		this.save();
 
 		for (i = 2; i <= this.nbRoomSelects; i++) {
-			this.model = new Reservation(this.newAttributes(i));
+			this.model = new Reservation(this.newAttributes(i, idResaGroup));
 			this.model.set({ start: initialStartDate, end: initialEndDate });
 			console.log(this.model);
 			this.save();

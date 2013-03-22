@@ -1,39 +1,39 @@
 var Token = Backbone.Model.extend({
-	localStorage: new Backbone.LocalStorage("token-backbone"),
+	localStorage: new Backbone.LocalStorage('token-backbone'),
 });
 
 var FichierConfig = Backbone.Model.extend({
-	localStorage: new Backbone.LocalStorage("fichier-backbone")
+	localStorage: new Backbone.LocalStorage('fichier-backbone')
 });
 
 var CurrentHost = Backbone.Model.extend({
-	defaults:{
-		id : 0	
+	defaults: {
+		id: 0	
 	},
-	localStorage: new Backbone.LocalStorage("currentHost-backbone")
+	localStorage: new Backbone.LocalStorage('currentHost-backbone')
 });
 
 var Reservation = Backbone.Model.extend({
-	localStorage: new Backbone.LocalStorage("resas-backbone"),
+	localStorage: new Backbone.LocalStorage('resas-backbone'),
 
 	defaults: {
-		date_start: function(){ return new Date(); },
-		date_end: function(){ return new Date(); },
-		duration: 0,
+		idResaGroup: 0,
+		date_start: function() { return new Date(); },
+		date_end: function() { return new Date(); },
 		lastName: '',
 		firstName: '',
 		nbPersons: 0,
 		room: ''
 		//price: 0
 	},
-	initialize: function(){
+	initialize: function() {
 		console.log('Réservation créée !');
 		//this.on('doReset', this.reset);
 	}
 });
 
 var Reservations = Backbone.Collection.extend({
-	localStorage: new Backbone.LocalStorage("resas-backbone"),
+	localStorage: new Backbone.LocalStorage('resas-backbone'),
 	model: Reservation,
 
 	nextId: function() {
@@ -41,10 +41,16 @@ var Reservations = Backbone.Collection.extend({
 			return 1;
 		}
 		return this.last().get('id') + 1;
+	},
+	nextGroupId: function() {
+		if (!this.length) {
+			return 1;
+		}
+		return this.last().get('idResaGroup') + 1;
 	}
 });
 
 var Arrhes = Backbone.Model.extend({
-	localStorage: new Backbone.LocalStorage("arrhes-backbone")
+	localStorage: new Backbone.LocalStorage('arrhes-backbone')
 });
 

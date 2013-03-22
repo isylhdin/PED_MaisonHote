@@ -119,13 +119,14 @@ window.EventsView = Backbone.View.extend({
 		fcEvent.email = resa.get('email');
 		fcEvent.room = resa.get('room');
 		fcEvent.nbPersons = resa.get('nbPersons');
-		fcEvent.title = this.eventContentToDisplay(fcEvent);
 
-		this.$el.fullCalendar("updateEvent", fcEvent, true); 
+		this.$el.fullCalendar('updateEvent', fcEvent, true); 
 	},
 	eventDropOrResize: function(fcEvent) {
 		// Lookup the model that has the ID of the event and update its attributes
-		this.collection.get(fcEvent.id).save({start: fcEvent.start, end: fcEvent.end});
+		this.collection.get(fcEvent.id).save({
+			start: fcEvent.start, end: fcEvent.end
+		});
 
 		// Affiche le bouton pour sauvegarder la rÃ©servation sur le serveur
 		// aprÃ¨s que ses dates de dÃ©but/fin aient changÃ©
@@ -140,8 +141,14 @@ window.EventsView = Backbone.View.extend({
 				'<button type="submit" id="submit" class="btn btn-warning">' +
 				'Sauvegarder</button></div></div></div>'; 
 
-			$('#calendar').before("<div id='SaveRow' class='row'> <div class='span4 offset4 text-center alert'>" + contentSaveForm + "</div></div>");
-			$('#infoSave').tooltip({'title' : 'Si vous ne sauvegardez pas, vos modifications ne seront pas prises en compte lors de votre prochaine connexion'});
+			$('#calendar').before(
+				'<div id="SaveRow" class="row">' +
+				'<div class="span4 offset4 text-center alert">' +
+				contentSaveForm + '</div></div>');
+			$('#infoSave').tooltip({
+				'title' : 'Si vous ne sauvegardez pas, vos modifications ne' +
+				'seront pas prises en compte lors de votre prochaine connexion'
+			});
 		}
 	},
 	destroy: function(event) {
@@ -173,10 +180,10 @@ window.EventsView = Backbone.View.extend({
 				couleurs[Chambre.id] + '; width:50px; height:30px;"></div>');
 			var title = 'Chambre ' + Chambre.id,
 				content =
-				'<b>PrixParjour </b>: ' + Chambre.get('prixParJour') +
-				'<br> <b>Nombre de lit simple</b> : ' + Chambre.get('litSimple') +
-				'<br> <b>Nombre de lit double</b> : ' + Chambre.get('litDouble') +
-				'<br> <b>Nombre de lit jumeau</b> : ' + Chambre.get('litJumeau');
+				'<b>PrixParjour</b> : ' + Chambre.get('prixParJour') +
+				'<br><b>Nombre de lit simple</b> : ' + Chambre.get('litSimple') +
+				'<br><b>Nombre de lit double</b> : ' + Chambre.get('litDouble') +
+				'<br><b>Nombre de lit jumeau</b> : ' + Chambre.get('litJumeau');
 
 			$('#popover' + Chambre.id).popover({
 				title: title, content: content, trigger: 'hover',
