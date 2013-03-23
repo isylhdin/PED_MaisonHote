@@ -94,6 +94,8 @@ function savehouse_config_prestationsIntoLocalStorage(fileContent){
 		for(var i=0; i<prestations.length;i++){
 			var prestation = new Prestation(prestations[i]);
 			prestation.save();	
+			
+			prestasPourCalendrier.add(prestation);
 		}
 	}
 }
