@@ -213,8 +213,7 @@ window.EditChambreView = Backbone.View.extend({
 		//supprime les chambres en trop dans le cache
 		window.tab = localStorage.getItem('chambres-backbone');
 		var index = parseInt(nbChambres) + 1;
-		while(tab.contains(index)){
-			console.log("l'index "+index+" est dedans ! : "  +"chambres-backbone-"+index);
+		while(tab.search(index) != -1){
 			localStorage.removeItem("chambres-backbone-"+index);
 			index++;
 		}
