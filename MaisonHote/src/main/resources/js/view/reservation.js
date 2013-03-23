@@ -6,7 +6,9 @@ window.ReservationView = Backbone.View.extend({
 		'change #rooms select' : 'updateRoomOptions',
 		'change #prestaSelect' : 'addPresta',
 		'click #removePresta' : 'removePresta',
-		'click #btnFicheSejour' : 'btnFicheSejour'
+		'click #btnFicheSejour' : 'btnFicheSejour',
+		'click #client' : 'renderTypeaheadList',
+		'keypress input[name=client]': 'checkValidClient'
 	},
 	nbRoomSelects: 1,
 
@@ -15,8 +17,7 @@ window.ReservationView = Backbone.View.extend({
 		this.initDialog();
 		prestasPourCalendrier.bind('replace reset add remove', this.renderPrestaList);
 		prestasPourCalendrier.fetch();
-		
-		//customersResa.bind('replace reset add remove', this.renderTypeaheadList);
+
 		customersResa.fetch();
 	},
 
@@ -48,24 +49,24 @@ window.ReservationView = Backbone.View.extend({
 		$('#prestaSelect').empty();
 		prestasPourCalendrier.each(function(presta) {
 			$('#prestaSelect').append('<option value="' + presta.get('id') +
-				'">' +  presta.get('title') + '</option>');
+					'">' +  presta.get('title') + '</option>');
 		});
 	},
 
 	initDialog: function() {
 		$("input[name=nbPersons]").spinner({min: 1});
-	
-	    jQuery.validator.addMethod('nbPersons', function(value, element) {
-	        return value > 0;
-	    }, 'The number of persons must be positive');
-	
-	    jQuery.validator.addMethod('phone', function(value, element) {
-	        if (value.length == 0) {
-	        	return true;
-	        }
-	        return /^0\d \d\d \d\d \d\d \d\d$/i.test(value);
-	    }, 'Expected phone number format: <i>0X XX XX XX XX</i>');
-	
+
+		jQuery.validator.addMethod('nbPersons', function(value, element) {
+			return value > 0;
+		}, 'The number of persons must be positive');
+
+		jQuery.validator.addMethod('phone', function(value, element) {
+			if (value.length == 0) {
+				return true;
+			}
+			return /^0\d \d\d \d\d \d\d \d\d$/i.test(value);
+		}, 'Expected phone number format: <i>0X XX XX XX XX</i>');
+
 		$('#resa-form').validate({
 			rules: {
 				client: {
@@ -80,15 +81,13 @@ window.ReservationView = Backbone.View.extend({
 			},
 			success: function(element) {
 				element.text('OK!').addClass('valid')
-					.closest('.control-group').removeClass('error').addClass('success');
+				.closest('.control-group').removeClass('error').addClass('success');
 			}
 		});
 	},
 
 	open: function() {
-		console.log($('#client'));
-		//$('#client').typeahead({ source: namesArray}) ;
-		this.renderTypeaheadList();
+		$("input").blur();
 		// enlevé pour faciliter les tests 
 		//validateForm.getField('lastName').val(this.model.get('lastName'));
 		//validateForm.getField('firstName').val(this.model.get('firstName'));
@@ -112,7 +111,7 @@ window.ReservationView = Backbone.View.extend({
 
 	newAttributes: function(selectNum, idResaGroup) {
 		var email = validateForm.getField('email').val(),
-			room = $('#roomSelect' + selectNum + ' :selected').val();
+		room = $('#roomSelect' + selectNum + ' :selected').val();
 		return {
 			idResaGroup: idResaGroup,
 			client: validateForm.getField('client').val(),
@@ -127,9 +126,9 @@ window.ReservationView = Backbone.View.extend({
 			return;
 		}
 		var i,
-			initialStartDate = this.model.get('start'),
-			initialEndDate = this.model.get('end'),
-			idResaGroup = this.collection.nextGroupId();
+		initialStartDate = this.model.get('start'),
+		initialEndDate = this.model.get('end'),
+		idResaGroup = this.collection.nextGroupId();
 
 		this.model.set(this.newAttributes(1, idResaGroup));
 		this.save();
@@ -184,13 +183,16 @@ window.ReservationView = Backbone.View.extend({
 		$('body').removeClass('unselectCanceled');
 		this.$el.dialog('close');
 	},
+	
 	destroy: function() {
 		this.model.destroy({success: this.close});
 	},
+	
 	btnFicheSejour: function() {
 		app.navigate('ficheSejour/' + this.model.id, {trigger: true});
 		this.$el.dialog('close');
 	},
+	
 	resetFormClasses: function() {
 		var form = $('#resa-form');
 		form.validate().resetForm();
@@ -209,33 +211,37 @@ window.ReservationView = Backbone.View.extend({
 			}
 		}
 	},
+	
 	addRoomOpt: function(room, excepted) {
 		var i;
 		for (i = 1; i <= this.nbRoomSelects; i++) {
 			if (i != excepted) {
 				$('#roomSelect' + i).append(
-		     		$('<option></option>')
-		     			.attr('value', room)
-		     			.text('Chambre ' + room)
-			     );
+						$('<option></option>')
+						.attr('value', room)
+						.text('Chambre ' + room)
+				);
 			}
 		}
 	},
+	
 	storeOldValue: function(e) {
 		var select = e.currentTarget;
 		select.previous = select.value;
 	},
+	
 	updateRoomOptions: function(e) {
 		var i,
-			select = e.currentTarget,
-			$select = $(select),
-			idSelect = $select.attr('id'),
-			excepted = idSelect.charAt(idSelect.length - 1),
-			selectedRoom = $select.val();
+		select = e.currentTarget,
+		$select = $(select),
+		idSelect = $select.attr('id'),
+		excepted = idSelect.charAt(idSelect.length - 1),
+		selectedRoom = $select.val();
 
-			this.removeRoomOpt(selectedRoom, excepted);
-			this.addRoomOpt(select.previous, excepted);
+		this.removeRoomOpt(selectedRoom, excepted);
+		this.addRoomOpt(select.previous, excepted);
 	},
+	
 	updateSelectIds: function() {
 		var i = 1;
 		$('#rooms select').each(function(index, select) {
@@ -243,6 +249,7 @@ window.ReservationView = Backbone.View.extend({
 			i++;
 		});
 	},
+	
 	addRoomForResa: function(e) {
 		e.preventDefault();
 		if (this.nbRoomSelects >= this.nbRooms) {
@@ -259,17 +266,18 @@ window.ReservationView = Backbone.View.extend({
 			});
 
 		this.nbRoomSelects++;
-		
+
 		var roomRow = _.template(tpl.get('RoomForResaView'), {
 			idSelect: this.nbRoomSelects, rooms: unselectedRooms
 		});
 		this.removeRoomOpt(unselectedRooms[0]);
 		$('#rooms').append(roomRow);
 	},
+	
 	removeRoomForResa: function(e) {
 		e.preventDefault();
 		var $select = $(e.currentTarget).prev(),
-			idRoom = $select.val();
+		idRoom = $select.val();
 
 		$select.closest('.row-fluid').remove();
 		this.nbRoomSelects--;
@@ -277,24 +285,25 @@ window.ReservationView = Backbone.View.extend({
 		this.addRoomOpt(idRoom);
 	},
 
-// TODO: Améliorer les input (bootstrap...) et mettre --- en début de select
+//	TODO: Améliorer les input (bootstrap...) et mettre --- en début de select
 	addPresta: function(e) {
 		var $prestaOpt = $(e.currentTarget).find('option:selected'),
-			prestaId = $prestaOpt.attr('value'),
-			prestaTitle = $prestaOpt.val(),
-			prestaRow = _.template(tpl.get('PrestaForResaView'), {
-				id: prestaId, title: prestaTitle
-			});
+		prestaId = $prestaOpt.attr('value'),
+		prestaTitle = $prestaOpt.val(),
+		prestaRow = _.template(tpl.get('PrestaForResaView'), {
+			id: prestaId, title: prestaTitle
+		});
 		$prestaOpt.remove();
 		$('#prestas').append(prestaRow);
 	},
+	
 	removePresta: function(e) {
 		var $prestaField = $(e.currentTarget).prev(),
-			$prestaRow = $prestaField.closest('.row-fluid'),
-			prestaId = $prestaField.attr('value'),
-			prestaTitle = $prestaField.val();
+		$prestaRow = $prestaField.closest('.row-fluid'),
+		prestaId = $prestaField.attr('value'),
+		prestaTitle = $prestaField.val();
 		$('#prestaSelect').append(
-			$('<option></option>')
+				$('<option></option>')
 				.attr('value', prestaId)
 				.text(prestaTitle)
 		);
@@ -303,16 +312,34 @@ window.ReservationView = Backbone.View.extend({
 
 	renderTypeaheadList: function() {
 
-		console.log("on passe dans renderTypeaheadList !");
-		
-		var namesArray = new Array();
+		window.namesArray = new Array();
 		if(customersResa!=null)
-	    {
+		{
 			customersResa.each(function(Customer){        		
-	    		namesArray.push( Customer.get('name') + ' ' + Customer.get('firstname') + ' | ' + Customer.get('address'));
-	    	});
-	    }
-		console.log(namesArray);
+				namesArray.push( Customer.get('name') + ' ' + Customer.get('firstname'));
+			});
+		}
 		$('#client').typeahead({ source: namesArray}) ;
-	}	 
+	},
+
+	checkValidClient: function(){
+		setTimeout(function() {
+			var value =$('#client').val();
+
+			if ($('.typeahead').length){
+				if($('.typeahead').css('display') == 'none' && value != ''){
+					$('#client').css('background-color', '#FE705A');
+				}else{
+					$('#client').css('background-color', '');
+				}
+			}else{
+				if(value != ''){
+					$('#client').css('background-color', '#FE705A');
+				}
+				else{
+					$('#client').css('background-color', '');
+				}
+			}
+		}, 150); //laisser à ce temps, sinon la div du typeahead n'a pas encore été crée
+	}
 });
