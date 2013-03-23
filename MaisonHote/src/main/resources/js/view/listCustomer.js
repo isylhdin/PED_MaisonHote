@@ -9,6 +9,9 @@ window.ListCustomerView = Backbone.View.extend({
 	},
 
     initialize: function () {
+    	customers = new Customers();
+		customers.localStorage = new Backbone.LocalStorage("customers-backbone");
+		customers.fetch();
         this.render();
     },
 

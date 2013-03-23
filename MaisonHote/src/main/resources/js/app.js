@@ -64,6 +64,10 @@ var appRouter = Backbone.Router.extend({
 		prestasPourCalendrier = new Prestations();
 		prestasPourCalendrier.localStorage = new Backbone.LocalStorage("prestations-backbone");
 		
+		customersResa = new Customers();
+		customersResa.localStorage = new Backbone.LocalStorage("customers-backbone");
+		customersResa.fetch();
+		
 		this.calendarView = new CalendarView();
 		$('#content').html(this.calendarView.el);
 
@@ -98,10 +102,7 @@ var appRouter = Backbone.Router.extend({
 	},
 
 	listCustomer: function() {
-		console.log("Welcome back config!");
-		customers = new Customers();
-		customers.localStorage = new Backbone.LocalStorage("customers-backbone");
-		customers.fetch();
+		console.log("Welcome back config!");	
 		this.listCustomerView = new ListCustomerView();
 		$('#content').html(this.listCustomerView.el);
 	},

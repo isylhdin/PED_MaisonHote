@@ -6,8 +6,7 @@ window.ReservationView = Backbone.View.extend({
 		'change #rooms select' : 'updateRoomOptions',
 		'change #prestaSelect' : 'addPresta',
 		'click #removePresta' : 'removePresta',
-		'click #btnFicheSejour' : 'btnFicheSejour',
-		'click #inputLastName' : 'autoCompletion'
+		'click #btnFicheSejour' : 'btnFicheSejour'
 	},
 	nbRoomSelects: 1,
 
@@ -16,6 +15,9 @@ window.ReservationView = Backbone.View.extend({
 		this.initDialog();
 		prestasPourCalendrier.bind('replace reset add remove', this.renderPrestaList);
 		prestasPourCalendrier.fetch();
+		
+		//customersResa.bind('replace reset add remove', this.renderTypeaheadList);
+		customersResa.fetch();
 	},
 
 	render: function() {
@@ -25,6 +27,7 @@ window.ReservationView = Backbone.View.extend({
 		if (!isNewModel) {
 			_.extend(buttons, {'Delete': {text: 'Delete',
 				click: this.destroy, class: 'btn'}});
+			$('#btnFicheSejour').removeAttr("disabled");
 		}
 		_.extend(buttons, {'Cancel': {text: 'Cancel',
 			click: this.close, class: 'btn'}});
@@ -32,7 +35,7 @@ window.ReservationView = Backbone.View.extend({
 		this.resetFormClasses();
 		this.$el.dialog({
 			//modal: true,
-			title: (isNewModel ? 'New' : 'Edit') + ' Event',
+			title: (isNewModel ? 'New' : 'Edit') + ' Reservation',
 			buttons: buttons,
 			open: this.open
 		});
@@ -65,23 +68,11 @@ window.ReservationView = Backbone.View.extend({
 	
 		$('#resa-form').validate({
 			rules: {
-				lastName: {
+				client: {
 					required: true
-				},
-				firstName: {
-					required: true
-				},
-				phone: {
-					phone: true
-				},
-				email: {
-					email: true
 				},
 				room: {
 					required: true
-				},
-				nbPersons: {
-					nbPersons: true
 				}
 			},
 			highlight: function(element) {
@@ -95,6 +86,9 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	open: function() {
+		console.log($('#client'));
+		//$('#client').typeahead({ source: namesArray}) ;
+		this.renderTypeaheadList();
 		// enlevé pour faciliter les tests 
 		//validateForm.getField('lastName').val(this.model.get('lastName'));
 		//validateForm.getField('firstName').val(this.model.get('firstName'));
@@ -105,8 +99,8 @@ window.ReservationView = Backbone.View.extend({
 			validateForm.getField('firstName').val(firstName);
 		}
 		else {
-			validateForm.getField('firstName').val('Ernest');
-			validateForm.getField('lastName').val('Le Marcassin');
+//			validateForm.getField('firstName').val('Ernest');
+//			validateForm.getField('lastName').val('Le Marcassin');
 		}
 
 		validateForm.getField('phone').val(this.model.get('phone'));
@@ -121,10 +115,7 @@ window.ReservationView = Backbone.View.extend({
 			room = $('#roomSelect' + selectNum + ' :selected').val();
 		return {
 			idResaGroup: idResaGroup,
-			lastName: validateForm.getField('lastName').val(),
-			firstName: validateForm.getField('firstName').val(),
-			phone: validateForm.getField('phone').val(),
-			email: (email.length > 0) ? email : '',
+			client: validateForm.getField('client').val(),
 			nbPersons: validateForm.getField('nbPersons').val(),
 			room: room,
 			color: couleurs[room]
@@ -310,25 +301,18 @@ window.ReservationView = Backbone.View.extend({
 		$prestaRow.remove();
 	},
 
-	autoCompletion: function() {
-		/*var testValue = {}, i;      
-		if(customers!=null)
-	    {
-	    	customers.each(function(Customer){
-	    		i = Customer.get('id');
-	    		testValue[i] = Customer.get('name') + " " + Customer.get('firstname') ;
-	    	});
-	    }	  	        
-		console.log(testValue);*/ 
+	renderTypeaheadList: function() {
+
+		console.log("on passe dans renderTypeaheadList !");
 		
 		var namesArray = new Array();
-		if(customers!=null)
+		if(customersResa!=null)
 	    {
-	    	customers.each(function(Customer){        		
-	    		namesArray.push( Customer.get('name') + ' ' + Customer.get('firstname')  );
+			customersResa.each(function(Customer){        		
+	    		namesArray.push( Customer.get('name') + ' ' + Customer.get('firstname') + ' | ' + Customer.get('address'));
 	    	});
 	    }
-	    
-		$('#inputLastName').typeahead({ source: namesArray}) ;
+		console.log(namesArray);
+		$('#client').typeahead({ source: namesArray}) ;
 	}	 
 });

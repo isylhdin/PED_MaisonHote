@@ -4,27 +4,16 @@
 	<form id="resa-form">
 	
 		<div class="control-group">
-			<label class="control-label" for="lastName">Nom :</label>
+			<label class="control-label" for="lastName">Client :</label>
 			<div class="controls">
-				<input id="inputLastName" name="lastName" class="field" type="text" maxlength="40">
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="firstName">Prénom :</label>
-			<div class="controls">
-				<input name="firstName" class="field" type="text" maxlength="40">
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="phone">Tél. :</label>
-			<div class="controls">
-				<input name="phone" class="field" type="tel">
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="email">Email Address</label>
-			<div class="controls">
-				<input type="text" name="email" maxlength="255">
+				<div class="row-fluid">
+					<div class="input-prepend">
+						<span class="add-on"><i class='icon-search'></i></span>
+						<input id="client" name="client" class="input-medium" type="text" maxlength="40" data-provide="typeahead"  autocomplete="off">				
+					</div>				
+					<button class="btn btn-success" disabled='disabled'>Nouveau client</button>	
+
+				</div>
 			</div>
 		</div>
 		<div id="rooms">
@@ -37,7 +26,7 @@
 								<option value="<%= room.get('id') %>">Chambre <%= room.get('id') %></option>
 							<% }); %>
 						</select>
-						<button id="addRoom" class="btn"><i class='icon-plus icon-black'></i></button>
+						<button id="addRoom" class="btn btn-success"><i class='icon-plus icon-white'></i></button>
 		        	</div>
 		        </div>
 			</div>
@@ -57,14 +46,14 @@
 		<div class="control-group">
 			<label class="control-label" for="nbPersons">Nombre de personnes :</label>
 			<div class="controls">
-				<input class="resaDialogSpinner" name="nbPersons" value="1">
+				<input class="input-small" name="nbPersons" value="1">
 			</div>
 		</div>
 		<label class="checkbox">
 			<input type="checkbox">Arrhes payées
 		</label>
 	</form>
-	<button id="btnFicheSejour" type="submit" class="btn btn-link">Fiche séjour</button>
+	<button id="btnFicheSejour" type="submit" class="btn btn-info" disabled='disabled'><i class='icon-arrow-right icon-white'></i> Fiche séjour</button>
 </div> 
 <br>
 

@@ -109,6 +109,8 @@ function savecustomersIntoLocalStorage(fileContent){
 			window.nbCustomers++;
 			var customer = new Customer(customers[i]);
 			customer.save();	
+			
+			customersResa.add(customer);
 		}
 	}
 }

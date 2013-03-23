@@ -20,8 +20,7 @@ var Reservation = Backbone.Model.extend({
 		idResaGroup: 0,
 		date_start: function() { return new Date(); },
 		date_end: function() { return new Date(); },
-		lastName: '',
-		firstName: '',
+		client: '',
 		nbPersons: 0,
 		room: ''
 		//price: 0
