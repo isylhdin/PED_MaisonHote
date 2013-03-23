@@ -1,10 +1,10 @@
 window.ficheSejourView = Backbone.View.extend({
 
 	initialize: function () {
-		var reservedRooms;
+		var resaGroup;
 		window.idResaGroup = jQuery.parseJSON(this.model).idResaGroup;
 
-		this.getAllRooms();
+		this.getAllResaFromGroup();
 		this.render();
 
 	},
@@ -14,24 +14,31 @@ window.ficheSejourView = Backbone.View.extend({
 		$(this.el).html(this.template(this.model));
 		var self = this;
 		
-		reservedRooms.forEach(function(Room){
-			var idResa = Room.attributes.id;
-			var room = jQuery.parseJSON(localStorage.getItem('resas-backbone-'+idResa));
-			$(self.el).find('#rooms').append('<p> Chambre '+ room.room +'</p>');
+		resaGroup.forEach(function(Resa){
+			var idResa = Resa.attributes.id;
+			var resa = jQuery.parseJSON(localStorage.getItem('resas-backbone-'+idResa));
 			
-			console.log(Room.attributes.idResaGroup);
+			var duration = getDuration(resa);
+			var computedPrice = computePriceOverDaysForRoom(resa);
+			
+			var idRoom = resa.room;
+			var room = jQuery.parseJSON(localStorage.getItem('chambres-backbone-'+idRoom));
+			
+			$(self.el).find('#rooms').append('<p> Chambre '+ resa.room +' : '+
+					duration + ' jours X '+ room.prixParJour + ' = ' +
+					computedPrice +'€</p>');
 		});
 
 		return this;
 	},
 
 
-	getAllRooms: function () { 
+	getAllResaFromGroup: function () { 
 
-		reservedRooms = reservations.filter(function(model){
+		resaGroup = reservations.filter(function(model){
 			return model.attributes.idResaGroup === idResaGroup;
 		});	
-		console.log(reservedRooms);
+		console.log(resaGroup);
 	}
 
 
