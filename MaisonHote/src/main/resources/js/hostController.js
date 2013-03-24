@@ -137,7 +137,7 @@ function savecustomersIntoLocalStorage(fileContent){
 function downloadRequiredFiles(){
 
 	window.requiredFiles = ['house_config_prestations.json','resa.json',
-		'customers.json', 'prestas_ordered.json'];
+		'customers.json', 'ordered_prestas.json'];
 
 
 	retrieveFile('house_config_chambres.json', function(reponse){
