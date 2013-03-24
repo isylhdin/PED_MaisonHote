@@ -27,6 +27,7 @@ label.error {
     vertical-align: middle;
     line-height: 18px;
     height: 18px;
+    cursor: pointer;
 }
 .mghTagRemover, .mghTagIncr, .mghTagDecr
 {

@@ -58,6 +58,7 @@ window.EventsView = Backbone.View.extend({
 
 	reRenderWeekView: function() {
 		this.nbRooms = chambresPourCalendrier.length;
+		this.resaView.nbRooms = this.nbRooms;
 		$(this.el).empty();
 		this.render();
 	},

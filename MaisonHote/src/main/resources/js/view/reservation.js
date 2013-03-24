@@ -225,6 +225,7 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	close: function() {
+		this.nbRoomSelects = 1;
 		$('body').removeClass('unselectCanceled');
 		this.$el.dialog('close');
 	},
@@ -305,13 +306,12 @@ window.ReservationView = Backbone.View.extend({
 		var i, unselectedRooms, alrdySelected = [];
 
 		for (i = 1; i <= this.nbRoomSelects; i++) {
-			alrdySelected.push(parseInt($('#roomSelect' + i).val()));
+			alrdySelected.push(parseInt($('#roomSelect' + i + ' :selected').val()));
 		}
 		unselectedRooms =
 			_.reject(chambresPourCalendrier.pluck('id'), function(idRoom) {
 				return $.inArray(idRoom, alrdySelected) !== -1;
 			});
-
 		this.nbRoomSelects++;
 
 		var roomRow = _.template(tpl.get('RoomForResaView'), {
