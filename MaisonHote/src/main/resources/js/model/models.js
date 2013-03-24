@@ -7,10 +7,24 @@ var FichierConfig = Backbone.Model.extend({
 });
 
 var CurrentHost = Backbone.Model.extend({
+	localStorage: new Backbone.LocalStorage('currentHost-backbone'),
+
 	defaults: {
-		id: 0	
-	},
-	localStorage: new Backbone.LocalStorage('currentHost-backbone')
+		id: 0
+	}
+});
+
+var ResaGroupPrestas = Backbone.Model.extend({
+	localStorage: new Backbone.LocalStorage('resa-groups-prestas'),
+
+	defaults: {
+		id: 0
+	}
+});
+
+var ResaGroupsPrestas = Backbone.Collection.extend({
+	localStorage: new Backbone.LocalStorage('resa-groups-prestas'),
+	model: ResaGroupPrestas
 });
 
 var Reservation = Backbone.Model.extend({
@@ -22,7 +36,7 @@ var Reservation = Backbone.Model.extend({
 		date_end: function() { return new Date(); },
 		client: '',
 		nbPersons: 0,
-		room: ''
+		room: '',
 		//price: 0
 	},
 	initialize: function() {

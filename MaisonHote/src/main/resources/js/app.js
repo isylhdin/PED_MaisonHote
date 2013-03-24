@@ -2,18 +2,18 @@
 var appRouter = Backbone.Router.extend({
 
 	routes: {
-		"":	 				"home",  //index.html
-		"resa":  			"resa",	 //index.html#resa
-		"chambre":  		"editChambre", //index.html#chambre
-		"prestation":  		"editPrestation", //index.html#prestation
-		"ficheSejour/:id":  	"ficheSejour", //index.html#ficheSejour/id
-		"listCustomer":  	"listCustomer", //index.html#listCustomer
-		"facturation":  	"facturation" //index.html#facturation
+		'': 'home',  //index.html
+		'resa': 'resa',	 //index.html#resa
+		'chambre': 'editChambre', //index.html#chambre
+		'prestation': 'editPrestation', //index.html#prestation
+		'ficheSejour/:id': 'ficheSejour', //index.html#ficheSejour/id
+		'listCustomer': 'listCustomer', //index.html#listCustomer
+		'facturation': 'facturation' //index.html#facturation
 	},
 
 
 	initialize: function() {
-		console.log("Initialize router !");
+		console.log('Initialize router !');
 		
 		if (localStorage.length === 0) {
 			this.connexion();
@@ -43,11 +43,11 @@ var appRouter = Backbone.Router.extend({
 	// Cette route sera appelée à chaque fois qu'une route est inexistante
 	// ainsi qu'au lancement de l'application
 	home: function() {
-		console.log("Welcome back home!");
+		console.log('Welcome back home!');
 	},
 
 	connexion: function() {
-		console.log("Welcome back connexion!");
+		console.log('Welcome back connexion!');
 		this.connexionView = new ConnexionView();
 		$('#content').html(this.connexionView.el);
 		this.headerView = new HeaderView();
@@ -55,17 +55,20 @@ var appRouter = Backbone.Router.extend({
 	},
 
 	resa: function() {
-		console.log("Welcome back resa!");
+		console.log('Welcome back resa!');
 				
 		chambresPourCalendrier = new Chambres();
-		chambresPourCalendrier.localStorage = new Backbone.LocalStorage("chambres-backbone");
+		chambresPourCalendrier.localStorage = new Backbone.LocalStorage('chambres-backbone');
 		chambresPourCalendrier.fetch();
 
 		prestasPourCalendrier = new Prestations();
-		prestasPourCalendrier.localStorage = new Backbone.LocalStorage("prestations-backbone");
-		
+		prestasPourCalendrier.localStorage = new Backbone.LocalStorage('prestations-backbone');
+
+		resaGroupsPrestas = new ResaGroupsPrestas();
+		resaGroupsPrestas.localStorage = new Backbone.LocalStorage('resa-groups-prestas');
+
 		customersResa = new Customers();
-		customersResa.localStorage = new Backbone.LocalStorage("customers-backbone");
+		customersResa.localStorage = new Backbone.LocalStorage('customers-backbone');
 		customersResa.fetch();
 		
 		this.calendarView = new CalendarView();
@@ -74,35 +77,35 @@ var appRouter = Backbone.Router.extend({
 
 		//Reservations
 		reservations = new Reservations();
-		reservations.localStorage = new Backbone.LocalStorage("resas-backbone");
+		reservations.localStorage = new Backbone.LocalStorage('resas-backbone');
 
 		//Un calendrier possède un ensemble de réservations
-		calendar = new EventsView({el: $("#calendar"), collection: reservations}).render();
+		calendar = new EventsView({el: $('#calendar'), collection: reservations}).render();
 		reservations.fetch();
 	},
 
 	firstConfigChambre: function() {
-		console.log("Welcome back firstConfig!");
+		console.log('Welcome back firstConfig!');
 		this.selectChambreView = new SelectChambreView({model: 	Chambre});
 		$('#content').html(this.selectChambreView.el);
 
 	},
 
 	editChambre: function() {
-		console.log("Welcome back config!");
+		console.log('Welcome back config!');
 		this.editChambreView = new EditChambreView();
 		$('#content').html(this.editChambreView.el);
 
 	},
 
 	editPrestation: function() {
-		console.log("Welcome back prestationConfig!");
+		console.log('Welcome back prestationConfig!');
 		this.editPrestationView = new EditPrestationView();
 		$('#content').html(this.editPrestationView.el);
 	},
 
 	listCustomer: function() {
-		console.log("Welcome back config!");	
+		console.log('Welcome back config!');	
 		this.listCustomerView = new ListCustomerView();
 		$('#content').html(this.listCustomerView.el);
 	},

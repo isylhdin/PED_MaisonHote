@@ -52,8 +52,10 @@ window.EventsView = Backbone.View.extend({
 		chambresPourCalendrier.fetch();
 		this.nbRooms = chambresPourCalendrier.length;
 		this.resaView.nbRooms = this.nbRooms;
+
+		resaGroupsPrestas.fetch();
 	},
-	
+
 	reRenderWeekView: function() {
 		this.nbRooms = chambresPourCalendrier.length;
 		$(this.el).empty();

@@ -1,32 +1,32 @@
 var Prestation = Backbone.Model.extend({
-	localStorage: new Backbone.LocalStorage("prestations-backbone"),
+	localStorage: new Backbone.LocalStorage('prestations-backbone'),
 
 	defaults: {
-		id:null,
+		id: null,
 		title: '',
 		price: '',
 		number: 0,
-		comment: '',
+		comment: ''
 	},
 
-	initialize: function(){
+	initialize: function() {
 		console.log('Prestation créée !');
 	},
 
-	validate: function( attrs ) {
+	validate: function(attrs) {
 		var errors = [];
-		if ( !attrs.title.length ) errors.push('title');
-		if ( !attrs.price.length ) errors.push('price');
+		if (!attrs.title.length) errors.push('title');
+		if (!attrs.price.length) errors.push('price');
 
-		if ( errors.length ){
-			console.log("champ(s) qui provoque(nt) une erreur : "+errors);
+		if (errors.length) {
+			console.log('champ(s) qui provoque(nt) une erreur : ' + errors);
 			return errors;
 		}
 	}
 });
 
 var Prestations = Backbone.Collection.extend({
-	localStorage: new Backbone.LocalStorage("prestations-backbone"),
+	localStorage: new Backbone.LocalStorage('prestations-backbone'),
 	model: Prestation,
 	sort_key: 'id', // default sort key
 

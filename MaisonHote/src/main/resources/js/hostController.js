@@ -86,6 +86,17 @@ function saveresaIntoLocalStorage(fileContent){
 	}
 }
 
+function saveordered_prestasIntoLocalStorage(fileContent) {
+	if (fileContent != '') {
+		var orderedPrestas = jQuery.parseJSON(fileContent);
+
+		for (var i = 0; i < orderedPrestas.length; i++) {
+			var prestas = new ResaGroupPrestas(orderedPrestas[i]);
+			prestas.save();
+			resaGroupsPrestasForCalendar.add(prestas);
+		}
+	}
+}
 
 function savehouse_config_prestationsIntoLocalStorage(fileContent){
 	if(fileContent != ""){
@@ -125,7 +136,8 @@ function savecustomersIntoLocalStorage(fileContent){
  */
 function downloadRequiredFiles(){
 
-	window.requiredFiles = ['house_config_prestations.json','resa.json', 'customers.json'];
+	window.requiredFiles = ['house_config_prestations.json','resa.json',
+		'customers.json', 'prestas_ordered.json'];
 
 
 	retrieveFile('house_config_chambres.json', function(reponse){

@@ -6,6 +6,8 @@ window.ReservationView = Backbone.View.extend({
 		'change #rooms select' : 'updateRoomOptions',
 		'change #prestaSelect' : 'addPresta',
 		'click #removePresta' : 'removePresta',
+		'click #decrPresta' : 'decrPresta',
+		'click #incrPresta' : 'incrPresta',
 		'click #btnFicheSejour' : 'btnFicheSejour',
 		'click #client' : 'renderTypeaheadList',
 		'keypress input[name=client]': 'checkValidClient'
@@ -28,7 +30,7 @@ window.ReservationView = Backbone.View.extend({
 		if (!isNewModel) {
 			_.extend(buttons, {'Delete': {text: 'Delete',
 				click: this.destroy, class: 'btn'}});
-			$('#btnFicheSejour').removeAttr("disabled");
+			$('#btnFicheSejour').removeAttr('disabled');
 		}
 		_.extend(buttons, {'Cancel': {text: 'Cancel',
 			click: this.close, class: 'btn'}});
@@ -54,7 +56,7 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	initDialog: function() {
-		$("input[name=nbPersons]").spinner({min: 1});
+		$('input[name=nbPersons]').spinner({ min: 1 });
 
 		jQuery.validator.addMethod('nbPersons', function(value, element) {
 			return value > 0;
@@ -109,9 +111,11 @@ window.ReservationView = Backbone.View.extend({
 		validateForm.getField('nbPersons').val(nbPersons ? nbPersons : 1);
 	},
 
+	// TODO: faire que la recherche des attributs soit moins éparpillée et
+	// que tous les attributs communs ne soient recherchés qu'une fois
 	newAttributes: function(selectNum, idResaGroup) {
 		var email = validateForm.getField('email').val(),
-		room = $('#roomSelect' + selectNum + ' :selected').val();
+			room = $('#roomSelect' + selectNum + ' :selected').val();
 		return {
 			idResaGroup: idResaGroup,
 			client: validateForm.getField('client').val(),
@@ -126,9 +130,25 @@ window.ReservationView = Backbone.View.extend({
 			return;
 		}
 		var i,
-		initialStartDate = this.model.get('start'),
-		initialEndDate = this.model.get('end'),
-		idResaGroup = this.collection.nextGroupId();
+			idPresta,
+			nbPresta,
+			initialStartDate = this.model.get('start'),
+			initialEndDate = this.model.get('end'),
+			idResaGroup = this.collection.nextGroupId(),
+			resaGroupPrestas = resaGroupsPrestas.at(idResaGroup);
+
+		if (!resaGroupPrestas) {
+			this.resaGroupPrestations = new ResaGroupPrestas({
+				id: idResaGroup
+			});
+			resaGroupsPrestas.add(this.resaGroupPrestations);
+		}
+
+		$('#prestas').find('[idPresta]').each(function(index, element) {
+    		idPresta = $(element).attr('idPresta');
+    		nbPresta = $('#nbPresta' + idPresta).text();
+    		this.resaGroupPrestations.set(prestaId, nbPresta);
+		});
 
 		this.model.set(this.newAttributes(1, idResaGroup));
 		this.save();
@@ -143,7 +163,7 @@ window.ReservationView = Backbone.View.extend({
 
 	save: function() {
 		if (this.model.isNew()) {
-			console.log("nouvelle réservation détectée");
+			console.log('nouvelle réservation détectée');
 			this.model.set({ id: this.collection.nextId() });
 
 			var self = this;
@@ -152,28 +172,40 @@ window.ReservationView = Backbone.View.extend({
 					self.collection.add(self.model);
 					self.close();
 
-					var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
+					var obj = JSON.parse(localStorage.getItem('fichier-backbone-resa.json'));
 					updateFile(obj.idFichier, JSON.stringify(self.collection.toJSON()), function(reponse) {	
 						if (!reponse.error) {
-							console.log("réservation sauvegardée sur le serveur");
+							console.log('réservation sauvegardée sur le serveur');
+						}
+					});
+					obj = JSON.parse(localStorage.getItem('fichier-backbone-ordered-prestas.json'));
+					updateFile(obj.idFichier, JSON.stringify(resaGroupsPrestas.toJSON()), function(reponse) {	
+						if (!reponse.error) {
+							console.log('réservation sauvegardée sur le serveur');
 						}
 					});
 				},
 				error: function() {
-					console.log("une erreur s'est produite lors de la sauvegarde dans le cache");
+					console.log('une erreur s\'est produite lors de la sauvegarde dans le cache');
 					self.close();
 				}
 			});
 
 		} else {
-			console.log("édition de réservation");
+			console.log('édition de réservation');
 			var self = this;
 
-			this.model.save({}, {success: this.close});
-			var obj = JSON.parse(localStorage.getItem("fichier-backbone-resa.json"));
+			this.model.save({}, { success: this.close });
+			var obj = JSON.parse(localStorage.getItem('fichier-backbone-resa.json'));
 			updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
 				if (!reponse.error) {
-					console.log("réservation sauvegardée sur le serveur");
+					console.log('réservation sauvegardée sur le serveur');
+				}
+			});
+			obj = JSON.parse(localStorage.getItem('fichier-backbone-ordered-prestas.json'));
+			updateFile(obj.idFichier, JSON.stringify(resaGroupsPrestas.toJSON()), function(reponse) {
+				if (!reponse.error) {
+					console.log('réservation sauvegardée sur le serveur');
 				}
 			});
 		}
@@ -285,58 +317,75 @@ window.ReservationView = Backbone.View.extend({
 		this.addRoomOpt(idRoom);
 	},
 
-//	TODO: Améliorer les input (bootstrap...) et mettre --- en début de select
+//	TODO: faire que la sélection soit vide au départ
 	addPresta: function(e) {
 		var $prestaOpt = $(e.currentTarget).find('option:selected'),
-		prestaId = $prestaOpt.attr('value'),
-		prestaTitle = $prestaOpt.val(),
-		prestaRow = _.template(tpl.get('PrestaForResaView'), {
-			id: prestaId, title: prestaTitle
-		});
+			prestaId = $prestaOpt.val(),
+			prestaTitle = $prestaOpt.text(),
+			prestaRow = _.template(tpl.get('PrestaForResaView'), {
+				id: prestaId, title: prestaTitle, nb: 1
+			});
 		$prestaOpt.remove();
 		$('#prestas').append(prestaRow);
 	},
-	
+
 	removePresta: function(e) {
-		var $prestaField = $(e.currentTarget).prev(),
-		$prestaRow = $prestaField.closest('.row-fluid'),
-		prestaId = $prestaField.attr('value'),
-		prestaTitle = $prestaField.val();
+		var prestaTagId = $(e.currentTarget).attr('idPrestaTag'),
+			$prestaTag = $('#' + prestaTagId),
+			prestaId = $prestaTag.attr('idPresta'),
+			prestaTitle = $prestaTag.text(),
+			$prestaRow = $prestaTag.closest('.row-fluid');
 		$('#prestaSelect').append(
-				$('<option></option>')
+			$('<option></option>')
 				.attr('value', prestaId)
 				.text(prestaTitle)
 		);
 		$prestaRow.remove();
 	},
 
+// TODO: supprimer la duplication de code
+	incrPresta: function(e) {
+		var prestaNbId = $(e.currentTarget).attr('idNbPresta'),
+			$prestaNb = $('#' + prestaNbId),
+			prestaNb = parseInt($prestaNb.text());
+		$prestaNb.text(prestaNb + 1);
+	},
+
+	decrPresta: function(e) {
+		var prestaNbId = $(e.currentTarget).attr('idNbPresta'),
+			$prestaNb = $('#' + prestaNbId),
+			prestaNb = parseInt($prestaNb.text());
+		if (prestaNb > 1) {
+			$prestaNb.text(prestaNb - 1);
+		}
+	},
+
 	renderTypeaheadList: function() {
 
 		window.namesArray = new Array();
-		if(customersResa!=null)
+		if (customersResa != null)
 		{
-			customersResa.each(function(Customer){        		
+			customersResa.each(function(Customer) {        		
 				namesArray.push( Customer.get('name') + ' ' + Customer.get('firstname'));
 			});
 		}
 		$('#client').typeahead({ source: namesArray}) ;
 	},
 
-	checkValidClient: function(){
+	checkValidClient: function() {
 		setTimeout(function() {
 			var value =$('#client').val();
 
 			if ($('.typeahead').length){
-				if($('.typeahead').css('display') == 'none' && value != ''){
+				if ($('.typeahead').css('display') == 'none' && value != '') {
 					$('#client').css('background-color', '#FE705A');
-				}else{
+				} else {
 					$('#client').css('background-color', '');
 				}
-			}else{
-				if(value != ''){
+			} else {
+				if (value != '') {
 					$('#client').css('background-color', '#FE705A');
-				}
-				else{
+				} else {
 					$('#client').css('background-color', '');
 				}
 			}

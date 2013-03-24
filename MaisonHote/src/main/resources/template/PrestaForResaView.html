@@ -1,8 +1,21 @@
 <div class="row-fluid">
 	<div class="control-group">
 		<div class="form-horizontal">
-			<input value="<%= obj.title %>" readonly>
-			<button id="removePresta" class="btn"><i class='icon-minus icon-black'></i></button>
+			<span class="mghTag">
+				<span id="presta<%= obj.id %>" idPresta="<%= obj.id %>">
+					<%= obj.title %>&nbsp;&nbsp;
+				</span>
+				<span href="#" id="nbPresta<%= obj.id %>" title="nbPresta"><%= obj.nb %></span>
+				<span href="#" class="mghTagDecr" id="decrPresta" title="Decrement" idNbPresta="nbPresta<%= obj.id %>">
+					<i class="icon-minus-sign icon-white"></i>
+				</span>
+				<span href="#" class="mghTagIncr" id="incrPresta" title="Increment" idNbPresta="nbPresta<%= obj.id %>">
+					<i class="icon-plus-sign icon-white"></i>
+				</span>
+				<span href="#" class="mghTagRemover" id="removePresta" title="Remove" idPrestaTag="presta<%= obj.id %>">
+					<i class="icon-remove-sign icon-white"></i>
+				</span>
+			</span>
     	</div>
     </div>
 </div>
