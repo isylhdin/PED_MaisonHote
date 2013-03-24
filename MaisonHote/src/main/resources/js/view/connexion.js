@@ -20,7 +20,7 @@ window.ConnexionView = Backbone.View.extend({
 	buttonGoogleHandler : function(event){
 		currentHost = 'Drive' ;
 		this.saveCurrentHost(currentHost);	
-		connectToHost(handleAuthResultDrive);
+		connectToHost();
 		//connectToHost(handleAuthResult); ne fonctionne pas encore, probleme "Uncaught TypeError: Cannot convert object to primitive value"
 	},
 	
