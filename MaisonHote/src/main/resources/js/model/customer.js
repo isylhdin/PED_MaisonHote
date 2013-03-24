@@ -7,6 +7,8 @@ var Customer = Backbone.Model.extend({
 		firstname: '',
 		phone: '',
 		address: '',
+		cp: '',
+		city: '',
 		mail: ''
 	},
 
@@ -34,7 +36,6 @@ var Customers = Backbone.Collection.extend({
 
 	initialize : function() {
 		console.log('Collection de clients créée');
-
 	},
 
 	comparator: function(item) {

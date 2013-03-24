@@ -18,14 +18,17 @@ window.ListCustomerView = Backbone.View.extend({
     render: function () {
        //$(this.el).html(_.template(tpl.get('ListCustomerView')));
               
-    	var list = "<div class='span5'><a id='btnAddCustomer' role='button' class='btn' data-toggle='modal'>+</a><select id='selectCustomer' size='10' >";
+    	var list = "<div class='span5'><div class='hero-unit'><table class='table'><tr><td>" +
+    		        "<a id='btnAddCustomer' role='button' class='btn' data-toggle='modal'>+</a></td><td><select id='selectCustomer' size='10' >";
         if(customers!=null)
         {
         	customers.each(function(Customer){
-        		list += "<option value='" + Customer.get('id') + "' >" + Customer.get('name').toUpperCase() + " " + Customer.get('firstname') + "</option>";
+        		list += "<option value='" + Customer.get('id') + "' >" + Customer.get('name').toUpperCase() 
+        															   + " " + Customer.get('firstname')
+        															   + " - " + Customer.get('address')  + "</option>";
         	});
         }
-        list += "</select></div><div id='dataCustomer' class='span5'>" + customers.length + " clients dans votre annuaire </div>";
+        list += "</select></td></tr></table></div></div><div  class='span5'><div id='dataCustomer' class='hero-unit'>" + customers.length + " clients dans votre annuaire </div></div>";
         
         $(this.el).append(list);      
        
@@ -44,6 +47,8 @@ window.ListCustomerView = Backbone.View.extend({
 		$("#inputFirstname").val( "" );
 		$("#inputPhone").val( "" );
 		$("#inputAdress").val( "" );
+		$("#inputCp").val( "" );	
+		$("#inputCity").val( "" );	
 		$("#inputEmail").val( "" );	
     	$('#myModal').modal('show');
     },
@@ -68,12 +73,14 @@ window.ListCustomerView = Backbone.View.extend({
 		window.name = $('#inputName').val();
 		window.firstname = $('#inputFirstname').val();
 		window.address = $('#inputAddress').val();
+		window.cp = $('#inputCp').val();
+		window.city = $('#inputCity').val();
 		window.phone = $('#inputPhone').val();
 		window.mail = $('#inputEmail').val();
 
 		customer.save({
 			'name':name, 'firstname':firstname, 'address':address,
-			'phone':phone, 'mail':mail
+			'cp':cp, 'city':city, 'phone':phone, 'mail':mail
 		},
 		{
 
@@ -94,11 +101,13 @@ window.ListCustomerView = Backbone.View.extend({
 		var customer = JSON.parse( localStorage['customers-backbone-'+idCustomer] ) ;
 			
 		// charge les infos dans le div
-		var infos = customer.name.toUpperCase() + "<br/>"
-					+ customer.firstname + "<br/>"
-					+ customer.phone + "<br/>"
+		var infos = "<address><strong>"
+					+ customer.name.toUpperCase() + " "
+					+ customer.firstname + "</strong><br/>"
 					+ customer.address + "<br/>"
-					+ customer.mail + "<br/>" ;		
+					+ customer.cp + " " + customer.city + "<br/>"
+					+ customer.phone + "<br/>"					
+					+ "<a href='mailto:#'>" + customer.mail + "</a><br/></adresse>" ;		
 		document.getElementById("dataCustomer").innerHTML =  infos ;
 
 		console.log(customers);
@@ -110,6 +119,8 @@ window.ListCustomerView = Backbone.View.extend({
 		$("#inputFirstname").val( customer.firstname );
 		$("#inputPhone").val( customer.phone );
 		$("#inputAdress").val( customer.address );
+		$("#inputCp").val( customer.cp );	
+		$("#inputCity").val( customer.city );	
 		$("#inputEmail").val( customer.mail );			
 		$('#myModal').modal('show');
 	}

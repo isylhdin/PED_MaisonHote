@@ -177,8 +177,6 @@ tpl = {
 		}		
 };
 
-
-
 tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView',
 		'ChambreView', 'ConnexionView', 'ficheSejourView', 'ServiceView',
 		'DeleteModalView', 'FirstConfigModalView', 'ListCustomerView',
