@@ -8,7 +8,8 @@ window.ReservationView = Backbone.View.extend({
 		'click #removePresta' : 'removePresta',
 		'click #btnFicheSejour' : 'btnFicheSejour',
 		'click #client' : 'renderTypeaheadList',
-		'keypress input[name=client]' : 'checkValidClient'
+		'keypress input[name=client]' : 'checkValidClient',
+		'click #deleteSelection' : 'deleteSelection'
 	},
 	nbRoomSelects: 1,
 
@@ -327,12 +328,20 @@ window.ReservationView = Backbone.View.extend({
 			source: namesArray,
 
 			updater: function(selection){
-				$('#selectedClient').html(selection);
+				$('#selectedClient').html(selection + ' <i id="deleteSelection" class="icon-remove-sign" data-toggle="tooltip"></i>');
+				$('#deleteSelection').tooltip({
+					'title' : 'Supprimer sélection'
+				});
 				return selection;
 			}
 		}) ;
 	},
-
+	
+	deleteSelection: function(){
+		$('#selectedClient').empty();
+		$('#client').val('');
+	},
+	
 	checkValidClient: function(){
 		setTimeout(function() {
 			var value =$('#client').val();
