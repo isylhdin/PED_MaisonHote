@@ -1,10 +1,7 @@
-//old key, in case : 966416489314.apps.googleusercontent.com		
-//key to use : 133252798458.apps.googleusercontent.com
 var config = {
 		'client_id': '133252798458.apps.googleusercontent.com',
 		'scope': 'https://www.googleapis.com/auth/drive'
 };
-
 
 /**
  *  Connection 
@@ -127,8 +124,6 @@ function getFileContentDrive (file, callback) {
  * Update an existing file knowing his 'fileId'
  **/
 function updateFileDrive (fileId, newContent, callback) {	    	   	    	
-	//gapi.client.load('drive', 'v2');
-
 	var request = gapi.client.request({
 		'path': '/upload/drive/v2/files/'+ fileId, 
 		'method': 'PUT',

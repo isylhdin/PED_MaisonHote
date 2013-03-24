@@ -1,9 +1,7 @@
 <html>
   <head>
    <script src="//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.9.1/dropbox.min.js"></script>
-   <script src="js/hostController.js"></script>
-   
-  </head>
+ </head>
   
   <body>
     <button id="authorize-dropbox-button" onclick="connectDropbox()">Connect to dropbox</button>
@@ -109,11 +107,16 @@
 					  }
 
 					  console.log("Connection to dropbox ok, you are authorized to make API calls.");
+					  test3();
 			   });
 			}
        	 else
 			console.log("Already authentified to dropbox");
        }
+
+       function test3(){
+				console.log("test3");
+           }
 
        // Create a file in the user's dropbox app folder
 		function createFile(fileName,content){

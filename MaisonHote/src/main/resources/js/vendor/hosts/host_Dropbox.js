@@ -4,6 +4,7 @@ var client = new Dropbox.Client({
 });
 // provides the integration between the application and the Dropbox OAuth flow
 client.authDriver(new Dropbox.Drivers.Redirect({useQuery : true , rememberUser: true}));
+//client.authDriver(new Dropbox.Drivers.Popup({receiverUrl: "http://localhost:8080/index.html" , useQuery : true , rememberUser: true}));
 
 // errors handling
 var showError = function(error) {
@@ -54,27 +55,34 @@ var showError = function(error) {
 /**
  *  Connection : Authenticates the app's user to Dropbox' API server.
 **/    
-function connectToHostDropbox(){
-   	 if ( !client.isAuthenticated() ){					
-			console.log("Connection to Dropbox");
-			
-		   client.authenticate(function(error, client) {
-			   console.log("test");
-			  if (error) {
-			    console.log("Connection to Dropbox error :\n-->");
+function connectToHostDropbox(){	
+   	if ( !client.isAuthenticated() ){	
+			   		
+		   client.authenticate(function(error, client) {			   
+			  if (error) {	
+				console.log("Connection to Dropbox error :\n-->");
 			    return showError(error);
 			  }
-
+			 
 			  console.log("Connection to dropbox ok, you are authorized to make API calls.");
 			  handleAuthResultDropbox();
-		   });
+		   }) ;  
+		 	
    	 }
-	 else
+	 else {
 		console.log("Already authentified to dropbox");
+	 }
 }
 
- function handleAuthResultDropbox (authResult) {
-		retrieveFileDropbox('house_config_chambres.json', function(reponse){
+function handleAuthResultDropbox (authResult) {
+	 	//console.log(authResult);	 	
+		/*var token = new Token(authResult);
+		token.save();*/
+		
+		//on télécharge les métadonnées de tous les fichiers qui seront utilisés par l'appli, à la connexion
+		//downloadRequiredFiles();
+	 	 
+	   retrieveFileDropbox('house_config_chambres.json', function(reponse){
 				if (!reponse){
 					alert("PREMIERE UTILISATION");
 					app.firstConfigChambre();	
@@ -211,9 +219,9 @@ function updateFileDropbox(fileName,newContent,callback){
 }*/
 
 function setTokenDropbox () {
-	/*var idToken = localStorage.getItem('token-backbone');
+/*	var idToken = localStorage.getItem('token-backbone');
 	var token = jQuery.parseJSON(localStorage.getItem('token-backbone-'+idToken));
 	//console.log(token);
 	gapi.auth.setToken(new Token(token));
-	//console.log(gapi.auth.getToken());*/
+	//console.log(gapi.auth.getToken()); */
 }

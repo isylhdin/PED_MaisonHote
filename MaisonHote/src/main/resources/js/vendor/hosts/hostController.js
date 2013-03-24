@@ -35,13 +35,10 @@ function updateFile (file, newContent, callback) {
 	eval(funToCall);
 }
 
-
 function setToken () {
 	var funToCall = "setToken"+currentHost+'()';
 	eval(funToCall);
 }
-
-
 
 
 /**
@@ -147,7 +144,7 @@ function downloadRequiredFiles(){
 
 //			retrieveAndStoreOtherFiles(requiredFiles);
 
-
+			//getFileContent(reponse.items[0] , saveChambreIntoLocalStorage);
 			tpl.downloadFile(reponse.items[0] , saveChambreIntoLocalStorage);
 
 			var houseConfig = new FichierConfig({'id': 'house_config_chambres.json', 'idFichier': reponse.items[0].id});
@@ -196,6 +193,7 @@ function retrieveAndStoreOtherFiles(requiredFiles){
 			var tableau=reponse.items[0].title.split(reg);
 			var name = tableau[0]; //contient "resa" par exemple
 
+			//getFileContent(reponse.items[0] , eval("save"+name+"IntoLocalStorage"));
 			tpl.downloadFile(reponse.items[0] , eval("save"+name+"IntoLocalStorage"));
 
 			//stocke l'id du fichier récupéré du serveur, dans le cache

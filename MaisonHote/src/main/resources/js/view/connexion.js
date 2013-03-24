@@ -31,6 +31,6 @@ window.ConnexionView = Backbone.View.extend({
 	buttonDropboxHandler : function (event){
 		currentHost = 'Dropbox' ;
 		this.saveCurrentHost(currentHost);
-		connectToHost ();
+		connectToHost();
 	}		
 });

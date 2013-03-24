@@ -31,6 +31,7 @@ var appRouter = Backbone.Router.extend({
 			}
 
 			setToken();
+			
 			//A cet endroit il faudra set le token du service de stockage pour qu'il soit intégré aux appels de web services
 			//ne marche pas, l'appel aux web service n'intègre pas le token dans le header ...
 
