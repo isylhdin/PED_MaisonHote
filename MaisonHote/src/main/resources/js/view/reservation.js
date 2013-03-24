@@ -22,7 +22,7 @@ window.ReservationView = Backbone.View.extend({
 		prestasPourCalendrier.fetch();
 
 		customersResa.fetch();
-		
+
 		window.clientMatched = 0;
 	},
 
@@ -118,8 +118,8 @@ window.ReservationView = Backbone.View.extend({
 	// que tous les attributs communs ne soient recherchés qu'une fois
 	newAttributes: function(selectNum, idResaGroup) {
 		var email = validateForm.getField('email').val(),
-			room = $('#roomSelect' + selectNum + ' :selected').val(),
-			idClient = findClient(validateForm.getField('client').val());
+		room = $('#roomSelect' + selectNum + ' :selected').val(),
+		idClient = findClient(validateForm.getField('client').val());
 		console.log(idClient);
 
 		return {
@@ -136,12 +136,12 @@ window.ReservationView = Backbone.View.extend({
 			return;
 		}
 		var i,
-			idPresta,
-			nbPresta,
-			initialStartDate = this.model.get('start'),
-			initialEndDate = this.model.get('end'),
-			idResaGroup = this.collection.nextGroupId(),
-			resaGroupPrestas = resaGroupsPrestas.at(idResaGroup);
+		idPresta,
+		nbPresta,
+		initialStartDate = this.model.get('start'),
+		initialEndDate = this.model.get('end'),
+		idResaGroup = this.collection.nextGroupId(),
+		resaGroupPrestas = resaGroupsPrestas.at(idResaGroup);
 
 		if (!resaGroupPrestas) {
 			this.resaGroupPrestations = new ResaGroupPrestas({
@@ -151,9 +151,9 @@ window.ReservationView = Backbone.View.extend({
 		}
 
 		$('#prestas').find('[idPresta]').each(function(index, element) {
-    		idPresta = $(element).attr('idPresta');
-    		nbPresta = $('#nbPresta' + idPresta).text();
-    		this.resaGroupPrestations.set(prestaId, nbPresta);
+			idPresta = $(element).attr('idPresta');
+			nbPresta = $('#nbPresta' + idPresta).text();
+			this.resaGroupPrestations.set(prestaId, nbPresta);
 		});
 
 		this.model.set(this.newAttributes(1, idResaGroup));
@@ -167,6 +167,12 @@ window.ReservationView = Backbone.View.extend({
 		}
 	},
 
+	/**
+	 * Sauvegarde la réservation dans le cache et sur le serveur.
+	 * On distingue 2 types de réservation : 
+	 * - la nouvelle réservation
+	 * - la réservation existante qu'on veut éditer
+	 */
 	save: function() {
 		if (this.model.isNew()) {
 			console.log('nouvelle réservation détectée');
@@ -239,8 +245,10 @@ window.ReservationView = Backbone.View.extend({
 		form.find('.valid').removeClass('valid');
 	},
 
-	// Remove the option tags corresponding to room "room" except in
-	// the "excepted" select
+	/**
+	 *  Remove the option tags corresponding to room "room" except in
+	 *  the "excepted" select
+	 */
 	removeRoomOpt: function(room, excepted) {
 		var i;
 		for (i = 1; i <= this.nbRoomSelects; i++) {
@@ -326,49 +334,52 @@ window.ReservationView = Backbone.View.extend({
 //	TODO: faire que la sélection soit vide au départ
 	addPresta: function(e) {
 		var $prestaOpt = $(e.currentTarget).find('option:selected'),
-			prestaId = $prestaOpt.val(),
-			prestaTitle = $prestaOpt.text(),
-			prestaRow = _.template(tpl.get('PrestaForResaView'), {
-				id: prestaId, title: prestaTitle, nb: 1
-			});
+		prestaId = $prestaOpt.val(),
+		prestaTitle = $prestaOpt.text(),
+		prestaRow = _.template(tpl.get('PrestaForResaView'), {
+			id: prestaId, title: prestaTitle, nb: 1
+		});
 		$prestaOpt.remove();
 		$('#prestas').append(prestaRow);
 	},
 
 	removePresta: function(e) {
 		var prestaTagId = $(e.currentTarget).attr('idPrestaTag'),
-			$prestaTag = $('#' + prestaTagId),
-			prestaId = $prestaTag.attr('idPresta'),
-			prestaTitle = $prestaTag.text(),
-			$prestaRow = $prestaTag.closest('.row-fluid');
+		$prestaTag = $('#' + prestaTagId),
+		prestaId = $prestaTag.attr('idPresta'),
+		prestaTitle = $prestaTag.text(),
+		$prestaRow = $prestaTag.closest('.row-fluid');
 		$('#prestaSelect').append(
-			$('<option></option>')
+				$('<option></option>')
 				.attr('value', prestaId)
 				.text(prestaTitle)
 		);
 		$prestaRow.remove();
 	},
 
-// TODO: supprimer la duplication de code
+//	TODO: supprimer la duplication de code
 	incrPresta: function(e) {
 		var prestaNbId = $(e.currentTarget).attr('idNbPresta'),
-			$prestaNb = $('#' + prestaNbId),
-			prestaNb = parseInt($prestaNb.text());
+		$prestaNb = $('#' + prestaNbId),
+		prestaNb = parseInt($prestaNb.text());
 		$prestaNb.text(prestaNb + 1);
 	},
 
 	decrPresta: function(e) {
 		var prestaNbId = $(e.currentTarget).attr('idNbPresta'),
-			$prestaNb = $('#' + prestaNbId),
-			prestaNb = parseInt($prestaNb.text());
+		$prestaNb = $('#' + prestaNbId),
+		prestaNb = parseInt($prestaNb.text());
 		if (prestaNb > 1) {
 			$prestaNb.text(prestaNb - 1);
 		}
 	},
 
+	/**
+	 * Construit l'input typeahead avec les méthodes associées
+	 */
 	renderTypeaheadList: function() {	
 		window.namesArray = new Array();
-		
+
 		if(customersResa != null)
 		{
 			customersResa.each(function(Customer) {        		
@@ -377,12 +388,12 @@ window.ReservationView = Backbone.View.extend({
 		}
 		$('#client').typeahead({ 
 			source: namesArray,
-			
+
 			matcher: function (item) {
-			    if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1) {
-			    	clientMatched++;
-			        return true;
-			    }
+				if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1) {
+					clientMatched++;
+					return true;
+				}
 			},
 
 			updater: function(selection){
@@ -395,31 +406,23 @@ window.ReservationView = Backbone.View.extend({
 		}) ;
 	},
 
+	/**
+	 * supprime le client qu'on a sélectionné dans la pop-up de réservation
+	 */
 	deleteSelection: function(){
 		$('#selectedClient').empty();
 		$('#client').val('');
 	},
-	
+
+	/**
+	 * colore l'input en rouge si aucun client ne correspond à ce qu'on a rentré
+	 */
 	checkValidClient: function(){
 		clientMatched = 0;
 		console.log('avant = '+ clientMatched);
 
 		setTimeout(function() {
 			var value =$('#client').val();
-
-			if ($('.typeahead').length){
-				if ($('.typeahead').css('display') == 'none' && value != '') {
-					$('#client').css('background-color', '#FE705A');
-				} else {
-					$('#client').css('background-color', '');
-				}
-			} else {
-				if (value != '') {
-					$('#client').css('background-color', '#FE705A');
-				} else {
-					$('#client').css('background-color', '');
-				}
-
 			console.log('dedans = '+ clientMatched);
 
 			if(clientMatched > 0 || value == ''){
@@ -428,23 +431,23 @@ window.ReservationView = Backbone.View.extend({
 			}else{
 				$('#client').css('background-color', '#FE705A');
 			}
-			
-			
-//			if ($('.typeahead').length){
-//				if($('.typeahead').css('display') == 'none' && value != ''){
-//					$('#client').css('background-color', '#FE705A');
-//				}else{
-//					$('#client').css('background-color', '');
-//				}
-//			}else{
-//				if(value != ''){
-//					$('#client').css('background-color', '#FE705A');
-//				}
-//				else{
-//					$('#client').css('background-color', '');
-//				}
-//			}
-		}, 150); //laisser à ce temps, sinon la div du typeahead n'a pas encore été crée
+
+
+			// if ($('.typeahead').length){
+			// if($('.typeahead').css('display') == 'none' && value != ''){
+			// $('#client').css('background-color', '#FE705A');
+			// }else{
+			// $('#client').css('background-color', '');
+			// }
+			// }else{
+			// if(value != ''){
+			// $('#client').css('background-color', '#FE705A');
+			// }
+			// else{
+			// $('#client').css('background-color', '');
+			// }
+			// }
+		}, 150); //laisser à ce temps, sinon la div du typeahead n'a pas encore été crée et la valeur de l'input n'a pas changé
 	}
-	
+
 });
