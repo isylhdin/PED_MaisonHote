@@ -48,7 +48,8 @@ window.EventsView = Backbone.View.extend({
 		chambresPourCalendrier.bind('replace reset add remove', this.caption);
 		chambresPourCalendrier.bind('replace reset add remove', this.renderList);
 		chambresPourCalendrier.bind('replace reset add remove', this.reRenderWeekView);
-		//si on refresh la page Ã§a va chercher les chambres dans le localstorage
+				
+		//si on refresh la page on va chercher les chambres dans le localstorage
 		chambresPourCalendrier.fetch();
 		this.nbRooms = chambresPourCalendrier.length;
 		this.resaView.nbRooms = this.nbRooms;
@@ -163,14 +164,22 @@ window.EventsView = Backbone.View.extend({
 		var view = this.$el.fullCalendar('getView');
 
 		var idClient = fcEvent.idClient;
-		var client = jQuery.parseJSON(localStorage.getItem('customers-backbone-'+idClient));
+		var content = customersResa.get(idClient);
+		
+		if(typeof(content) !== 'undefined'){
+			content = content.toJSON();
+		}else{
+			content='';
+		}
+		
+		var client = new Customer(content);
 		
 		if (view.name === 'basicWeek') {
-			return 'M/Mme ' + client.name + '\n' + fcEvent.nbPersons +
+			return 'M/Mme ' + client.attributes.name + '\n' + fcEvent.nbPersons +
 			(fcEvent.nbPersons > 1 ? ' personnes' : ' personne') +
-			(fcEvent.phone ? '\n☎ ' + client.phone : '');
+			(fcEvent.phone ? '\n☎ ' + client.attributes.phone : '');
 		} else if (view.name === 'month') {
-			return 'Chambre ' + fcEvent.room + ' | ' + client.name;
+			return 'Chambre ' + fcEvent.room + ' | ' + client.attributes.name;
 		} else {
 			return fcEvent.title;
 		}

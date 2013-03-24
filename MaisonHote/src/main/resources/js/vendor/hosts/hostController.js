@@ -85,7 +85,7 @@ function saveordered_prestasIntoLocalStorage(fileContent) {
 		for (var i = 0; i < orderedPrestas.length; i++) {
 			var prestas = new ResaGroupPrestas(orderedPrestas[i]);
 			prestas.save();
-			resaGroupsPrestasForCalendar.add(prestas);
+			resaGroupsPrestas.add(prestas);
 		}
 	}
 }
