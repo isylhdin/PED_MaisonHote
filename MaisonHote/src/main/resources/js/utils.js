@@ -37,3 +37,28 @@ function getDuration(room){
 	return duration;
 	
 }
+
+/**
+ * Retrouve l'id du client qu'on a sélectionné dans la pop-up de resa
+ * @param client
+ * @returns
+ */
+function findClient(client){
+	
+	var reg = new RegExp("[ ]+", "g"); 
+	var tab = client.split(reg);
+	var name = tab[0];
+	var firstName = tab[1];
+	console.log("nom : "+name +" prenom = "+ firstName);
+	
+	window.result = customersResa.filter(function(model){
+		return model.attributes.name == name && model.attributes.firstname == firstName;
+	});	//retourne une collection, alors qu'on n'a besoin que d'un seul résultat
+	
+	var foundClients = new Customers(result);
+	foundClients.each(function(Client){
+		result = Client.id;	
+	});
+
+	return result;
+}
