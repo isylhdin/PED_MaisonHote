@@ -16,23 +16,21 @@ window.ConnexionView = Backbone.View.extend({
 		$(this.el).html(_.template(tpl.get('ConnexionView')));
 		return this;
 	},
+	
+	saveCurrentHost : function (currentHost){
+		var host = new CurrentHost({'host' : currentHost});
+		host.save();
+	},
 
 	buttonGoogleHandler : function(event){
 		currentHost = 'Drive' ;
 		this.saveCurrentHost(currentHost);	
-		connectToHost();
-		//connectToHost(handleAuthResult); ne fonctionne pas encore, probleme "Uncaught TypeError: Cannot convert object to primitive value"
+		connectToHost();		
 	},
 	
 	buttonDropboxHandler : function (event){
 		currentHost = 'Dropbox' ;
 		this.saveCurrentHost(currentHost);
-		connectToHost (handleAuthResultDropbox);
-	},
-	
-	saveCurrentHost : function (currentHost){
-		var host = new CurrentHost({'host' : currentHost});
-		host.save();
-	}
-	
+		connectToHost ();
+	}		
 });
