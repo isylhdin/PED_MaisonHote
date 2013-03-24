@@ -22,6 +22,8 @@ window.ReservationView = Backbone.View.extend({
 		prestasPourCalendrier.fetch();
 
 		customersResa.fetch();
+		
+		window.clientMatched = 0;
 	},
 
 	render: function() {
@@ -364,10 +366,10 @@ window.ReservationView = Backbone.View.extend({
 		}
 	},
 
-	renderTypeaheadList: function() {
-
+	renderTypeaheadList: function() {	
 		window.namesArray = new Array();
-		if (customersResa != null)
+		
+		if(customersResa != null)
 		{
 			customersResa.each(function(Customer) {        		
 				namesArray.push( Customer.get('name') + ' ' + Customer.get('firstname'));
@@ -375,6 +377,13 @@ window.ReservationView = Backbone.View.extend({
 		}
 		$('#client').typeahead({ 
 			source: namesArray,
+			
+			matcher: function (item) {
+			    if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1) {
+			    	clientMatched++;
+			        return true;
+			    }
+			},
 
 			updater: function(selection){
 				$('#selectedClient').html(selection + ' <i id="deleteSelection" class="icon-remove-sign" data-toggle="tooltip"></i>');
@@ -392,6 +401,9 @@ window.ReservationView = Backbone.View.extend({
 	},
 	
 	checkValidClient: function(){
+		clientMatched = 0;
+		console.log('avant = '+ clientMatched);
+
 		setTimeout(function() {
 			var value =$('#client').val();
 
@@ -407,7 +419,31 @@ window.ReservationView = Backbone.View.extend({
 				} else {
 					$('#client').css('background-color', '');
 				}
+
+			console.log('dedans = '+ clientMatched);
+
+			if(clientMatched > 0 || value == ''){
+				console.log('value = '+ value);
+				$('#client').css('background-color', '');
+			}else{
+				$('#client').css('background-color', '#FE705A');
 			}
+			
+			
+//			if ($('.typeahead').length){
+//				if($('.typeahead').css('display') == 'none' && value != ''){
+//					$('#client').css('background-color', '#FE705A');
+//				}else{
+//					$('#client').css('background-color', '');
+//				}
+//			}else{
+//				if(value != ''){
+//					$('#client').css('background-color', '#FE705A');
+//				}
+//				else{
+//					$('#client').css('background-color', '');
+//				}
+//			}
 		}, 150); //laisser à ce temps, sinon la div du typeahead n'a pas encore été crée
 	}
 	
