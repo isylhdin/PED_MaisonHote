@@ -54,7 +54,7 @@ var showError = function(error) {
 /**
  *  Connection : Authenticates the app's user to Dropbox' API server.
 **/    
-function connectToHostDropbox(callback){
+function connectToHostDropbox(){
    	 if ( !client.isAuthenticated() ){					
 			console.log("Connection to Dropbox");
 			
@@ -66,8 +66,7 @@ function connectToHostDropbox(callback){
 			  }
 
 			  console.log("Connection to dropbox ok, you are authorized to make API calls.");
-			  if (callback != null)
-				  callback();
+			  handleAuthResultDropbox();
 		   });
    	 }
 	 else
@@ -210,3 +209,11 @@ function updateFileDropbox(fileName,newContent,callback){
 		});
 	 }				 
 }*/
+
+function setTokenDropbox () {
+	/*var idToken = localStorage.getItem('token-backbone');
+	var token = jQuery.parseJSON(localStorage.getItem('token-backbone-'+idToken));
+	//console.log(token);
+	gapi.auth.setToken(new Token(token));
+	//console.log(gapi.auth.getToken());*/
+}

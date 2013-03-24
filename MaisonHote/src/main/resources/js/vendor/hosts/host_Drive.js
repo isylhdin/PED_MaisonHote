@@ -9,8 +9,8 @@ var config = {
 /**
  *  Connection 
  **/
-function connectToHostDrive(callback){
-	gapi.auth.authorize(config, callback);
+function connectToHostDrive(){
+	gapi.auth.authorize(config, handleAuthResultDrive );
 }
 
 function handleAuthResultDrive (authResult) {
