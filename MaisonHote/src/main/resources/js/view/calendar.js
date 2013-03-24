@@ -161,12 +161,15 @@ window.EventsView = Backbone.View.extend({
 	eventContentToDisplay: function(fcEvent) {
 		var view = this.$el.fullCalendar('getView');
 
+		var idClient = fcEvent.idClient;
+		var client = jQuery.parseJSON(localStorage.getItem('customers-backbone-'+idClient));
+		
 		if (view.name === 'basicWeek') {
-			return 'M/Mme ' + fcEvent.lastName + '\n' + fcEvent.nbPersons +
+			return 'M/Mme ' + client.name + '\n' + fcEvent.nbPersons +
 			(fcEvent.nbPersons > 1 ? ' personnes' : ' personne') +
-			(fcEvent.phone ? '\n☎ ' + fcEvent.phone : '');
+			(fcEvent.phone ? '\n☎ ' + client.phone : '');
 		} else if (view.name === 'month') {
-			return 'Chambre ' + fcEvent.room + ' | ' + fcEvent.lastName;
+			return 'Chambre ' + fcEvent.room + ' | ' + client.name;
 		} else {
 			return fcEvent.title;
 		}

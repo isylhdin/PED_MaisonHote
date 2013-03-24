@@ -190,11 +190,11 @@ window.ReservationView = Backbone.View.extend({
 						if (!reponse.error) {
 							console.log('réservation sauvegardée sur le serveur');
 						}
-					});
-					obj = JSON.parse(localStorage.getItem('fichier-backbone-ordered-prestas.json'));
+					});					
+					obj = JSON.parse(localStorage.getItem('fichier-backbone-ordered_prestas.json'));
 					updateFile(obj.idFichier, JSON.stringify(resaGroupsPrestas.toJSON()), function(reponse) {	
 						if (!reponse.error) {
-							console.log('réservation sauvegardée sur le serveur');
+							console.log('prestas de la réservation sauvegardées sur le serveur');
 						}
 					});
 				},
