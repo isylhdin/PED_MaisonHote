@@ -11,7 +11,8 @@ window.ReservationView = Backbone.View.extend({
 		'click #btnFicheSejour' : 'btnFicheSejour',
 		'click #client' : 'renderTypeaheadList',
 		'keypress input[name=client]' : 'checkValidClient',
-		'click #deleteSelection' : 'deleteSelection'
+		'click #deleteSelection' : 'deleteSelection',
+		'click #newCustomer' : 'createCustomer'
 	},
 	nbRoomSelects: 1,
 
@@ -448,6 +449,12 @@ window.ReservationView = Backbone.View.extend({
 			// }
 			// }
 		}, 150); //laisser à ce temps, sinon la div du typeahead n'a pas encore été crée et la valeur de l'input n'a pas changé
+	},
+	
+	createCustomer: function(){
+//		this.template = _.template(tpl.get('DataCustomerView'));
+//		$('#client').before(this.template());	
+//		$('#myModal').modal({'show':true,'backdrop':false});
 	}
 
 });

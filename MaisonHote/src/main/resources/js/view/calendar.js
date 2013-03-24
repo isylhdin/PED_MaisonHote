@@ -148,7 +148,7 @@ window.EventsView = Backbone.View.extend({
 				'<div class="span4 offset4 text-center alert">' +
 				contentSaveForm + '</div></div>');
 			$('#infoSave').tooltip({
-				'title' : 'Si vous ne sauvegardez pas, vos modifications ne' +
+				'title' : 'Si vous ne sauvegardez pas, vos modifications ne ' +
 				'seront pas prises en compte lors de votre prochaine connexion'
 			});
 		}

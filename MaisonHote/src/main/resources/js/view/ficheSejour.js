@@ -2,7 +2,11 @@ window.ficheSejourView = Backbone.View.extend({
 
 	initialize: function () {
 		var resaGroup;
+		var idClient = jQuery.parseJSON(this.model).idClient;
+		
+		window.client = jQuery.parseJSON(localStorage.getItem('customers-backbone-'+idClient));
 		window.idResaGroup = jQuery.parseJSON(this.model).idResaGroup;
+		
 
 		this.getAllResaFromGroup();
 		this.render();
@@ -11,7 +15,7 @@ window.ficheSejourView = Backbone.View.extend({
 
 	render: function () { 	
 		this.template = _.template(tpl.get('ficheSejourView'));
-		$(this.el).html(this.template(this.model));
+		$(this.el).html(this.template(client));
 		var self = this;
 		
 		resaGroup.forEach(function(Resa){
@@ -31,7 +35,6 @@ window.ficheSejourView = Backbone.View.extend({
 
 		return this;
 	},
-
 
 	getAllResaFromGroup: function () { 
 
