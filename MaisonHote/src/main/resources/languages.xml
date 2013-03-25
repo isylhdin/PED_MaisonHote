@@ -16,8 +16,4 @@
     	<fr>Chambres</fr>
         <en>Room</en>
     </translation>
-    <translation id="logOut">
-    	<fr>Déconnexion</fr>
-        <en>Log out</en>
-    </translation>
 </translations>
