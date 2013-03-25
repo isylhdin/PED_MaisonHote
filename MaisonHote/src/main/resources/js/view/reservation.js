@@ -11,8 +11,7 @@ window.ReservationView = Backbone.View.extend({
 		'click #btnFicheSejour' : 'btnFicheSejour',
 		'click #client' : 'renderTypeaheadList',
 		'keypress input[name=client]' : 'checkValidClient',
-		'click #deleteSelection' : 'deleteSelection',
-		'click #newCustomer' : 'createCustomer'
+		'click #deleteSelection' : 'deleteSelection'
 	},
 
 	initialize: function() {
@@ -57,8 +56,10 @@ window.ReservationView = Backbone.View.extend({
 
 		$select.empty();
 		chambresPourCalendrier.each(function(room) {
+
 			$select.append('<option value="' + room.get('id') +
-				'"> Chambre ' +  room.get('id') + '</option>');
+					'"> Chambre ' +  room.get('id') + '</option>');
+
 		});
 	},
 
@@ -69,7 +70,7 @@ window.ReservationView = Backbone.View.extend({
 		$select.empty().append('<option selected></option>');
 		prestasPourCalendrier.each(function(presta) {
 			$select.append('<option value="' + presta.get('id') +
-				'">' +  presta.get('title') + '</option>');
+					'">' +  presta.get('title') + '</option>');
 		});
 	},
 
@@ -110,8 +111,6 @@ window.ReservationView = Backbone.View.extend({
 		$('input').blur();
 		this.nbRoomSelects = 1;
 
-		validateForm.getField('phone').val(this.model.get('phone'));
-		validateForm.getField('email').val(this.model.get('email'));
 		$('#roomSelect1').val(this.model.get('room'));
 		this.renderPrestaList();
 		var nbPersons = this.model.get('nbPersons');
@@ -193,7 +192,10 @@ window.ReservationView = Backbone.View.extend({
 						if (!reponse.error) {
 							console.log('réservation sauvegardée sur le serveur');
 						}
-					});					
+					});		
+					
+					console.log(resaGroupsPrestas);
+					
 					obj = JSON.parse(localStorage.getItem('fichier-backbone-ordered_prestas.json'));
 					updateFile(obj.idFichier, JSON.stringify(resaGroupsPrestas.toJSON()), function(reponse) {	
 						if (!reponse.error) {
@@ -218,10 +220,11 @@ window.ReservationView = Backbone.View.extend({
 					console.log('réservation sauvegardée sur le serveur');
 				}
 			});
-			obj = JSON.parse(localStorage.getItem('fichier-backbone-ordered-prestas.json'));
+			
+			obj = JSON.parse(localStorage.getItem('fichier-backbone-ordered_prestas.json'));
 			updateFile(obj.idFichier, JSON.stringify(resaGroupsPrestas.toJSON()), function(reponse) {
 				if (!reponse.error) {
-					console.log('réservation sauvegardée sur le serveur');
+					console.log('prestas de la resa sauvegardée sur le serveur');
 				}
 			});
 		}
@@ -303,9 +306,11 @@ window.ReservationView = Backbone.View.extend({
 
 	addRoomForResa: function(e) {
 		e.preventDefault();
+			
 		if (this.nbRoomSelects >= this.nbRooms) {
 			return;
 		}
+		
 		var i, unselectedRooms, alrdySelected = [];
 
 		for (i = 1; i <= this.nbRoomSelects; i++) {
@@ -319,7 +324,7 @@ window.ReservationView = Backbone.View.extend({
 		var roomRow = _.template(tpl.get('RoomForResaView'), {
 			idSelect: this.nbRoomSelects, rooms: unselectedRooms
 		});
-		//console.log(roomRow);
+
 		this.removeRoomOpt(unselectedRooms[0]);
 		$('#rooms').append(roomRow);
 	},
@@ -353,9 +358,9 @@ window.ReservationView = Backbone.View.extend({
 		prestaTitle = $prestaTag.text(),
 		$prestaRow = $prestaTag.closest('.row-fluid');
 		$('#prestaSelect').append(
-			$('<option></option>')
-			.attr('value', prestaId)
-			.text(prestaTitle)
+				$('<option></option>')
+				.attr('value', prestaId)
+				.text(prestaTitle)
 		);
 		$prestaRow.remove();
 	},
@@ -380,7 +385,8 @@ window.ReservationView = Backbone.View.extend({
 	/**
 	 * Construit l'input typeahead avec les méthodes associées
 	 */
-	renderTypeaheadList: function() {	
+	renderTypeaheadList: function() {
+		console.log("on a cliqué dans le typeahead");
 		window.namesArray = new Array();
 
 		if (customersResa != null)
@@ -389,24 +395,31 @@ window.ReservationView = Backbone.View.extend({
 				namesArray.push( Customer.get('name') + ' ' + Customer.get('firstname'));
 			});
 		}
-		$('#client').typeahead({ 
-			source: namesArray,
 
-			matcher: function (item) {
-				if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1) {
-					clientMatched++;
-					return true;
+		var typeahead = $('#client').data('typeahead');
+		console.log(typeahead);
+		if(!typeahead){
+
+			$('#client').typeahead({ 
+				source: namesArray,
+
+				matcher: function (item) {
+					if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) != -1) {
+						clientMatched++;
+						return true;
+					}
+				},
+
+				updater: function(selection){
+					$('#selectedClient').html(selection + ' <i id="deleteSelection" class="icon-remove-sign" data-toggle="tooltip"></i>');
+					$('#deleteSelection').tooltip({
+						'title' : 'Supprimer sélection'
+					});
+					return selection;
 				}
-			},
+			}) ;
+		}
 
-			updater: function(selection){
-				$('#selectedClient').html(selection + ' <i id="deleteSelection" class="icon-remove-sign" data-toggle="tooltip"></i>');
-				$('#deleteSelection').tooltip({
-					'title' : 'Supprimer sélection'
-				});
-				return selection;
-			}
-		}) ;
 	},
 
 	/**
@@ -434,29 +447,7 @@ window.ReservationView = Backbone.View.extend({
 			} else {
 				$('#client').css('background-color', '#FE705A');
 			}
-
-
-			// if ($('.typeahead').length){
-			// if($('.typeahead').css('display') == 'none' && value != ''){
-			// $('#client').css('background-color', '#FE705A');
-			// }else{
-			// $('#client').css('background-color', '');
-			// }
-			// }else{
-			// if(value != ''){
-			// $('#client').css('background-color', '#FE705A');
-			// }
-			// else{
-			// $('#client').css('background-color', '');
-			// }
-			// }
-		}, 150); //laisser à ce temps, sinon la div du typeahead n'a pas encore été crée et la valeur de l'input n'a pas changé
-	},
-	
-	createCustomer: function() {
-//		this.template = _.template(tpl.get('DataCustomerView'));
-//		$('#client').before(this.template());	
-//		$('#myModal').modal({'show':true,'backdrop':false});
+		}, 250); //laisser à ce temps, sinon la div du typeahead n'a pas encore été crée et la valeur de l'input n'a pas changé
 	}
 
 });

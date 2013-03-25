@@ -14,7 +14,7 @@ var appRouter = Backbone.Router.extend({
 
 	initialize: function() {
 		console.log('Initialize router !');
-		
+
 		if (localStorage.length === 0) {
 			this.connexion();
 			$('#room').hide();
@@ -31,7 +31,7 @@ var appRouter = Backbone.Router.extend({
 			}
 
 			setToken();
-			
+
 			//A cet endroit il faudra set le token du service de stockage pour qu'il soit intégré aux appels de web services
 			//ne marche pas, l'appel aux web service n'intègre pas le token dans le header ...
 
@@ -57,7 +57,7 @@ var appRouter = Backbone.Router.extend({
 
 	resa: function() {
 		console.log('Welcome back resa!');
-				
+
 		chambresPourCalendrier = new Chambres();
 		chambresPourCalendrier.localStorage = new Backbone.LocalStorage('chambres-backbone');
 		//chambresPourCalendrier.fetch();
@@ -72,7 +72,7 @@ var appRouter = Backbone.Router.extend({
 		customersResa = new Customers();
 		customersResa.localStorage = new Backbone.LocalStorage('customers-backbone');
 		customersResa.fetch();
-		
+
 		if (this.calendarView) {
 			this.calendarView.$el.removeData().unbind();
 			$('.dialog').remove();
@@ -116,7 +116,7 @@ var appRouter = Backbone.Router.extend({
 		this.listCustomerView = new ListCustomerView();
 		$('#content').html(this.listCustomerView.el);
 	},
-	
+
 	ficheSejour: function(id, params) {
 		console.log("Welcome back sejour!");
 		//console.log(id);
@@ -184,10 +184,10 @@ tpl = {
 };
 
 tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView',
-		'ChambreView', 'ConnexionView', 'ficheSejourView', 'ServiceView',
-		'DeleteModalView', 'FirstConfigModalView', 'ListCustomerView',
-		'FacturationView', 'DataCustomerView', 'RoomForResaView',
-		'PrestaForResaView'], function() {
+                   'ChambreView', 'ConnexionView', 'ficheSejourView', 'ServiceView',
+                   'DeleteModalView', 'FirstConfigModalView', 'ListCustomerView',
+                   'DataCustomerView', 'RoomForResaView','PrestaForResaView'], 
+                   function() {
 
 	app = new appRouter();
 	Backbone.history.start();

@@ -120,7 +120,7 @@ function savecustomersIntoLocalStorage(fileContent){
 
 
 /**
- * Cette méthode vérifie que le fichier house_config.json est présent sur le serveur. A parti de là on
+ * Cette méthode vérifie que le fichier house_config.json est présent sur le serveur. A partir de là on
  * peut déterminer si c'est une première utilisation de l'application. Ce fichier est primordial pour
  * l'application, elle ne peut pas fonctionner sans ce dernier.
  * Si c'est la première utilisation l'utilisateur est dirigé sur la page de configuration des chambres, 
