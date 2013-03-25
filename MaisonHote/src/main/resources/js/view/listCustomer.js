@@ -1,5 +1,5 @@
 window.ListCustomerView = Backbone.View.extend({
-
+	
 	idCustomer:null,
 	
 	events: {
@@ -13,19 +13,13 @@ window.ListCustomerView = Backbone.View.extend({
 	},
 
     initialize: function () {
+    	idCustomer = null;
     	customers = new Customers();
 		customers.localStorage = new Backbone.LocalStorage("customers-backbone");
 		customers.fetch();
-		idCustomer = '-1' ;
-        this.render();
+		this.render();
     },
 
-    /*
-     * <tr><form class='form-search'>"
-  	       + '<input type="text" class="input-medium search-query" id="inputSearch">'
-           + '<button type="submit" class="btn" id="btnSearchCustomer"><i class="icon-search"></i></button>'	
-           + '</form></tr>
-     */
     render: function () {       
         var customersData = "<div class='span5'><div class='hero-unit'><table class='table'><tr><td>";
         customersData += this.createList();
@@ -73,7 +67,7 @@ window.ListCustomerView = Backbone.View.extend({
     
     closeModal: function(){
     	this.reRender();
-    	idCustomer = '-1' ;
+    	idCustomer = null ;
     	$('#myModal').modal('hide');
     },
     
@@ -89,16 +83,17 @@ window.ListCustomerView = Backbone.View.extend({
 	    		if (Customer.get('id') > id)
 	    			id = Customer.get('id') ;
 	    	});
+	    	
     	}
     	id += 1;
     	return id ;
     },
     
-	saveDataCustomer: function(){
+	saveDataCustomer: function(){		
 		// If it'a new customer we have to create it
 		var msg2show ;
-		if ( idCustomer == '-1' ) {
-			var newId = this.getNewId();	    	
+		if ( !idCustomer ) {
+			var newId = this.getNewId();			
 			customer = new Customer({'id': newId});
 			customers.add(customer);
 			msg2show = 'Nouveau client ajouté avec succès.';
@@ -133,9 +128,9 @@ window.ListCustomerView = Backbone.View.extend({
 		this.reRender();
 	},
 	
-	showCustomer : function (){
-		idCustomer = document.getElementById('selectCustomer').value ;
-		var customer = JSON.parse( localStorage['customers-backbone-'+idCustomer] ) ;
+	showCustomer : function (){		
+		var idCustomers = document.getElementById('selectCustomer').value ;
+		var customer = JSON.parse( localStorage['customers-backbone-'+idCustomers] ) ;
 			
 		// we load data in the div		
 		var infos = "<address><strong>"
@@ -145,7 +140,7 @@ window.ListCustomerView = Backbone.View.extend({
 					+ customer.cp + " " + customer.city + "<br/><br/>"
 					+ customer.phone + "<br/>"					
 					+ "<a href='mailto:#'>" + customer.mail + "</a><br/></adresse>" ;		
-		document.getElementById("dataCustomer").innerHTML =  infos ;
+		document.getElementById("dataCustomer").innerHTML =  infos ;		
 	},
 	
 	showModalCustomer : function (){
