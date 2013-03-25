@@ -60,14 +60,14 @@ window.EventsView = Backbone.View.extend({
 	reRenderWeekView: function() {
 		this.nbRooms = chambresPourCalendrier.length;
 		this.resaView.nbRooms = this.nbRooms;
-		$(this.el).empty();
+		this.$el.empty();
 		this.render();
 	},
 
 	render: function() {
-		$(this.el).empty();
+		this.$el.empty();
 		var roomTitles = chambresPourCalendrier.pluck('id').map(function(room) {return 'Chambre ' + room});
-		$(this.el).fullCalendar({
+		this.$el.fullCalendar({
 			header: {
 				left: 'prev,next',
 				center: 'title',
@@ -89,6 +89,7 @@ window.EventsView = Backbone.View.extend({
 			eventContentToDisplay: this.eventContentToDisplay,
 			ordinateTitles: roomTitles
 		});
+		return this;
 	},
 	addAll: function() {
 		this.$el.fullCalendar('addEventSource', this.collection.toJSON(), true);

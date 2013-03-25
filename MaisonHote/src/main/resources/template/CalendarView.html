@@ -43,7 +43,6 @@
 				<h5>Prestations :</h5>
 				<div class="controls">
 					<select id="prestaSelect">
-						<option selected></option>
 						<% prestasPourCalendrier.each(function(presta) { %>
 							<option value="<%= presta.get('id') %>"><%= presta.get('title') %></option>
 						<% }); %>
