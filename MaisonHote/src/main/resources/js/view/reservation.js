@@ -14,7 +14,6 @@ window.ReservationView = Backbone.View.extend({
 		'click #deleteSelection' : 'deleteSelection',
 		'click #newCustomer' : 'createCustomer'
 	},
-	nbRoomSelects: 1,
 
 	initialize: function() {
 		_.bindAll(this);
@@ -67,7 +66,7 @@ window.ReservationView = Backbone.View.extend({
 		//console.log("-renderPrestaList " + prestasPourCalendrier.length);
 		var $select = $('#prestaSelect');
 
-		$select.slice(1).remove();
+		$select.empty().append('<option selected></option>');
 		prestasPourCalendrier.each(function(presta) {
 			$select.append('<option value="' + presta.get('id') +
 				'">' +  presta.get('title') + '</option>');
@@ -108,24 +107,13 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	open: function() {
-		$("input").blur();
-		// enlevé pour faciliter les tests 
-		//validateForm.getField('lastName').val(this.model.get('lastName'));
-		//validateForm.getField('firstName').val(this.model.get('firstName'));
-		var lastName = this.model.get('lastName');
-		var firstName = this.model.get('firstName');
-		if (lastName) {
-			validateForm.getField('lastName').val(lastName);
-			validateForm.getField('firstName').val(firstName);
-		}
-		else {
-//			validateForm.getField('firstName').val('Ernest');
-//			validateForm.getField('lastName').val('Le Marcassin');
-		}
+		$('input').blur();
+		this.nbRoomSelects = 1;
 
 		validateForm.getField('phone').val(this.model.get('phone'));
 		validateForm.getField('email').val(this.model.get('email'));
 		$('#roomSelect1').val(this.model.get('room'));
+		this.renderPrestaList();
 		var nbPersons = this.model.get('nbPersons');
 		validateForm.getField('nbPersons').val(nbPersons ? nbPersons : 1);
 	},
@@ -240,7 +228,7 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	close: function() {
-		this.nbRoomSelects = 1;
+		$('#prestas').find('.prestaRow').remove();
 		$('body').removeClass('unselectCanceled');
 		this.$el.dialog('close');
 	},
@@ -347,7 +335,6 @@ window.ReservationView = Backbone.View.extend({
 		this.addRoomOpt(idRoom);
 	},
 
-//	TODO: faire que la sélection soit vide au départ
 	addPresta: function(e) {
 		var $prestaOpt = $(e.currentTarget).find('option:selected'),
 		prestaId = $prestaOpt.val(),
@@ -366,9 +353,9 @@ window.ReservationView = Backbone.View.extend({
 		prestaTitle = $prestaTag.text(),
 		$prestaRow = $prestaTag.closest('.row-fluid');
 		$('#prestaSelect').append(
-				$('<option></option>')
-				.attr('value', prestaId)
-				.text(prestaTitle)
+			$('<option></option>')
+			.attr('value', prestaId)
+			.text(prestaTitle)
 		);
 		$prestaRow.remove();
 	},
