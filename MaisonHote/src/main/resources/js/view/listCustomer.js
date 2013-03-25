@@ -20,13 +20,19 @@ window.ListCustomerView = Backbone.View.extend({
         this.render();
     },
 
+    /*
+     * <tr><form class='form-search'>"
+  	       + '<input type="text" class="input-medium search-query" id="inputSearch">'
+           + '<button type="submit" class="btn" id="btnSearchCustomer"><i class="icon-search"></i></button>'	
+           + '</form></tr>
+     */
     render: function () {       
         var customersData = "<div class='span5'><div class='hero-unit'><table class='table'><tr><td>";
         customersData += this.createList();
         customersData += "</td><td><a id='btnAddCustomer' role='button' class='btn' data-toggle='modal'><img src='css/img/add_logo.png' width='30'  border='0'/></a><br/>"
         	     + "<a id='btnEditCustomer' role='button' class='btn' data-toggle='modal'><img src='css/img/edit_logo.png' width='30'  border='0'/></a><br/>"
         	     + "<a id='btnDeleteCustomer' role='button' class='btn'><img src='css/img/delete_logo.png' width='30'  border='0'/></a></td>"
-        	     + "</td></tr></table></div></div><div  class='span5'><div id='dataCustomer' class='hero-unit'>" + customers.length + " clients dans votre annuaire </div>";
+        	     + "</tr></table></div></div><div  class='span5'><div id='dataCustomer' class='hero-unit'>" + customers.length + " clients dans votre annuaire </div>";
                 
         $(this.el).append(customersData);         
         return this;
