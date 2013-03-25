@@ -73,6 +73,11 @@ var appRouter = Backbone.Router.extend({
 		customersResa.localStorage = new Backbone.LocalStorage('customers-backbone');
 		customersResa.fetch();
 		
+		if (this.calendarView) {
+			this.calendarView.$el.removeData().unbind();
+			$('.dialog').remove();
+			//this.calendarView.$el.remove();
+		}
 		this.calendarView = new CalendarView();
 		$('#content').html(this.calendarView.el);
 
