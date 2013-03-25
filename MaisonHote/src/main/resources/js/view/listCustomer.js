@@ -26,7 +26,7 @@ window.ListCustomerView = Backbone.View.extend({
         customersData += "</td><td><a id='btnAddCustomer' role='button' class='btn' data-toggle='modal'><img src='css/img/add_logo.png' width='30'  border='0'/></a><br/>"
         	     + "<a id='btnEditCustomer' role='button' class='btn' data-toggle='modal'><img src='css/img/edit_logo.png' width='30'  border='0'/></a><br/>"
         	     + "<a id='btnDeleteCustomer' role='button' class='btn'><img src='css/img/delete_logo.png' width='30'  border='0'/></a></td>"
-        	     + "</tr></table></div></div><div  class='span5'><div id='dataCustomer' class='hero-unit'>" + customers.length + " clients dans votre annuaire </div>";
+        	     + "</tr></table></div></div><div  class='span5'><div id='dataCustomer' class='hero-unit'></div>";
                 
         $(this.el).append(customersData);         
         return this;
