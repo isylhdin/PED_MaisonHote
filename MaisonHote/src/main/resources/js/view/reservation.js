@@ -11,8 +11,7 @@ window.ReservationView = Backbone.View.extend({
 		'click #btnFicheSejour' : 'btnFicheSejour',
 		'click #client' : 'renderTypeaheadList',
 		'keypress input[name=client]' : 'checkValidClient',
-		'click #deleteSelection' : 'deleteSelection',
-		'click #newCustomer' : 'createCustomer'
+		'click #deleteSelection' : 'deleteSelection'
 	},
 	nbRoomSelects: 1,
 
@@ -57,7 +56,7 @@ window.ReservationView = Backbone.View.extend({
 		$('#roomSelect1').empty();
 		chambresPourCalendrier.each(function(room) {
 			$('#roomSelect1').append('<option value="' + room.get('id') +
-				'"> Chambre ' +  room.get('id') + '</option>');
+					'"> Chambre ' +  room.get('id') + '</option>');
 		});
 	},
 
@@ -389,7 +388,8 @@ window.ReservationView = Backbone.View.extend({
 	/**
 	 * Construit l'input typeahead avec les méthodes associées
 	 */
-	renderTypeaheadList: function() {	
+	renderTypeaheadList: function() {
+		console.log("on a cliqué dans le typeahead");
 		window.namesArray = new Array();
 
 		if(customersResa != null)
@@ -398,6 +398,11 @@ window.ReservationView = Backbone.View.extend({
 				namesArray.push( Customer.get('name') + ' ' + Customer.get('firstname'));
 			});
 		}
+
+		var typeahead = $('#client').data('typeahead');
+		console.log(typeahead);
+		if(!typeahead){
+
 		$('#client').typeahead({ 
 			source: namesArray,
 
@@ -416,6 +421,8 @@ window.ReservationView = Backbone.View.extend({
 				return selection;
 			}
 		}) ;
+		}
+
 	},
 
 	/**
@@ -435,37 +442,17 @@ window.ReservationView = Backbone.View.extend({
 
 		setTimeout(function() {
 			var value =$('#client').val();
+			console.log('value = '+ value);
 			console.log('dedans = '+ clientMatched);
 
 			if(clientMatched > 0 || value == ''){
-				console.log('value = '+ value);
 				$('#client').css('background-color', '');
+				console.log('bon');
 			}else{
 				$('#client').css('background-color', '#FE705A');
+				console.log('pas bon');
 			}
-
-
-			// if ($('.typeahead').length){
-			// if($('.typeahead').css('display') == 'none' && value != ''){
-			// $('#client').css('background-color', '#FE705A');
-			// }else{
-			// $('#client').css('background-color', '');
-			// }
-			// }else{
-			// if(value != ''){
-			// $('#client').css('background-color', '#FE705A');
-			// }
-			// else{
-			// $('#client').css('background-color', '');
-			// }
-			// }
-		}, 150); //laisser à ce temps, sinon la div du typeahead n'a pas encore été crée et la valeur de l'input n'a pas changé
-	},
-	
-	createCustomer: function(){
-//		this.template = _.template(tpl.get('DataCustomerView'));
-//		$('#client').before(this.template());	
-//		$('#myModal').modal({'show':true,'backdrop':false});
+		}, 250); //laisser à ce temps, sinon la div du typeahead n'a pas encore été crée et la valeur de l'input n'a pas changé
 	}
 
 });
