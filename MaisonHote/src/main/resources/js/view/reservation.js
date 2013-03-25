@@ -54,19 +54,23 @@ window.ReservationView = Backbone.View.extend({
 
 	renderRoomList: function() {
 		//console.log("-renderList: " + chambresPourCalendrier.length);
-		$('#roomSelect1').empty();
+		var $select = $('#roomSelect1');
+
+		$select.empty();
 		chambresPourCalendrier.each(function(room) {
-			$('#roomSelect1').append('<option value="' + room.get('id') +
+			$select.append('<option value="' + room.get('id') +
 				'"> Chambre ' +  room.get('id') + '</option>');
 		});
 	},
 
 	renderPrestaList: function() {
 		//console.log("-renderPrestaList " + prestasPourCalendrier.length);
-		$('#prestaSelect').empty();
+		var $select = $('#prestaSelect');
+
+		$select.slice(1).remove();
 		prestasPourCalendrier.each(function(presta) {
-			$('#prestaSelect').append('<option value="' + presta.get('id') +
-					'">' +  presta.get('title') + '</option>');
+			$select.append('<option value="' + presta.get('id') +
+				'">' +  presta.get('title') + '</option>');
 		});
 	},
 
@@ -392,7 +396,7 @@ window.ReservationView = Backbone.View.extend({
 	renderTypeaheadList: function() {	
 		window.namesArray = new Array();
 
-		if(customersResa != null)
+		if (customersResa != null)
 		{
 			customersResa.each(function(Customer) {        		
 				namesArray.push( Customer.get('name') + ' ' + Customer.get('firstname'));
@@ -421,7 +425,7 @@ window.ReservationView = Backbone.View.extend({
 	/**
 	 * supprime le client qu'on a sélectionné dans la pop-up de réservation
 	 */
-	deleteSelection: function(){
+	deleteSelection: function() {
 		$('#selectedClient').empty();
 		$('#client').val('');
 	},
@@ -429,18 +433,18 @@ window.ReservationView = Backbone.View.extend({
 	/**
 	 * colore l'input en rouge si aucun client ne correspond à ce qu'on a rentré
 	 */
-	checkValidClient: function(){
+	checkValidClient: function() {
 		clientMatched = 0;
-		console.log('avant = '+ clientMatched);
+		console.log('avant = ' + clientMatched);
 
 		setTimeout(function() {
-			var value =$('#client').val();
+			var value = $('#client').val();
 			console.log('dedans = '+ clientMatched);
 
-			if(clientMatched > 0 || value == ''){
+			if (clientMatched > 0 || value === '') {
 				console.log('value = '+ value);
 				$('#client').css('background-color', '');
-			}else{
+			} else {
 				$('#client').css('background-color', '#FE705A');
 			}
 
@@ -462,7 +466,7 @@ window.ReservationView = Backbone.View.extend({
 		}, 150); //laisser à ce temps, sinon la div du typeahead n'a pas encore été crée et la valeur de l'input n'a pas changé
 	},
 	
-	createCustomer: function(){
+	createCustomer: function() {
 //		this.template = _.template(tpl.get('DataCustomerView'));
 //		$('#client').before(this.template());	
 //		$('#myModal').modal({'show':true,'backdrop':false});
