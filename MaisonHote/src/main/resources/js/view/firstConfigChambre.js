@@ -187,6 +187,15 @@ window.SelectChambreView = Backbone.View.extend({
 
 		});
 	},
+	
+	createFileOrderedPresta: function(){
+		createNewFile('ordered_prestas.json', function(reponse){	
+			window.idPrestaResa = reponse.id;
+
+			var prestaResaFile = new FichierConfig({'id':reponse.title, 'idFichier': idPrestaResa });
+			prestaResaFile.save();
+		});
+	},
 
 	onSubmit: function(e){
 		success = true;
@@ -214,6 +223,8 @@ window.SelectChambreView = Backbone.View.extend({
 		this.createFileClient();
 
 		this.createFileResa();
+		
+		this.createFileOrderedPresta();
 
 		/**********************************************************************************/
 

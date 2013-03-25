@@ -33,7 +33,7 @@ window.ListCustomerView = Backbone.View.extend({
     },
     
     reRender: function(){
-    	$('#selectCustomer').replaceWith(   this.createList() );    	
+    	$('#selectCustomer').replaceWith( this.createList() );    	
     },
     
     createList: function(){
@@ -144,31 +144,35 @@ window.ListCustomerView = Backbone.View.extend({
 	},
 	
 	showModalCustomer : function (){
-		idCustomer = document.getElementById('selectCustomer').value ;
-		var customer = JSON.parse( localStorage['customers-backbone-'+idCustomer] ) ;
-		
-		this.template = _.template(tpl.get('DataCustomerView'));
-		$('#dataCustomer').before(this.template());
-		
-		// we load data in the modal and open it
-		$("#inputName").val( customer.name );
-		$("#inputFirstname").val( customer.firstname );
-		$("#inputPhone").val( customer.phone );
-		$("#inputAddress").val( customer.address );
-		$("#inputCp").val( customer.cp );	
-		$("#inputCity").val( customer.city );	
-		$("#inputEmail").val( customer.mail );			
-		$('#myModal').modal('show');		
+		if ( document.getElementById('selectCustomer').selectedIndex != -1 ){
+			idCustomer = document.getElementById('selectCustomer').value ;		
+			var customer = JSON.parse( localStorage['customers-backbone-'+idCustomer] ) ;
+			
+			this.template = _.template(tpl.get('DataCustomerView'));
+			$('#dataCustomer').before(this.template());
+			
+			// we load data in the modal and open it
+			$("#inputName").val( customer.name );
+			$("#inputFirstname").val( customer.firstname );
+			$("#inputPhone").val( customer.phone );
+			$("#inputAddress").val( customer.address );
+			$("#inputCp").val( customer.cp );	
+			$("#inputCity").val( customer.city );	
+			$("#inputEmail").val( customer.mail );			
+			$('#myModal').modal('show');
+		}
 	},
 	
-	deleteCustomer : function (){		 
-		customer = customers.get( document.getElementById('selectCustomer').value) ;		
-		localStorage.removeItem('customers-backbone-'+customer.get('id')) ;
-		customers.remove(customer);		
-		var obj = JSON.parse(localStorage.getItem("fichier-backbone-customers.json"));
-		updateFile(obj.idFichier, JSON.stringify(customers.toJSON()), function (){} );
-		document.getElementById('dataCustomer').innerHTML = "Client supprimé avec succès." ;
-		this.reRender();		
+	deleteCustomer : function (){
+		if ( document.getElementById('selectCustomer').selectedIndex != -1 ){
+			customer = customers.get( document.getElementById('selectCustomer').value) ;		
+			localStorage.removeItem('customers-backbone-'+customer.get('id')) ;
+			customers.remove(customer);		
+			var obj = JSON.parse(localStorage.getItem("fichier-backbone-customers.json"));
+			updateFile(obj.idFichier, JSON.stringify(customers.toJSON()), function (){} );
+			document.getElementById('dataCustomer').innerHTML = "Client supprimé avec succès." ;
+			this.reRender();
+		}
 	}
 	
 });
