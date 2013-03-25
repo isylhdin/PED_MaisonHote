@@ -75,8 +75,7 @@ var appRouter = Backbone.Router.extend({
 
 		this.calendarView = new CalendarView();
 		$('#content').html(this.calendarView.el);
-
-
+		
 		//Reservations
 		reservations = new Reservations();
 		reservations.localStorage = new Backbone.LocalStorage('resas-backbone');

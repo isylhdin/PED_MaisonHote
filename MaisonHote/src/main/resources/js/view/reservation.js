@@ -308,6 +308,7 @@ window.ReservationView = Backbone.View.extend({
 		e.preventDefault();
 			
 		if (this.nbRoomSelects >= this.nbRooms) {
+			$('#addRoom').attr("disabled", "disabled");;
 			return;
 		}
 		
@@ -338,6 +339,8 @@ window.ReservationView = Backbone.View.extend({
 		this.nbRoomSelects--;
 		this.updateSelectIds();
 		this.addRoomOpt(idRoom);
+		
+		$('#addRoom').removeAttr("disabled");
 	},
 
 	addPresta: function(e) {
