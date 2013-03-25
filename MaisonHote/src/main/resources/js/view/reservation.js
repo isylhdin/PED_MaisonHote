@@ -19,8 +19,9 @@ window.ReservationView = Backbone.View.extend({
 	initialize: function() {
 		_.bindAll(this);
 		this.initDialog();
+		var self = this;
+		chambresPourCalendrier.bind('replace reset add remove', this.renderRoomList);
 		prestasPourCalendrier.bind('replace reset add remove', this.renderPrestaList);
-		prestasPourCalendrier.fetch();
 
 		customersResa.fetch();
 
@@ -51,7 +52,17 @@ window.ReservationView = Backbone.View.extend({
 		return this;
 	},
 
+	renderRoomList: function() {
+		//console.log("-renderList: " + chambresPourCalendrier.length);
+		$('#roomSelect1').empty();
+		chambresPourCalendrier.each(function(room) {
+			$('#roomSelect1').append('<option value="' + room.get('id') +
+				'"> Chambre ' +  room.get('id') + '</option>');
+		});
+	},
+
 	renderPrestaList: function() {
+		//console.log("-renderPrestaList " + prestasPourCalendrier.length);
 		$('#prestaSelect').empty();
 		prestasPourCalendrier.each(function(presta) {
 			$('#prestaSelect').append('<option value="' + presta.get('id') +
@@ -313,10 +324,10 @@ window.ReservationView = Backbone.View.extend({
 				return $.inArray(idRoom, alrdySelected) !== -1;
 			});
 		this.nbRoomSelects++;
-
 		var roomRow = _.template(tpl.get('RoomForResaView'), {
 			idSelect: this.nbRoomSelects, rooms: unselectedRooms
 		});
+		//console.log(roomRow);
 		this.removeRoomOpt(unselectedRooms[0]);
 		$('#rooms').append(roomRow);
 	},

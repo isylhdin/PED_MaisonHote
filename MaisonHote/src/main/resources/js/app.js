@@ -60,10 +60,11 @@ var appRouter = Backbone.Router.extend({
 				
 		chambresPourCalendrier = new Chambres();
 		chambresPourCalendrier.localStorage = new Backbone.LocalStorage('chambres-backbone');
-		chambresPourCalendrier.fetch();
+		//chambresPourCalendrier.fetch();
 
 		prestasPourCalendrier = new Prestations();
 		prestasPourCalendrier.localStorage = new Backbone.LocalStorage('prestations-backbone');
+		//prestasPourCalendrier.fetch({success: function(){console.log(chambresPourCalendrier.length);}});
 
 		resaGroupsPrestas = new ResaGroupsPrestas();
 		resaGroupsPrestas.localStorage = new Backbone.LocalStorage('resa-groups-prestas');

@@ -46,11 +46,11 @@ window.EventsView = Backbone.View.extend({
 
 		this.resaView = new ReservationView({ el: $('#eventDialog') });
 		chambresPourCalendrier.bind('replace reset add remove', this.caption);
-		chambresPourCalendrier.bind('replace reset add remove', this.renderList);
 		chambresPourCalendrier.bind('replace reset add remove', this.reRenderWeekView);
-				
+
 		//si on refresh la page on va chercher les chambres dans le localstorage
 		chambresPourCalendrier.fetch();
+		prestasPourCalendrier.fetch();
 		this.nbRooms = chambresPourCalendrier.length;
 		this.resaView.nbRooms = this.nbRooms;
 
@@ -204,14 +204,6 @@ window.EventsView = Backbone.View.extend({
 				title: title, content: content, trigger: 'hover',
 				html: true, placement: 'top'
 			});
-		});
-	},
-
-	renderList: function() {
-		$('#roomSelect1').empty();
-		chambresPourCalendrier.each(function(room) {
-			$('#roomSelect1').append('<option value="' + room.get('id') +
-				'"> Chambre ' +  room.get('id') + '</option>');
 		});
 	},
 
