@@ -37,16 +37,16 @@ window.CalendarView = Backbone.View.extend({
 
 window.EventsView = Backbone.View.extend({
 	initialize: function() {
-		_.bindAll(this); 
+		_.bindAll(this);
 
-		this.collection.bind('reset', this.addAll);
-		this.collection.bind('add', this.addOne);
-		this.collection.bind('change', this.change);
-		this.collection.bind('destroy', this.destroy);
+		this.listenTo(this.collection, 'reset', this.addAll);
+		this.listenTo(this.collection, 'add', this.addOne);
+		this.listenTo(this.collection, 'change', this.change);
+		this.listenTo(this.collection, 'destroy', this.destroy);
 
 		this.resaView = new ReservationView({ el: $('#eventDialog') });
-		chambresPourCalendrier.bind('replace reset add remove', this.caption);
-		chambresPourCalendrier.bind('replace reset add remove', this.reRenderWeekView);
+		this.listenTo(chambresPourCalendrier, 'replace reset add remove', this.caption);
+		this.listenTo(chambresPourCalendrier, 'replace reset add remove', this.reRenderWeekView);
 
 		//si on refresh la page on va chercher les chambres dans le localstorage
 		chambresPourCalendrier.fetch();
@@ -59,7 +59,6 @@ window.EventsView = Backbone.View.extend({
 
 	reRenderWeekView: function() {
 		this.nbRooms = chambresPourCalendrier.length;
-		this.resaView.nbRooms = this.nbRooms;
 		this.$el.empty();
 		this.render();
 	},

@@ -18,8 +18,8 @@ window.ReservationView = Backbone.View.extend({
 		_.bindAll(this);
 		this.initDialog();
 		var self = this;
-		chambresPourCalendrier.bind('replace reset add remove', this.renderRoomList);
-		prestasPourCalendrier.bind('replace reset add remove', this.renderPrestaList);
+		this.listenTo(chambresPourCalendrier, 'replace reset add remove', this.renderRoomList);
+		this.listenTo(prestasPourCalendrier, 'replace reset add remove', this.renderPrestaList);
 
 		customersResa.fetch();
 
@@ -54,6 +54,7 @@ window.ReservationView = Backbone.View.extend({
 		//console.log("-renderList: " + chambresPourCalendrier.length);
 		var $select = $('#roomSelect1');
 
+		this.nbRooms = chambresPourCalendrier.length;
 		$select.empty();
 		chambresPourCalendrier.each(function(room) {
 
@@ -267,6 +268,7 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	close: function() {
+		$('#rooms').find('.additionalRoomRow').remove();
 		$('#prestas').find('.prestaRow').remove();
 		$('body').removeClass('unselectCanceled');
 		this.$el.dialog('close');

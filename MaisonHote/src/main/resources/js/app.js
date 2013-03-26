@@ -74,9 +74,10 @@ var appRouter = Backbone.Router.extend({
 		customersResa.fetch();
 
 		if (this.calendarView) {
-			this.calendarView.$el.removeData().unbind();
-			$('.dialog').remove();
-			//this.calendarView.$el.remove();
+			// TODO: calendarView à fusionner avec EventsView ?
+			this.calendarView.remove();
+			calendar.resaView.remove();
+			calendar.remove();
 		}
 		this.calendarView = new CalendarView();
 		$('#content').html(this.calendarView.el);
