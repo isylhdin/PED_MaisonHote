@@ -3,6 +3,8 @@
 	<h1>Fiche séjour</h1>
 	<hr/>
 	<h3><b><u>Informations client</u></b></h3>
+	<div class="row">
+	<div class="span9 offset2">
 	<form class="form-horizontal">
       <div class="control-group">
       	<div class="span6">
@@ -47,26 +49,36 @@
         </div>
       </div>
 	</form>
-	
+	</div>
+	</div>
 	<hr/>
 	
 	<h3><b><u>Informations chambres réservées</u></b></h3>
-	<div id="rooms"></div>
-	
+	<div class="row">
+		<div id="rooms"></div>
+		<div> 
+			<hr/>
+		</div>
+		<div id="arrhes"></div>
+	</div>
 	<hr/>
 	
 	<h3><b><u>Informations prestations</u></b></h3>
 	<div id="prestations"></div>
 	
 	<hr/>
-	<form class="form-horizontal">
-      <div class="control-group">
-      	<div class="span6">
-        	<label class="control-label" for="labelRoom"><b>Total :</b></label>
-        	<input type="text" name="prix" id="prix" disabled="disabled" >
+	
+      <div class="row">
+      	<div>
+        	<label class="control-label" for="labelRoom"><h3>Total :</h3></label>
+        	<input type="text" name="totalPrice" id="totalPrice" disabled="disabled" >
+        </div>
+        <div>
+        	<label class="control-label" for="labelRoom"><h3>Reste &agrave; payer :</h3></label>
+        	<input type="text" name="remainingPrice" id="remainingPrice" disabled="disabled" >
         </div>
       </div>
-	</form>
+	
 	
   </div>
 </div>

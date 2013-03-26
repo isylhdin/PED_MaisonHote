@@ -79,3 +79,6 @@ function getAllResaFromGroup(idResaGroup) {
 	});	
 	return resaGroup;
 }
+
+
+
