@@ -91,12 +91,15 @@ window.EventsView = Backbone.View.extend({
 		});
 		return this;
 	},
+	
 	addAll: function() {
 		this.$el.fullCalendar('addEventSource', this.collection.toJSON(), true);
 	},
+	
 	addOne: function(resa) {
 		this.$el.fullCalendar('renderEvent', resa.toJSON(), true);
-	},        
+	},  
+	
 	select: function(startDate, endDate, allDay, ev, origRow) {
 		this.resaView.collection = this.collection;
 		this.resaView.model = new Reservation({start: startDate, end: endDate});
@@ -109,10 +112,12 @@ window.EventsView = Backbone.View.extend({
 		}
 		this.resaView.render();
 	},
+	
 	eventClick: function(fcEvent) {
 		this.resaView.model = this.collection.get(fcEvent.id);
 		this.resaView.render();
 	},
+	
 	change: function(resa) {
 		// Look up the underlying event in the calendar and update its details from the model
 		var fcEvent = this.$el.fullCalendar('clientEvents', resa.get('id'))[0],
@@ -127,6 +132,7 @@ window.EventsView = Backbone.View.extend({
 
 		this.$el.fullCalendar('updateEvent', fcEvent, true); 
 	},
+	
 	eventDropOrResize: function(fcEvent) {
 		// Lookup the model that has the ID of the event and update its attributes
 		this.collection.get(fcEvent.id).save({
@@ -156,6 +162,7 @@ window.EventsView = Backbone.View.extend({
 			});
 		}
 	},
+	
 	destroy: function(event) {
 		this.$el.fullCalendar('removeEvents', event.id, true);
 		this.updateOnServer();
