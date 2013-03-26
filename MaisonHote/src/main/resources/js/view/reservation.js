@@ -54,6 +54,7 @@ window.ReservationView = Backbone.View.extend({
 		//console.log("-renderList: " + chambresPourCalendrier.length);
 		var $select = $('#roomSelect1');
 
+		this.nbRooms = chambresPourCalendrier.length;
 		$select.empty();
 		chambresPourCalendrier.each(function(room) {
 
@@ -110,8 +111,12 @@ window.ReservationView = Backbone.View.extend({
 	open: function() {
 		$('input').blur();
 		this.nbRoomSelects = 1;
-
+		this.renderRoomList();
 		$('#roomSelect1').val(this.model.get('room'));
+		//TODO: récupérer les autres chambres du groupe de réservation et
+		// les mettre dans des selects additionnels. La façon dépend de si
+		// on a un modèle commun (plus facile) ou plusieurs models pour un groupe
+
 		this.renderPrestaList();
 		var nbPersons = this.model.get('nbPersons');
 		validateForm.getField('nbPersons').val(nbPersons ? nbPersons : 1);
@@ -231,6 +236,7 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	close: function() {
+		$('#rooms').find('.additionalRoomRow').remove();
 		$('#prestas').find('.prestaRow').remove();
 		$('body').removeClass('unselectCanceled');
 		this.$el.dialog('close');
