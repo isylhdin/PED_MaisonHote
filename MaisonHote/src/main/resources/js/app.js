@@ -11,9 +11,8 @@ var appRouter = Backbone.Router.extend({
 		'facturation': 'facturation' //index.html#facturation
 	},
 
-
 	initialize: function() {
-		console.log('Initialize router !');
+		console.log('Initialize router!');
 
 		if (localStorage.length === 0) {
 			this.connexion();
@@ -49,8 +48,7 @@ var appRouter = Backbone.Router.extend({
 
 	connexion: function() {
 		console.log('Welcome back connexion!');
-		this.connexionView = new ConnexionView();
-		$('#content').html(this.connexionView.el);
+		controller.showView(new ConnexionView());
 		this.headerView = new HeaderView();
 		$('.header').html(this.headerView.el);
 	},
@@ -60,11 +58,9 @@ var appRouter = Backbone.Router.extend({
 
 		chambresPourCalendrier = new Chambres();
 		chambresPourCalendrier.localStorage = new Backbone.LocalStorage('chambres-backbone');
-		//chambresPourCalendrier.fetch();
 
 		prestasPourCalendrier = new Prestations();
 		prestasPourCalendrier.localStorage = new Backbone.LocalStorage('prestations-backbone');
-		//prestasPourCalendrier.fetch({success: function(){console.log(chambresPourCalendrier.length);}});
 
 		resaGroupsPrestas = new ResaGroupsPrestas();
 		resaGroupsPrestas.localStorage = new Backbone.LocalStorage('resa-groups-prestas');
@@ -73,59 +69,60 @@ var appRouter = Backbone.Router.extend({
 		customersResa.localStorage = new Backbone.LocalStorage('customers-backbone');
 		customersResa.fetch();
 
-		if (this.calendarView) {
-			// TODO: calendarView à fusionner avec EventsView ?
-			this.calendarView.remove();
-			calendar.resaView.remove();
-			calendar.remove();
-		}
 		this.calendarView = new CalendarView();
-		$('#content').html(this.calendarView.el);
-		
-		//Reservations
+		controller.showView(this.calendarView);
+
 		reservations = new Reservations();
 		reservations.localStorage = new Backbone.LocalStorage('resas-backbone');
 
 		//Un calendrier possède un ensemble de réservations
-		calendar = new EventsView({el: $('#calendar'), collection: reservations}).render();
+		this.calendarView.resasView =
+			new ReservationsView({ el: $('#calendar'), collection: reservations }).render();
 		reservations.fetch();
 	},
 
 	firstConfigChambre: function() {
 		console.log('Welcome back firstConfig!');
-		this.selectChambreView = new SelectChambreView({model: 	Chambre});
-		$('#content').html(this.selectChambreView.el);
-
+		controller.showView(new SelectChambreView({ model: Chambre }));
 	},
 
 	editChambre: function() {
 		console.log('Welcome back config!');
-		this.editChambreView = new EditChambreView();
-		$('#content').html(this.editChambreView.el);
-
+		controller.showView(new EditChambreView());
 	},
 
 	editPrestation: function() {
 		console.log('Welcome back prestationConfig!');
-		this.editPrestationView = new EditPrestationView();
-		$('#content').html(this.editPrestationView.el);
+		controller.showView(new EditPrestationView());
 	},
 
 	listCustomer: function() {
 		console.log('Welcome back config!');	
-		this.listCustomerView = new ListCustomerView();
-		$('#content').html(this.listCustomerView.el);
+		controller.showView(new ListCustomerView());
 	},
 
 	ficheSejour: function(id, params) {
-		console.log("Welcome back sejour!");
+		console.log('Welcome back sejour!');
 		//console.log(id);
-		var client = localStorage.getItem('resas-backbone-'+id);
-		this.ficheSejourView = new ficheSejourView({model : client});
-		$('#content').html(this.ficheSejourView.el);
+		var client = localStorage.getItem('resas-backbone-' + id);
+		controller.showView(new ficheSejourView({ model : client }));
 	}
-
 });
+
+function AppController() {
+
+	this.showView = function(view) {
+		if (this.currentView) {
+			if (this.currentView.close) {
+        		this.currentView.close();
+        	} else {
+        		this.currentView.remove();
+        	}
+		}
+		this.currentView = view;
+		$('#content').html(this.currentView.el);
+	}
+}
 
 tpl = {
 		// Map of preloaded templates for the app
@@ -189,6 +186,7 @@ tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView',
                    'DataCustomerView', 'RoomForResaView','PrestaForResaView'], 
                    function() {
 
+	controller = new AppController();
 	app = new appRouter();
 	Backbone.history.start();
 });
