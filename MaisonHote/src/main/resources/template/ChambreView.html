@@ -3,7 +3,7 @@
             <div class="span6 offset3">
             	
             	<div class="row">
-                <center><h2>Chambre <%= id %></h2>
+                <center><h2 id="roomTitle">Chambre <%= id %></h2>
  				<a class="btn btn-danger" id="<%= id %>" data-id="<%= id %>" ><i class="icon-trash icon-white"></i></a>
  				</center>
  				<hr>
@@ -14,7 +14,7 @@
 		
              		   <form class="form-horizontal">
                		   <div class="control-group">
-                  		  <label class="control-label" for="inputPrice">Prix *</label>
+                  		  <label id="priceRoom" class="control-label" for="inputPrice">Prix *</label>
                   			  <div class="controls">
                     		  <input type="text" name="prixParJour<%= id %>" id="inputPrice<%= id %>" value="<%= prixParJour %>" placeholder="Prix">
                    	 		</div>
@@ -24,19 +24,19 @@
                		 <div class="row-fluid">
 						<div class="span6"> 		
 			                <div class="control-group">
-			                  <label class="control-label" for="litSimple">Lits Simples</label>
+			                  <label id="singleBeds" class="control-label" for="litSimple">Lits Simples</label>
 			                  	<div class="controls">					               		
 			                  		<input class="input-mini" id="litSimple<%= id%>" value="<%= litSimple%>">
 			                  	</div> 
 			                  </div>                      
 			                <div class="control-group">
-			                  <label class="control-label" for="litSimple">Lits Doubles</label>
+			                  <label id="doubleBeds" class="control-label" for="litSimple">Lits Doubles</label>
 			                  	<div class="controls">
 			                  		<input class="input-mini" id="litDouble<%= id%>" value="<%= litDouble%>">
 			                  	</div>
 			                  </div>
 			                <div class="control-group">
-			                  <label class="control-label" for="litSimple">Lits Jumeaux</label>
+			                  <label id="twinBeds" class="control-label" for="litSimple">Lits Jumeaux</label>
 			                  	<div class="controls">
 			                  		<input class="input-mini" id="litJumeau<%= id%>" value="<%= litJumeau%>">
 			                  	</div>	

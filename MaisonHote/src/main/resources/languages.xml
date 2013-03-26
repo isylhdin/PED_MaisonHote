@@ -16,4 +16,93 @@
     	<fr>Chambres</fr>
         <en>Room</en>
     </translation>
+    <translation id="service">
+    	<fr>Prestations</fr>
+        <en>Services</en>
+    </translation>
+    <translation id="listCustomer">
+    	<fr>Annuaire client</fr>
+        <en>Customers directory</en>
+    </translation>
+    <translation id="serviceTitle">
+    	<fr>Prestation</fr>
+        <en>Service</en>
+    </translation>
+    <translation id="titleService">
+    	<fr>Intitulé *</fr>
+        <en>Title *</en>
+    </translation>
+    <translation id="priceService">
+    	<fr>Prix</fr>
+        <en>Price</en>
+    </translation>
+    <translation id="commentService">
+    	<fr>Commentaires</fr>
+        <en>Comments</en>
+    </translation>
+    <translation id="roomTitle">
+    	<fr>Chambre</fr>
+        <en>Room</en>
+    </translation>
+    <translation id="priceRoom">
+    	<fr>Prix </fr>
+        <en>Price </en>
+    </translation>
+    <translation id="singleBeds">
+    	<fr>Lits simples</fr>
+        <en>Single beds</en>
+    </translation>
+    <translation id="doubleBeds">
+    	<fr>Lits doubles</fr>
+        <en>Double beds</en>
+    </translation>
+    <translation id="twinBeds">
+    	<fr>Lits jumeaux</fr>
+        <en>Twin beds</en>
+    </translation>
+    <translation id="tele">
+    	<fr>Television</fr>
+        <en>TV</en>
+    </translation>
+    <translation id="textService">
+    	<fr>Veuillez indiquer les diffèrentes prestations que votre maison d'hôte propose !</fr>
+        <en>Please indicate the various services that your guest house offers !</en>
+    </translation>
+    <translation id="textDownpayment">
+    	<fr>Spécifiez le  du montant de la transaction qui permettra de calculer les arrhres</fr>
+        <en>Specify the of the transaction amount that will calculate the downpayment</en>
+    </translation>
+    <translation id="textDownpayment2">
+    	<fr>(Ce pourcentage s'appliquera à l'ensemble de vos chambres)</fr>
+        <en>(This percentage will apply to all your rooms)</en>
+    </translation>
+    <translation id="downpayment">
+    	<fr>Arrhes (%) :</fr>
+        <en>Downpayment (%) :</en>
+    </translation>
+    <translation id="submit">
+    	<fr>Enregistrer</fr>
+        <en>Save</en>
+    </translation>
+    <translation id="textRoom">
+    	<fr>Veuillez indiquer combien de chambres vous possèdez</fr>
+        <en>Please indicate how many room you have</en>
+    </translation>
+    <translation id="firstConf">
+    	<fr>Première utilisation</fr>
+        <en>First use</en>
+    </translation>
+    <translation id="textFirstConf">
+    	<fr>C'est votre première utilisation, vous allez configurer vos chambres !</fr>
+        <en>First use</en>
+    </translation>
+    <translation id="firstConf">
+    	<fr>Première utilisation</fr>
+        <en>First use</en>
+    </translation>
+    <translation id="firstConf">
+    	<fr>Première utilisation</fr>
+        <en>First use</en>
+    </translation>
 </translations>
+

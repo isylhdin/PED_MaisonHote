@@ -4,7 +4,7 @@
             	
             	<div class="row">
             	<center>
-                <h2>Prestation</h2>
+                <h2 id="serviceTitle">Prestation</h2>
                 <a class="btn btn-danger" id="<%= id %>" data-id="<%= id %>" ><i class="icon-trash icon-white"></i></a>
                 </center>
                 <hr>
@@ -14,19 +14,19 @@
 			  <div class="span12">
     			<form class="form-horizontal">
                   <div class="control-group">
-                    <label class="control-label" for="inputTitleP">Intitulé *</label>
+                    <label id="titleService" class="control-label" for="inputTitleP">Intitulé *</label>
                     <div class="controls">
                       <input type="text" name="title<%= id %>" id="title<%= id %>" value="<%= title %>" placeholder="Intitulé">
                     </div>
                   </div>
                   <div class="control-group">
-                    <label class="control-label" for="inputPriceP">Prix *</label>
+                    <label id="priceService" class="control-label" for="inputPriceP">Prix *</label>
                     <div class="controls">
                       <input type="text" name="price<%= id %>" id="price<%= id %>" value="<%= price %>" placeholder="Prix">
                     </div>
                   </div>
                   <div class="control-group">
-                    <label class="control-label" for="inputCommentP">Commentaire</label>
+                    <label id="commentService" class="control-label" for="inputCommentP">Commentaire</label>
                     <div class="controls">
                       <input type="text" name="comment" id="comment<%= id %>" value="<%= comment %>" placeholder="Commentaire">
                     </div>

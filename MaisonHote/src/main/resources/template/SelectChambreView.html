@@ -1,7 +1,7 @@
  <!-- Example row of columns -->
  <div align="center">
 	<div class="hero-unit">
-		<h4 class="selectRoom">Veuillez indiquer combien de chambres vous possédez  <span class="badge badge-important" data-toggle='tooltip' title='Obligatoire'>1</span></h4>
+		<row><h4 id="textRoom" class="selectRoom">Veuillez indiquer combien de chambres vous possédez</h4><span class="badge badge-important" data-toggle='tooltip' title='Obligatoire'>1</span></row>
 
 	    <div class="btn-group">
 			<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
@@ -32,7 +32,7 @@
 	<hr />
 	<div>
 		<div class="hero-unit" align="center">
-		<h4>Veuillez indiquer les différentes prestations que votre maison d'hôte propose !  <span class="badge badge-info" data-toggle='tooltip' title='Optionnel'>2</span></h4>
+		<h4 id="textService">Veuillez indiquer les différentes prestations que votre maison d'hôte propose !<span class="badge badge-info" data-toggle='tooltip' title='Optionnel'>2</span></h4>
 		</div>
 		<div class="row">
 		  <div class="span2">
@@ -47,9 +47,10 @@
 	<hr />
 	
 	 <div class='hero-unit' align='center'>   
-	 	<h4>Spécifiez le % du montant de la transaction qui permettra de calculer les arrhres  <span class="badge badge-info" data-toggle='tooltip' title='Optionnel'>3</span></h4>     
-        <p>(Ce pourcentage s'appliquera &agrave l'ensemble de vos chambres)</p>
-        Arrhes :  <input class='input-small' id='arrhes' disabled='disabled'/> %
+	 	<h4 id="textDownpayment">Spécifiez le % du montant de la transaction qui permettra de calculer les arrhres  <span class="badge badge-info" data-toggle='tooltip' title='Optionnel'>3</span></h4>     
+        <p id="textDownpayment2">(Ce pourcentage s'appliquera &agrave l'ensemble de vos chambres)</p>
+          <h4 id="downpayment"> Arrhes (%) :</h4>
+		  <input class='input-small' id='arrhes' disabled='disabled'/>
      </div>
      
 	<hr />
