@@ -18,8 +18,8 @@ window.ReservationView = Backbone.View.extend({
 		_.bindAll(this);
 		this.initDialog();
 		var self = this;
-		chambresPourCalendrier.bind('replace reset add remove', this.renderRoomList);
-		prestasPourCalendrier.bind('replace reset add remove', this.renderPrestaList);
+		this.listenTo(chambresPourCalendrier, 'replace reset add remove', this.renderRoomList);
+		this.listenTo(prestasPourCalendrier, 'replace reset add remove', this.renderPrestaList);
 
 		customersResa.fetch();
 
