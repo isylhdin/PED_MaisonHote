@@ -274,7 +274,7 @@ window.ReservationView = Backbone.View.extend({
 		}
 	},
 
-	close: function() {
+	closeDialog: function() {
 		//$('#rooms').find('.additionalRoomRow').remove(); // ne surtout pas mettre !!
 		$('#prestas').find('.prestaRow').remove();
 		$('body').removeClass('unselectCanceled');
