@@ -45,7 +45,7 @@ window.ReservationView = Backbone.View.extend({
 			open: this.open(isNewModel)
 		});
 		$('body').addClass('unselectCanceled');
-
+		$('input').blur();
 		return this;
 	},
 
@@ -107,8 +107,7 @@ window.ReservationView = Backbone.View.extend({
 		});
 	},
 
-	open: function(isNewModel) {
-		$('input').blur();
+	open: function(isNewModel) {		
 		this.nbRoomSelects = 1;
 
 		this.clearResa();
@@ -117,10 +116,12 @@ window.ReservationView = Backbone.View.extend({
 			this.openExistingResa(this.model);
 		}
 
-		//$('#roomSelect1').val(this.model.get('room'));	
+		var arrhes =  this.model.get('arrhes');
+		$('input[name=arrhes]').prop('checked', arrhes);
+
+
 		var nbPersons = this.model.get('nbPersons');
-		validateForm.getField('nbPersons').val(nbPersons ? nbPersons : 1);
-		
+		validateForm.getField('nbPersons').val(nbPersons ? nbPersons : 1);	
 	},
 
 
@@ -129,9 +130,10 @@ window.ReservationView = Backbone.View.extend({
 		$('#client').css('background-color', '');
 		$('#addRoom').removeAttr("disabled");
 		this.deleteSelection();
-		
+
 		var save =$('#rooms div:first').detach();
 		$('#rooms').empty().append(save);
+
 		this.renderRoomList();
 		this.renderPrestaList();
 	},
@@ -155,8 +157,8 @@ window.ReservationView = Backbone.View.extend({
 		$('#roomSelect1').val(resaGroup[0]);
 		if(resaGroup.length > 1){
 			for(var i=1; i < resaGroup.length; i++){
-				this.addRoomForResa(null)
-				$('#roomSelect'+ eval(i+1)).val(resaGroup[i]);
+				this.addRoomForResa(null);
+				$('#roomSelect'+ eval(i+1)).val(resaGroup[i].attributes.room);
 			}		
 		}
 
@@ -168,14 +170,16 @@ window.ReservationView = Backbone.View.extend({
 	// que tous les attributs communs ne soient recherchés qu'une fois
 	newAttributes: function(selectNum, idResaGroup) {
 		var	room = $('#roomSelect' + selectNum + ' :selected').val(),
-		idClient = findClient(validateForm.getField('client').val());
+		idClient = findClient(validateForm.getField('client').val())
+		arrhes = $('input[name=arrhes]').is(':checked');
 
 		return {
 			idResaGroup: idResaGroup,
 			idClient: idClient,
 			nbPersons: validateForm.getField('nbPersons').val(),
 			room: room,
-			color: couleurs[room]
+			color: couleurs[room],
+			arrhes: arrhes
 		};
 	},
 
@@ -275,7 +279,6 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	closeDialog: function() {
-		//$('#rooms').find('.additionalRoomRow').remove(); // ne surtout pas mettre !!
 		$('#prestas').find('.prestaRow').remove();
 		$('body').removeClass('unselectCanceled');
 		this.$el.dialog('close');

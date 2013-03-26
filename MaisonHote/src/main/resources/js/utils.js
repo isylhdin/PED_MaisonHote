@@ -77,6 +77,8 @@ function getAllResaFromGroup(idResaGroup) {
 	var resaGroup = reservations.filter(function(model){
 		return model.attributes.idResaGroup === idResaGroup;
 	});	
-	console.log(resaGroup);
 	return resaGroup;
 }
+
+
+
