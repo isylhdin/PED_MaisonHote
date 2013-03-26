@@ -42,7 +42,7 @@ window.ReservationView = Backbone.View.extend({
 			//modal: true,
 			title: (isNewModel ? 'New' : 'Edit') + ' Reservation',
 			buttons: buttons,
-			open: this.open
+			open: this.open(isNewModel)
 		});
 		$('body').addClass('unselectCanceled');
 
@@ -107,19 +107,51 @@ window.ReservationView = Backbone.View.extend({
 		});
 	},
 
-	open: function() {
+	open: function(isNewModel) {
 		$('input').blur();
 		this.nbRoomSelects = 1;
-		this.renderRoomList();
-		$('#roomSelect1').val(this.model.get('room'));
-		//TODO: récupérer les autres chambres du groupe de réservation et
-		// les mettre dans des selects additionnels. La façon dépend de si
-		// on a un modèle commun (plus facile) ou plusieurs models pour un groupe
-
-		this.renderPrestaList();
+		
+		this.clearResa();
+		
+		if(!isNewModel){
+			this.openExistingResa(this.model);
+		}
+		
+		$('#roomSelect1').val(this.model.get('room'));	
 		var nbPersons = this.model.get('nbPersons');
 		validateForm.getField('nbPersons').val(nbPersons ? nbPersons : 1);
 	},
+	
+	
+	clearResa: function(){
+		this.resetFormClasses();
+		this.deleteSelection();
+		var save =$('#rooms div:first').detach();
+		$('#rooms').empty().append(save);
+		this.renderRoomList();
+		this.renderPrestaList();
+		$('#addRoom').removeAttr("disabled");
+	},
+	
+	openExistingResa: function(model){
+		this.resetFormClasses();
+		
+		var idClient = model.get('idClient');
+		var client = customersResa.get(idClient);
+		var name = client.attributes.name;
+		var fistname = client.attributes.firstname;
+		var concatenatedName = name + ' ' + fistname;
+		
+		$('#client').val(concatenatedName);
+		$('#selectedClient').html(concatenatedName + ' <i id="deleteSelection" class="icon-remove-sign" data-toggle="tooltip"></i>');
+		$('#deleteSelection').tooltip({
+			'title' : 'Supprimer sélection'
+		});	
+
+
+	},
+	
+	
 
 	// TODO: faire que la recherche des attributs soit moins éparpillée et
 	// que tous les attributs communs ne soient recherchés qu'une fois

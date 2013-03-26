@@ -13,7 +13,6 @@ var Customer = Backbone.Model.extend({
 	},
 
 	initialize: function(){
-		console.log('Client créé !');
 	}
 
 	// validate: function( attrs ) {
