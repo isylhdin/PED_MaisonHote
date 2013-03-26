@@ -27,7 +27,7 @@ window.EditChambreView = Backbone.View.extend({
 		var self = this;
 
 		window.chambres = new Chambres();
-		window.chambres.localStorage = new Backbone.LocalStorage("chambres-backbone");
+		window.chambres.localStorage = new Backbone.LocalStorage('chambres-backbone');
 		window.chambres.fetch({
 			success: function(model, response, options) {
 				chambres.each(function(Chambre){
@@ -36,9 +36,9 @@ window.EditChambreView = Backbone.View.extend({
 					Chambre.bind('invalid ', self.onError);
 					this.template = _.template(tpl.get('ChambreView'));
 					self.$el.append(this.template(Chambre.toJSON()));
-					self.$el.find('#litSimple'+Chambre.id).spinner({min: 0});
-					self.$el.find('#litDouble'+Chambre.id).spinner({min: 0});
-					self.$el.find('#litJumeau'+Chambre.id).spinner({min: 0});
+					self.$el.find('#litSimple' + Chambre.id).spinner({min: 0});
+					self.$el.find('#litDouble' + Chambre.id).spinner({min: 0});
+					self.$el.find('#litJumeau' + Chambre.id).spinner({min: 0});
 					nbChambres++;
 					nbChambresInitial++;
 				});

@@ -17,7 +17,6 @@ window.ReservationView = Backbone.View.extend({
 	initialize: function() {
 		_.bindAll(this);
 		this.initDialog();
-		var self = this;
 		this.listenTo(chambresPourCalendrier, 'replace reset add remove', this.renderRoomList);
 		this.listenTo(prestasPourCalendrier, 'replace reset add remove', this.renderPrestaList);
 
@@ -36,7 +35,7 @@ window.ReservationView = Backbone.View.extend({
 			$('#btnFicheSejour').removeAttr('disabled');
 		}
 		_.extend(buttons, {'Cancel': {text: 'Cancel',
-			click: this.close, class: 'btn'}});
+			click: this.closeDialog, class: 'btn'}});
 
 		this.resetFormClasses();
 		this.$el.dialog({
@@ -190,7 +189,7 @@ window.ReservationView = Backbone.View.extend({
 			this.model.save(null, {
 				success: function() {
 					self.collection.add(self.model);
-					self.close();
+					self.closeDialog();
 
 					var obj = JSON.parse(localStorage.getItem('fichier-backbone-resa.json'));
 					updateFile(obj.idFichier, JSON.stringify(self.collection.toJSON()), function(reponse) {	
@@ -210,7 +209,7 @@ window.ReservationView = Backbone.View.extend({
 				},
 				error: function() {
 					console.log('une erreur s\'est produite lors de la sauvegarde dans le cache');
-					self.close();
+					self.closeDialog();
 				}
 			});
 
@@ -218,7 +217,7 @@ window.ReservationView = Backbone.View.extend({
 			console.log('édition de réservation');
 			var self = this;
 
-			this.model.save({}, { success: this.close });
+			this.model.save({}, { success: this.closeDialog });
 			var obj = JSON.parse(localStorage.getItem('fichier-backbone-resa.json'));
 			updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
 				if (!reponse.error) {
@@ -235,7 +234,7 @@ window.ReservationView = Backbone.View.extend({
 		}
 	},
 
-	close: function() {
+	closeDialog: function() {
 		$('#rooms').find('.additionalRoomRow').remove();
 		$('#prestas').find('.prestaRow').remove();
 		$('body').removeClass('unselectCanceled');
@@ -243,7 +242,7 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	destroy: function() {
-		this.model.destroy({success: this.close});
+		this.model.destroy({success: this.closeDialog});
 	},
 
 	btnFicheSejour: function() {

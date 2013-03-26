@@ -32,5 +32,5 @@ window.ConnexionView = Backbone.View.extend({
 		currentHost = 'Dropbox' ;
 		this.saveCurrentHost(currentHost);
 		connectToHost();
-	}		
+	}
 });
