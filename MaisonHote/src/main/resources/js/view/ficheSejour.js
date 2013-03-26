@@ -1,14 +1,13 @@
 window.ficheSejourView = Backbone.View.extend({
 
 	initialize: function () {
-		var resaGroup;
 		var idClient = jQuery.parseJSON(this.model).idClient;
 		
 		window.client = jQuery.parseJSON(localStorage.getItem('customers-backbone-'+idClient));
 		window.idResaGroup = jQuery.parseJSON(this.model).idResaGroup;
 		
 
-		this.getAllResaFromGroup();
+		this.resaGroup = getAllResaFromGroup(idResaGroup);
 		this.render();
 
 	},
@@ -18,7 +17,7 @@ window.ficheSejourView = Backbone.View.extend({
 		$(this.el).html(this.template(client));
 		var self = this;
 		
-		resaGroup.forEach(function(Resa){
+		this.resaGroup.forEach(function(Resa){
 			var idResa = Resa.attributes.id;
 			var resa = jQuery.parseJSON(localStorage.getItem('resas-backbone-'+idResa));
 			
@@ -34,15 +33,6 @@ window.ficheSejourView = Backbone.View.extend({
 		});
 
 		return this;
-	},
-
-	getAllResaFromGroup: function () { 
-
-		resaGroup = reservations.filter(function(model){
-			return model.attributes.idResaGroup === idResaGroup;
-		});	
-		console.log(resaGroup);
 	}
-
 
 });

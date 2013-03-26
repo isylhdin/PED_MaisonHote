@@ -62,3 +62,21 @@ function findClient(client){
 
 	return result;
 }
+
+
+
+/**
+ * retrouve toutes les sous réservations (les chambres louées par une même personne) 
+ * pour une même réservation
+ * @param reservations
+ * @returns
+ */
+
+function getAllResaFromGroup(idResaGroup) { 
+
+	var resaGroup = reservations.filter(function(model){
+		return model.attributes.idResaGroup === idResaGroup;
+	});	
+	console.log(resaGroup);
+	return resaGroup;
+}

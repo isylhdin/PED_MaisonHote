@@ -40,7 +40,6 @@ var Reservation = Backbone.Model.extend({
 		//price: 0
 	},
 	initialize: function() {
-		console.log('Réservation créée !');
 		//this.on('doReset', this.reset);
 	}
 });
