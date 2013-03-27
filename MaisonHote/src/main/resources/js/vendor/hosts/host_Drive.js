@@ -67,15 +67,6 @@ function handleAuthResultDrive (authResult) {
 }
 
 /** 
- * Get the id of the Mgh directory
- **/
-function setMghDirectoryIdDrive () {
-	retrieveFileDrive( "MyGuestHouse", function (response){
-		MghDirectoryID = response.items[0].id ;
-	});
-}
-	
-/** 
  * Retrieve a file
  **/
 function retrieveFileDrive(fileName, callback) {
