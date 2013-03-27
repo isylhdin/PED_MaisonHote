@@ -10,10 +10,13 @@ window.ReservationsView = Backbone.View.extend({
 		this.resaDialogView = new ReservationView({
 			el: $('#resaDialog'), collection: this.collection
 		});
-		this.listenTo(chambresPourCalendrier, 'replace reset add remove', this.caption);
-		this.listenTo(chambresPourCalendrier, 'replace reset add remove', this.reRenderWeekView);
+		this.listenTo(chambresPourCalendrier, 'replace reset add remove',
+			this.caption);
+		this.listenTo(chambresPourCalendrier, 'replace reset add remove',
+			this.reRenderWeekView);
 
-		//si on refresh la page on va chercher les chambres dans le localstorage
+		// si on refresh la page on va chercher les chambres dans le
+		// localstorage
 		chambresPourCalendrier.fetch();
 		prestasPourCalendrier.fetch();
 		this.nbRooms = chambresPourCalendrier.length;
@@ -30,7 +33,9 @@ window.ReservationsView = Backbone.View.extend({
 
 	render: function() {
 		this.$el.empty();
-		var roomTitles = chambresPourCalendrier.pluck('id').map(function(room) {return 'Chambre ' + room});
+		var roomTitles = chambresPourCalendrier.pluck('id').
+				map(function(room) { return 'Chambre ' + room });
+
 		this.$el.fullCalendar({
 			header: {
 				left: 'prev,next',
@@ -55,14 +60,20 @@ window.ReservationsView = Backbone.View.extend({
 		});
 		return this;
 	},
+
 	addAll: function() {
-		this.$el.fullCalendar('addEventSource', this.collection.toJSON(), true);
+		this.$el.fullCalendar(
+			'addEventSource', this.collection.toJSON(), true);
 	},
+
 	addOne: function(resa) {
 		this.$el.fullCalendar('renderEvent', resa.toJSON(), true);
-	},        
+	},
+      
 	select: function(startDate, endDate, allDay, ev, origRow) {
-		this.resaDialogView.model = new Reservation({ start: startDate, end: endDate });
+		this.resaDialogView.model = new Reservation({
+			start: startDate, end: endDate
+		});
 		if (this.$el.fullCalendar('getView').name === 'basicWeek') {
 			var roomNum = origRow + 1;
 			this.resaDialogView.model.set({
@@ -72,12 +83,15 @@ window.ReservationsView = Backbone.View.extend({
 		}
 		this.resaDialogView.render();
 	},
+
 	eventClick: function(fcEvent) {
 		this.resaDialogView.model = this.collection.get(fcEvent.id);
 		this.resaDialogView.render();
 	},
+
 	change: function(resa) {
-		// Look up the underlying event in the calendar and update its details from the model
+		// Look up the underlying event in the calendar and update its details
+		// from the model
 		var fcEvent = this.$el.fullCalendar('clientEvents', resa.get('id'))[0],
 		roomNum = resa.get('room');
 		fcEvent.color = couleurs[roomNum];
@@ -90,24 +104,28 @@ window.ReservationsView = Backbone.View.extend({
 
 		this.$el.fullCalendar('updateEvent', fcEvent, true); 
 	},
+
 	eventDropOrResize: function(fcEvent) {
-		// Lookup the model that has the ID of the event and update its attributes
+		// Lookup the model that has the ID of the event and update its
+		// attributes
 		this.collection.get(fcEvent.id).save({
 			start: fcEvent.start, end: fcEvent.end
 		});
 
-		// Affiche le bouton pour sauvegarder la rÃ©servation sur le serveur
-		// aprÃ¨s que ses dates de dÃ©but/fin aient changÃ©
+		// Affiche le bouton pour sauvegarder la réservation sur le serveur
+		// après que ses dates de début/fin aient changé
 		if (!$('#SaveRow').length) {
 			var text =
-				'Veuillez <strong>sauvegarder</strong> pour que vos ' +
-				'modifications soient prises en compte sur le serveur ' +
-				'<i id="infoSave" class="icon-info-sign" data-toggle="tooltip"></i>',
+					'Veuillez <strong>sauvegarder</strong> pour que vos ' +
+					'modifications soient prises en compte sur le serveur ' +
+					'<i id="infoSave" class="icon-info-sign" ' +
+					'data-toggle="tooltip"></i>',
 				contentSaveForm =
-				'<div class="control-group"><label class="control-label">' +
-				text + '</label><div class="controls">' +
-				'<button type="submit" id="submit" class="btn btn-warning">' +
-				'Sauvegarder</button></div></div></div>'; 
+					'<div class="control-group">' +
+					'<label class="control-label">' + text +
+					'</label><div class="controls"><button type="submit" ' +
+					'id="submit" class="btn btn-warning">' +
+					'Sauvegarder</button></div></div></div>';
 
 			$('#calendar').before(
 				'<div id="SaveRow" class="row">' +
@@ -119,29 +137,30 @@ window.ReservationsView = Backbone.View.extend({
 			});
 		}
 	},
+
 	destroy: function(event) {
 		this.$el.fullCalendar('removeEvents', event.id, true);
 		this.updateOnServer();
 	},
 
 	eventContentToDisplay: function(fcEvent) {
-		var view = this.$el.fullCalendar('getView');
-
-		var idClient = fcEvent.idClient;
-		var content = customersResa.get(idClient);
+		var view = this.$el.fullCalendar('getView'),
+			idClient = fcEvent.idClient,
+			content = customersResa.get(idClient);
 		
-		if(typeof(content) !== 'undefined'){
+		if (typeof(content) !== 'undefined') {
 			content = content.toJSON();
-		}else{
+		} else {
 			content='';
 		}
-		
+
 		var client = new Customer(content);
 		
 		if (view.name === 'basicWeek') {
-			return 'M/Mme ' + client.attributes.name + '\n' + fcEvent.nbPersons +
-			(fcEvent.nbPersons > 1 ? ' personnes' : ' personne') +
-			(fcEvent.phone ? '\n☎ ' + client.attributes.phone : '');
+			return 'M/Mme ' + client.attributes.name + '\n' +
+				fcEvent.nbPersons +
+				(fcEvent.nbPersons > 1 ? ' personnes' : ' personne') +
+				(fcEvent.phone ? '\n☎ ' + client.attributes.phone : '');
 		} else if (view.name === 'month') {
 			return 'Chambre ' + fcEvent.room + ' | ' + client.attributes.name;
 		} else {
@@ -158,11 +177,14 @@ window.ReservationsView = Backbone.View.extend({
 				'" class="span1" rel="popover" style="background-color:' +
 				couleurs[Chambre.id] + '; width:50px; height:30px;"></div>');
 			var title = 'Chambre ' + Chambre.id,
-				content =
-				'<b>PrixParjour</b> : ' + Chambre.get('prixParJour') +
-				'<br><b>Nombre de lit simple</b> : ' + Chambre.get('litSimple') +
-				'<br><b>Nombre de lit double</b> : ' + Chambre.get('litDouble') +
-				'<br><b>Nombre de lit jumeau</b> : ' + Chambre.get('litJumeau');
+				content = '<b>PrixParjour</b> : ' +
+					Chambre.get('prixParJour') +
+					'<br><b>Nombre de lit simple</b> : ' +
+					Chambre.get('litSimple') +
+					'<br><b>Nombre de lit double</b> : ' +
+					Chambre.get('litDouble') +
+					'<br><b>Nombre de lit jumeau</b> : ' +
+					Chambre.get('litJumeau');
 
 			$('#popover' + Chambre.id).popover({
 				title: title, content: content, trigger: 'hover',
@@ -172,12 +194,16 @@ window.ReservationsView = Backbone.View.extend({
 	},
 
 	updateOnServer: function() {
-		var obj = JSON.parse(localStorage.getItem('fichier-backbone-resa.json'));
-		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()), function(reponse) {
+		var obj = JSON.parse(
+			localStorage.getItem('fichier-backbone-resa.json'));
+
+		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()),
+				function(reponse) {
 			if (!reponse.error) {
-				console.log('réservations mises à jour sur le serveur'); 
+				console.log('réservations mises à jour sur le serveur');
 			} else {
-				console.log('les réservations n\'ont pas pu être mises à jour sur le serveur'); 
+				console.log('les réservations n\'ont pas pu être mises à ' +
+					'jour sur le serveur');
 			}
 		});
 	},

@@ -5,15 +5,14 @@
  * @returns le prix à payer pour une chambre
  */
 
-function computePriceOverDaysForRoom(room){
-	
-	var duration = getDuration(room);
-	var idRoom = room.room;
-	var room = jQuery.parseJSON(localStorage.getItem('chambres-backbone-'+idRoom));
-	var pricePerDay = room.prixParJour;
-	
-	var computedPrice = eval(duration * pricePerDay);
-	
+function computePriceOverDaysForRoom(room) {
+	var duration = getDuration(room),
+		idRoom = room.room,
+		room = jQuery.parseJSON(
+			localStorage.getItem('chambres-backbone-' + idRoom)),
+		pricePerDay = room.prixParJour,
+		computedPrice = eval(duration * pricePerDay);
+
 	return computedPrice;
 }
 
@@ -22,20 +21,18 @@ function computePriceOverDaysForRoom(room){
  * @param room
  * @returns
  */
-function getDuration(room){
-	var start = room.start;
-	var end = room.end;
-	
-	var reg = new RegExp("[-T]+", "g"); 
-	var tabStart = start.split(reg);
-	var tabEnd = end.split(reg);
-		
+function getDuration(room) {
+	var start = room.start,
+		end = room.end,
+		reg = new RegExp('[-T]+', 'g'),
+		tabStart = start.split(reg),
+		tabEnd = end.split(reg);
+
 	start = tabStart[2];
 	end = tabEnd[2];
-	
-	var duration = eval(end-start)+1;
+
+	var duration = eval(end - start) + 1;
 	return duration;
-	
 }
 
 /**
@@ -43,42 +40,38 @@ function getDuration(room){
  * @param client
  * @returns
  */
-function findClient(client){
-	
-	var reg = new RegExp("[ ]+", "g"); 
-	var tab = client.split(reg);
-	var name = tab[0];
-	var firstName = tab[1];
-	console.log("nom : "+name +" prenom = "+ firstName);
-	
-	window.result = customersResa.filter(function(model){
-		return model.attributes.name == name && model.attributes.firstname == firstName;
-	});	//retourne une collection, alors qu'on n'a besoin que d'un seul résultat
-	
+function findClient(client) {
+	var reg = new RegExp('[ ]+', 'g'),
+		tab = client.split(reg),
+		name = tab[0],
+		firstName = tab[1];
+
+	console.log('nom : ' + name + ' prenom = ' + firstName);
+
+	// retourne une collection, alors qu'on n'a besoin que d'un seul résultat
+	window.result = customersResa.filter(function(model) {
+		return model.attributes.name == name &&
+			model.attributes.firstname == firstName;
+	});
+
 	var foundClients = new Customers(result);
-	foundClients.each(function(Client){
+	foundClients.each(function(Client) {
 		result = Client.id;	
 	});
 
 	return result;
 }
 
-
-
 /**
- * retrouve toutes les sous réservations (les chambres louées par une même personne) 
- * pour une même réservation
+ * retrouve toutes les sous réservations (les chambres louées par une même
+ * personne) pour une même réservation
  * @param reservations
  * @returns
  */
 
 function getAllResaFromGroup(idResaGroup) { 
-
-	var resaGroup = reservations.filter(function(model){
+	var resaGroup = reservations.filter(function(model) {
 		return model.attributes.idResaGroup === idResaGroup;
 	});	
 	return resaGroup;
 }
-
-
-

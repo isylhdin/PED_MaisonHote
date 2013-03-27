@@ -1,15 +1,18 @@
 window.EditChambreView = Backbone.View.extend({
 
 	events: {
-		"click .btn-danger"   : "onDelete",
-		"click a.btn-primary" : "onAcceptDelete",
-		"click .btn-success"  : "onAdd",
-		"click #submit" 	  : "onSubmit",
-		"focus input"	 : "onInputGetFocus",
+		'click .btn-danger' : 'onDelete',
+		'click a.btn-primary' : 'onAcceptDelete',
+		'click .btn-success' : 'onAdd',
+		'click #submit' : 'onSubmit',
+		'focus input' : 'onInputGetFocus'
 	},
 
 	initialize: function () {
-		$(this.el).append("<header class='jumbotron subhead' id='overview'  style='height:330px;background: url(css/img/top-image.jpg) no-repeat; margin-top:-20px;'> <div class='container'><h1>Edition des Chambres</h1></div></header>");
+		$(this.el).append('<header class="jumbotron subhead" id="overview" ' +
+			'style="height:330px;background: url(css/img/top-image.jpg) ' +
+			'no-repeat; margin-top:-20px;"><div class="container">' +
+			'<h1>Edition des Chambres</h1></div></header>');
 		this.render();
 	},
 
@@ -22,16 +25,19 @@ window.EditChambreView = Backbone.View.extend({
 		window.id;
 		window.template = this.template;
 
-		$(this.el).append("<div id='chambre'></div>");
+		$(this.el).append('<div id="chambre"></div>');
 
 		var self = this;
 
 		window.chambres = new Chambres();
-		window.chambres.localStorage = new Backbone.LocalStorage('chambres-backbone');
+		window.chambres.localStorage =
+			new Backbone.LocalStorage('chambres-backbone');
+
 		window.chambres.fetch({
 			success: function(model, response, options) {
-				chambres.each(function(Chambre){
-					//Quand une chambre est modifiée on la réaffiche pour que la vue soit à jour
+				chambres.each(function(Chambre) {
+					// Quand une chambre est modifiée on la réaffiche pour que
+					// la vue soit à jour
 					Chambre.bind('change', self.reRenderChambre);
 					Chambre.bind('invalid ', self.onError);
 					this.template = _.template(tpl.get('ChambreView'));
@@ -46,20 +52,22 @@ window.EditChambreView = Backbone.View.extend({
 		});
 		
 		this.footpage();						
-		//met les id des chambres dans l'ordre, sinon ils sont en désordre pour les afficher dans les vues suivantes
+		// met les id des chambres dans l'ordre, sinon ils sont en désordre
+		// pour les afficher dans les vues suivantes
 		chambres.sortByField('id');
 
 		return this;
 	},
 
 	/**
-	 * Fonction appelée quand une chambre a été supprimée et qu'il y a avait des chambre derrière elle
-	 * Les chambres qui la suivaient sont alors re-numérotées et la vue est mise à jour
+	 * Fonction appelée quand une chambre a été supprimée et qu'il y a avait
+	 * des chambre derrière elle. Les chambres qui la suivaient sont alors
+	 * re-numérotées et la vue est mise à jour
 	 */
 	reRenderChambre: function() {
 		var chambre = this;
 		var addition = parseInt(chambre.id) + 1;
-		$('#row'+addition).replaceWith(window.template(chambre.toJSON()));
+		$('#row' + addition).replaceWith(window.template(chambre.toJSON()));
 	},
 
 	/**
@@ -70,22 +78,28 @@ window.EditChambreView = Backbone.View.extend({
 	 * - Sauvegarde qui a réussi
 	 * - Sauvegarde qui a échoué
 	 * 
-	 * => Les 3 types d'alert sont "hidden" et s'afficheront le moment voulu lors de l'appel à la méthode 'onSubmit'
+	 * => Les 3 types d'alert sont "hidden" et s'afficheront le moment voulu
+	 * lors de l'appel à la méthode 'onSubmit'
 	 */
 	footpage: function() {
 
 		//si on a deja 5 chambres d'affichées, on disable le bouton add
-		if(nbChambres == 5){
-			this.$('#chambre').append("<div class='row' id='add'> <button class='btn btn-success' disabled='disabled'><i class='icon-plus icon-white'></i> Ajouter</button></div>");
-		}else{
-			this.$('#chambre').append("<div class='row' id='add'> <button class='btn btn-success' ><i class='icon-plus icon-white'></i> Ajouter</button></div>");
+		if (nbChambres == 5) {
+			this.$('#chambre').append('<div class="row" id="add">' +
+				'<button class="btn btn-success" disabled="disabled">' +
+				'<i class="icon-plus icon-white"></i> Ajouter</button></div>');
+		} else {
+			this.$('#chambre').append('<div class="row" id="add">' +
+				'<button class="btn btn-success">' +
+				'<i class="icon-plus icon-white"></i> Ajouter</button></div>');
 		}
 
-
-		this.$el.append("<div class='row'><div class='hero-unit' align='center'><h2>Edition des arrhes</h2> Arrhes : <input class='input-small' id='arrhes' /> % </div></div>");
+		this.$el.append('<div class="row"><div class="hero-unit" ' +
+			'align="center"><h2>Edition des arrhes</h2> Arrhes : ' +
+			'<input class="input-small" id="arrhes" /> % </div></div>');
 
 		window.arrhes = new Arrhes();
-		arrhes.localStorage = new Backbone.LocalStorage("arrhes-backbone");
+		arrhes.localStorage = new Backbone.LocalStorage('arrhes-backbone');
 		var self = this;
 		arrhes.fetch({
 			success: function() {
@@ -93,18 +107,28 @@ window.EditChambreView = Backbone.View.extend({
 			}
 		});		
 
-		this.$el.append("<div id='rowSubmit' class='row' align='center'><button type='submit' id='submit' class='btn'>Enregistrer</button></div>");
-		this.$el.append("<div id='waitingResult' style='visibility:hidden' class='alert alert-info'><i class='icon-spinner icon-spin'></i> Sauvegarde en cours ... </div>");
-		this.$el.append("<div id='goodResult' style='visibility:hidden' class='alert alert-success'>Vos données ont été sauvegardées avec succès ! </div>");
-		this.$el.append("<div id='badResult'  style='visibility:hidden' class='alert alert-error'>Une erreur est survenue lors de la sauvegarde. Veuillez vérifier que vous êtes connecté à Internet et que vous utilisez un navigateur récent puis réésayez</div>");
+		this.$el.append('<div id="rowSubmit" class="row" align="center">' +
+			'<button type="submit" id="submit" class="btn">Enregistrer' +
+			'</button></div>');
+		this.$el.append('<div id="waitingResult" style="visibility:hidden" ' +
+			'class="alert alert-info"><i class="icon-spinner icon-spin"></i>' +
+			'Sauvegarde en cours ... </div>');
+		this.$el.append('<div id="goodResult" style="visibility:hidden" ' +
+			'class="alert alert-success">Vos données ont été sauvegardées ' +
+			'avec succès !</div>');
+		this.$el.append('<div id="badResult" style="visibility:hidden" ' +
+			'class="alert alert-error">Une erreur est survenue lors de la ' +
+			'sauvegarde. Veuillez vérifier que vous êtes connecté à Internet' +
+			'et que vous utilisez un navigateur récent puis réésayez</div>');
 	},
 
 	/**
 	 * Point d'entrée pour le suppression d'une chambre
-	 * Recupère l'id de la chambre qu'on veut supprimer et afficher une pop-up pour confirmer la suppression
+	 * Recupère l'id de la chambre qu'on veut supprimer et afficher une pop-up
+	 * pour confirmer la suppression
 	 */
 	onDelete: function(event) {
-		console.log("clic delete !");
+		console.log('click delete!');
 
 		event.preventDefault();
 		window.id = $(event.currentTarget).data('id');
@@ -119,7 +143,7 @@ window.EditChambreView = Backbone.View.extend({
 	 * - supprime la chambre du cache
 	 */
 	onAcceptDelete: function(event) {
-		console.log("clic accept !");
+		console.log('click accept!');
 
 		//supprime la chambre de la collection
 		var chambre =  window.chambres.get(window.id);
@@ -129,57 +153,62 @@ window.EditChambreView = Backbone.View.extend({
 		$('#row' + window.id).fadeOut(1000, function() {
 			$('#row' + window.id).remove();	
 		});	
-		$("#modal").remove();
+		$('#modal').remove();
 
-		//supprime toutes les chambres qui la suivent du cache
+		// supprime toutes les chambres qui la suivent du cache
 		this.deleteFromCache();
 
 		nbChambres--;
 
-		//on rend accessible le bouton "add" s'il était grisé
-		if($('.btn-success').attr('disabled') === 'disabled'){
-			$('.btn-success').removeAttr("disabled");
+		// on rend accessible le bouton "add" s'il était grisé
+		if($('.btn-success').attr('disabled') === 'disabled') {
+			$('.btn-success').removeAttr('disabled');
 		}		
 	},
 
 	/**
-	 * Quand on ajoute une chambre, elle est ajoutée à la collection des chambres puis ajoutée à la vue
+	 * Quand on ajoute une chambre, elle est ajoutée à la collection des
+	 * chambres puis ajoutée à la vue
 	 */
 	onAdd: function(event) {
-		console.log("clic add !");
+		console.log('click add!');
 		nbChambres++;
 
-		var chambre = new Chambre({'id': window.nbChambres});
+		var chambre = new Chambre({ 'id': window.nbChambres });
 		chambres.add(chambre);
 
 		var previous = parseInt(nbChambres) - 1;
 		this.template = _.template(tpl.get('ChambreView'));
-		$('#row'+previous).after(this.template(chambre.toJSON()));
+		$('#row' + previous).after(this.template(chambre.toJSON()));
 
-		this.$el.find('#litSimple'+chambre.id).spinner({min: 0});
-		this.$el.find('#litDouble'+chambre.id).spinner({min: 0});
-		this.$el.find('#litJumeau'+chambre.id).spinner({min: 0});
+		this.$el.find('#litSimple' + chambre.id).spinner({min: 0});
+		this.$el.find('#litDouble' + chambre.id).spinner({min: 0});
+		this.$el.find('#litJumeau' + chambre.id).spinner({min: 0});
 
 		chambre.bind('change', this.reRenderChambre);
-		chambre.bind('invalid ', this.onError);
+		chambre.bind('invalid', this.onError);
 
 		this.disableAddButton();
 	},
 
 	onSubmit: function(event) {
-		console.log("clic submit!");
+		console.log('click submit!');
 		success = true;
 		window.nbChambresSauveesDansCache = 0;
 
 		//enregistre toutes les chambres dans le cache
-		chambres.each(function(Chambre){
+		chambres.each(function(Chambre) {
 			window.price = $('#inputPrice' + Chambre.id).val();
 			window.nbLit = $('#inputNbPerson' + Chambre.id).val();
 			window.superficie = $('#inputArea' + Chambre.id).val();
-			window.tele = $("input[name=tele" + Chambre.id + "]").is(':checked');
-			window.internet = $("input[name=internet" + Chambre.id + "]").is(':checked');
-			window.baignoire = $("input[name=baignoire" + Chambre.id + "]").is(':checked');
-			window.douche = $("input[name=douche" + Chambre.id + "]").is(':checked');
+			window.tele =
+				$('input[name=tele' + Chambre.id + ']').is(':checked');
+			window.internet =
+				$('input[name=internet' + Chambre.id + ']').is(':checked');
+			window.baignoire =
+				$('input[name=baignoire' + Chambre.id + ']').is(':checked');
+			window.douche =
+				$('input[name=douche' + Chambre.id + ']').is(':checked');
 			window.litSimple = $('#litSimple' + Chambre.id).val();
 			window.litDouble = $('#litDouble' + Chambre.id).val();
 			window.litJumeau = $('#litJumeau' + Chambre.id).val();
@@ -188,12 +217,12 @@ window.EditChambreView = Backbone.View.extend({
 
 
 			Chambre.save({
-				'prixParJour':price, 'nbLit':nbLit, 'superficie':superficie,
-				'tele':tele, 'internet':internet, 'baignoire':baignoire,
-				'douche':douche, 'litSimple': litSimple, 'litDouble': litDouble,
-				'litJumeau': litJumeau, 'arrhes':avance
-			},
-			{
+				'prixParJour': price, 'nbLit': nbLit, 'superficie': superficie,
+				'tele': tele, 'internet': internet, 'baignoire': baignoire,
+				'douche': douche, 'litSimple': litSimple,
+				'litDouble': litDouble,	'litJumeau': litJumeau,
+				'arrhes': avance
+			}, {
 				success: function(model, response, options) {
 					nbChambresSauveesDansCache++;
 				},
@@ -214,7 +243,7 @@ window.EditChambreView = Backbone.View.extend({
 		window.tab = localStorage.getItem('chambres-backbone');
 		var index = parseInt(nbChambres) + 1;
 		while (tab.search(index) != -1) {
-			localStorage.removeItem("chambres-backbone-" + index);
+			localStorage.removeItem('chambres-backbone-' + index);
 			index++;
 		}
 
@@ -222,10 +251,14 @@ window.EditChambreView = Backbone.View.extend({
 		$('#waitingResult').show();
 
 		//update le fichier sur le serveur
-		var obj = JSON.parse(localStorage.getItem("fichier-backbone-house_config_chambres.json"));
-		updateFile(obj.idFichier, JSON.stringify(chambres.toJSON()), function(reponse) {	
+		var obj = JSON.parse(
+			localStorage.getItem('fichier-backbone-house_config_chambres.json')
+		);
+		updateFile(obj.idFichier, JSON.stringify(chambres.toJSON()),
+				function(reponse) {	
 			$('#waitingResult').fadeOut('fast');
-			//Vérifie que tout s'est bien passé et affiche un message en conséquence
+			//Vérifie que tout s'est bien passé et affiche un message en
+			// conséquence
 			if (!reponse.error && nbChambresSauveesDansCache === nbChambres) {
 				$('#goodResult').css('visibility','visible');
 				$('#goodResult').show();
@@ -233,9 +266,10 @@ window.EditChambreView = Backbone.View.extend({
 					$('#goodResult').css('visibility','hidden');
 				});
 			} else {
-				console.log("ERROR § " + nbChambresSauveesDansCache +
-						" chambres sur " + nbChambres +
-				" ont été sauvegardées dans le cache");
+				console.log(
+					'ERROR § ' + nbChambresSauveesDansCache +
+					' chambres sur ' + nbChambres +
+					' ont été sauvegardées dans le cache');
 				$('#badResult').css('visibility','visible');
 				$('#badResult').show();
 				$('#badResult').fadeOut(15000, function() {
@@ -250,11 +284,9 @@ window.EditChambreView = Backbone.View.extend({
 	 */
 	modal: function(id) {
 		$('#row' + id).append(_.template(tpl.get('DeleteModalView')));
-		$('h3').text("Suppression");
-		$('h4').text("Vous êtes sur le point de supprimer la chambre " + id);
-		$("#modal").modal({
-			backdrop: false
-		});		
+		$('h3').text('Suppression');
+		$('h4').text('Vous êtes sur le point de supprimer la chambre ' + id);
+		$('#modal').modal({	backdrop: false	});		
 	},
 
 	/**
@@ -264,14 +296,14 @@ window.EditChambreView = Backbone.View.extend({
 	 */
 	deleteFromCache: function() {
 		
-		console.log("id de la chambre supprimée = " + id +
-				" et nbChambre = " + nbChambres);
+		console.log('id de la chambre supprimée = ' + id +
+				' et nbChambre = ' + nbChambres);
 		if (id <= nbChambres) {
 			//localStorage.removeItem("chambres-backbone-"+window.id);
-			for (var i = window.id + 1; i <= nbChambres; i++){
+			for (var i = window.id + 1; i <= nbChambres; i++) {
 				//localStorage.removeItem("chambres-backbone-" + i);
 				var chambre =  window.chambres.get(i);
-				chambre.set({'id': i-1},{validate:false});
+				chambre.set({'id': i - 1}, {validate: false});
 			}
 		}
 	},
@@ -279,7 +311,7 @@ window.EditChambreView = Backbone.View.extend({
 	disableAddButton: function() {
 		//on ne peut avoir que 5 chambres max
 		if (nbChambres === 5) {
-			$('.btn-success').attr("disabled", true);
+			$('.btn-success').attr('disabled', true);
 		}
 	},
 

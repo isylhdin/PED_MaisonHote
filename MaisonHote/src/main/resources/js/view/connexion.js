@@ -3,8 +3,8 @@ var currentHost;
 window.ConnexionView = Backbone.View.extend({
 
 	events : {
-		"click #google" : "buttonGoogleHandler",
-		"click #dropbox" : "buttonDropboxHandler"
+		'click #google' : 'buttonGoogleHandler',
+		'click #dropbox' : 'buttonDropboxHandler'
 	},
 
 	initialize: function () {
@@ -17,19 +17,19 @@ window.ConnexionView = Backbone.View.extend({
 		return this;
 	},
 	
-	saveCurrentHost : function (currentHost){
+	saveCurrentHost : function (currentHost) {
 		var host = new CurrentHost({'host' : currentHost});
 		host.save();
 	},
 
-	buttonGoogleHandler : function(event){
-		currentHost = 'Drive' ;
+	buttonGoogleHandler : function(event) {
+		currentHost = 'Drive';
 		this.saveCurrentHost(currentHost);	
 		connectToHost();		
 	},
 	
-	buttonDropboxHandler : function (event){
-		currentHost = 'Dropbox' ;
+	buttonDropboxHandler : function (event) {
+		currentHost = 'Dropbox';
 		this.saveCurrentHost(currentHost);
 		connectToHost();
 	}

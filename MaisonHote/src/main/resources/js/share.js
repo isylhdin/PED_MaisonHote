@@ -1,49 +1,54 @@
 /**
  * FACEBOOK
  */
-  function facebookLogin() {
-	   FB.init({
-	      appId      : '259179997550813', // App ID
-	      status     : true, // check login status
-	      cookie     : true, // enable cookies to allow the server to access the session
-	      xfbml      : true  // parse XFBML
-	    });
-	  
-	   FB.login(function(response) {
-	        if (response.authResponse) {
-	            postOnWall();
-	        } else {
-	           alert("Impossible de se connecter à facebook");
-	        }
-	    });
-	} 
+function facebookLogin() {
+	FB.init({
+		appId : '259179997550813',
+		// check login status
+		status : true,
+		// enable cookies to allow the server to access the session
+		cookie : true,
+		// parse XFBML
+		xfbml : true
+	});
   
-	function postOnWall() {
-		
-        var obj = {
-          method: 'feed'         
-        };
+	FB.login(function(response) {
+		if (response.authResponse) {
+			postOnWall();
+		} else {
+			alert('Impossible de se connecter à facebook');
+		}
+	});
+}
 
-        function callback(response) {
-        	if (response && response.post_id) {
-                alert('Post was published.');
-              } else {
-                alert('Post was not published.');
-              }
-        }
+function postOnWall() {
 
-        FB.ui(obj, callback);
-     }
+	var obj = {
+		method: 'feed'
+	};
 
+	function callback(response) {
+		if (response && response.post_id) {
+			alert('Post was published.');
+		} else {
+			alert('Post was not published.');
+		}
+	}
 
-  // Load the SDK Asynchronously
-  (function(d){
-     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement('script'); js.id = id; js.async = true;
-     js.src = "//connect.facebook.net/en_US/all.js";
-     ref.parentNode.insertBefore(js, ref);
-   }(document));
+	FB.ui(obj, callback);
+}
+
+// Load the SDK Asynchronously
+(function(d) {
+	var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+	if (d.getElementById(id)) {
+		return;
+	}
+	js = d.createElement('script');
+	js.id = id; js.async = true;
+	js.src = '//connect.facebook.net/en_US/all.js';
+	ref.parentNode.insertBefore(js, ref);
+} (document));
   
 /**
  * TWITTER

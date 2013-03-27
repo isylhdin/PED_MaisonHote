@@ -23,16 +23,19 @@ var appRouter = Backbone.Router.extend({
 			$('#service').hide();
 			$('#listCustomer').hide();
 		} else {
-			//Quand on actualise la page 
-			//on récupère le nom du service de stockage qui est contenu dans le local storage
+			// Quand on actualise la page on récupère le nom du service de
+			// stockage qui est contenu dans le local storage
 			if (currentHost == null) {
-				currentHost = jQuery.parseJSON(localStorage.getItem('currentHost-backbone-0')).host;
+				currentHost = jQuery.parseJSON(
+					localStorage.getItem('currentHost-backbone-0')).host;
 			}
 
 			setToken();
 
-			//A cet endroit il faudra set le token du service de stockage pour qu'il soit intégré aux appels de web services
-			//ne marche pas, l'appel aux web service n'intègre pas le token dans le header ...
+			// A cet endroit il faudra set le token du service de stockage
+			// pour qu'il soit intégré aux appels de web services
+			//ne marche pas, l'appel aux web service n'intègre pas le token
+			// dans le header...
 
 			this.headerView = new HeaderView();
 			$('.header').html(this.headerView.el);
@@ -57,27 +60,34 @@ var appRouter = Backbone.Router.extend({
 		console.log('Welcome back resa!');
 
 		chambresPourCalendrier = new Chambres();
-		chambresPourCalendrier.localStorage = new Backbone.LocalStorage('chambres-backbone');
+		chambresPourCalendrier.localStorage =
+			new Backbone.LocalStorage('chambres-backbone');
 
 		prestasPourCalendrier = new Prestations();
-		prestasPourCalendrier.localStorage = new Backbone.LocalStorage('prestations-backbone');
+		prestasPourCalendrier.localStorage =
+			new Backbone.LocalStorage('prestations-backbone');
 
 		resaGroupsPrestas = new ResaGroupsPrestas();
-		resaGroupsPrestas.localStorage = new Backbone.LocalStorage('resa-groups-prestas');
+		resaGroupsPrestas.localStorage =
+			new Backbone.LocalStorage('resa-groups-prestas');
 
 		customersResa = new Customers();
-		customersResa.localStorage = new Backbone.LocalStorage('customers-backbone');
+		customersResa.localStorage =
+			new Backbone.LocalStorage('customers-backbone');
 		customersResa.fetch();
 
 		this.calendarView = new CalendarView();
 		controller.showView(this.calendarView);
 
 		reservations = new Reservations();
-		reservations.localStorage = new Backbone.LocalStorage('resas-backbone');
+		reservations.localStorage =
+			new Backbone.LocalStorage('resas-backbone');
 
 		//Un calendrier possède un ensemble de réservations
-		this.calendarView.resasView =
-			new ReservationsView({ el: $('#calendar'), collection: reservations }).render();
+		this.calendarView.resasView = new ReservationsView({
+			el: $('#calendar'), collection: reservations
+		}).render();
+
 		reservations.fetch();
 	},
 
@@ -129,7 +139,8 @@ tpl = {
 		templates: {},
 
 		// Recursively pre-load all the templates for the app.
-		// This implementation should be changed in a production environment. A build script should concatenate
+		// This implementation should be changed in a production environment.
+		// A build script should concatenate
 		// all the template files in a single file.
 		loadTemplates: function(names, callback) {
 
@@ -157,11 +168,11 @@ tpl = {
 			return this.templates[name];
 		},
 
-		/* @bug : this function should be in host_drive.js but when it is called
-		 * from host_drive.js it doesn't work, but it finely works when it is called
-		 * from there.
+		/* @bug : this function should be in host_drive.js but when it is
+		 * called from host_drive.js it doesn't work, but it finely works
+		 * when it is called from there.
 		 */ 
-		downloadFile : function (file, callback) {
+		downloadFile: function (file, callback) {
 			if (file.downloadUrl) {
 				var accessToken = gapi.auth.getToken().access_token;
 				var xhr = new XMLHttpRequest();
@@ -181,10 +192,10 @@ tpl = {
 };
 
 tpl.loadTemplates(['HeaderView', 'CalendarView', 'SelectChambreView',
-                   'ChambreView', 'ConnexionView', 'ficheSejourView', 'ServiceView',
-                   'DeleteModalView', 'FirstConfigModalView', 'ListCustomerView',
-                   'DataCustomerView', 'RoomForResaView','PrestaForResaView'], 
-                   function() {
+		'ChambreView', 'ConnexionView', 'ficheSejourView', 'ServiceView',
+		'DeleteModalView', 'FirstConfigModalView', 'ListCustomerView',
+		'DataCustomerView', 'RoomForResaView', 'PrestaForResaView'],
+		function() {
 
 	controller = new AppController();
 	app = new appRouter();

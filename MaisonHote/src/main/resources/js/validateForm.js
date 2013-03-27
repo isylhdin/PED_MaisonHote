@@ -3,7 +3,8 @@ window.validateForm = {
 		onError: function(model, error, a) {
 			success = false;
 			_.each( error, function(fieldName) {
-				$('input[name=' + fieldName + model.id + ']').parents('.control-group').addClass('error');
+				$('input[name=' + fieldName + model.id + ']').
+					parents('.control-group').addClass('error');
 			}, a );
 
 			return success;
@@ -14,7 +15,8 @@ window.validateForm = {
 		},
 
 		resetFieldError: function(fieldName) {
-			var $controlGroup = this.getFieldControlGroup(this.getField(fieldName));
+			var $controlGroup =
+				this.getFieldControlGroup(this.getField(fieldName));
 			$controlGroup.removeClass('error');
 		},
 
