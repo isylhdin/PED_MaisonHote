@@ -7,7 +7,9 @@ window.ReservationsView = Backbone.View.extend({
 		this.listenTo(this.collection, 'change', this.change);
 		this.listenTo(this.collection, 'destroy', this.destroy);
 
-		this.resaDialogView = new ReservationView({ el: $('#resaDialog') });
+		this.resaDialogView = new ReservationView({
+			el: $('#resaDialog'), collection: this.collection
+		});
 		this.listenTo(chambresPourCalendrier, 'replace reset add remove', this.caption);
 		this.listenTo(chambresPourCalendrier, 'replace reset add remove', this.reRenderWeekView);
 
@@ -36,7 +38,7 @@ window.ReservationsView = Backbone.View.extend({
 				right: 'basicWeek,month'
 			},
 			selectable: true,
-			unselectCancel: '.unselectCanceled',
+			//unselectCancel: '.unselectCanceled',
 			editable: true,
 			ignoreTimezone: false,
 			firstDay: 1,
@@ -60,8 +62,7 @@ window.ReservationsView = Backbone.View.extend({
 		this.$el.fullCalendar('renderEvent', resa.toJSON(), true);
 	},        
 	select: function(startDate, endDate, allDay, ev, origRow) {
-		this.resaDialogView.collection = this.collection;
-		this.resaDialogView.model = new Reservation({start: startDate, end: endDate});
+		this.resaDialogView.model = new Reservation({ start: startDate, end: endDate });
 		if (this.$el.fullCalendar('getView').name === 'basicWeek') {
 			var roomNum = origRow + 1;
 			this.resaDialogView.model.set({

@@ -213,8 +213,8 @@ window.EditChambreView = Backbone.View.extend({
 		//supprime les chambres en trop dans le cache
 		window.tab = localStorage.getItem('chambres-backbone');
 		var index = parseInt(nbChambres) + 1;
-		while(tab.search(index) != -1){
-			localStorage.removeItem("chambres-backbone-"+index);
+		while (tab.search(index) != -1) {
+			localStorage.removeItem("chambres-backbone-" + index);
 			index++;
 		}
 
@@ -254,7 +254,7 @@ window.EditChambreView = Backbone.View.extend({
 		$('h4').text("Vous êtes sur le point de supprimer la chambre " + id);
 		$("#modal").modal({
 			backdrop: false
-		}); 		
+		});		
 	},
 
 	/**

@@ -39,12 +39,13 @@ window.ReservationView = Backbone.View.extend({
 
 		this.resetFormClasses();
 		this.$el.dialog({
-			//modal: true,
+			modal: true,
 			title: (isNewModel ? 'New' : 'Edit') + ' Reservation',
 			buttons: buttons,
 			open: this.open(isNewModel)
 		});
-		$('body').addClass('unselectCanceled');
+		$('.ui-widget-overlay').css('background', 'transparent');
+		//$('body').addClass('unselectCanceled');
 		$('input').blur();
 		return this;
 	},
@@ -151,43 +152,44 @@ window.ReservationView = Backbone.View.extend({
 		$('#selectedClient').html(concatenatedName + ' <i id="deleteSelection" class="icon-remove-sign" data-toggle="tooltip"></i>');
 		$('#deleteSelection').tooltip({
 			'title' : 'Supprimer sélection'
-		});	
-
-		var resaGroup = getAllResaFromGroup(model.get('idResaGroup'));		
-		$('#roomSelect1').val(resaGroup[0]);
+		});
+		
+		var idResaGroup = model.get('idResaGroup'),
+			resaGroup = getAllResaFromGroup(idResaGroup);		
+		$('#roomSelect1').val(resaGroup[0].get('room'));
 		if (resaGroup.length > 1) {
 			for (var i = 1; i < resaGroup.length; i++) {
-				this.addRoomForResa(null);
-				$('#roomSelect' + eval(i + 1)).val(resaGroup[i].attributes.room);
+				this.addRoomForResa();
+				$('#roomSelect' + eval(i + 1)).val(resaGroup[i].get('room'));
 			}		
 		}
-/*
-		var idResaGroup = model.get('idResaGroup'),
-			orderedPrestas = resaGroupsPrestas.getModelByResaGroup(idResaGroup);
-		console.log(idResaGroup);
-		console.log(orderedPrestas.get('prestas'));
+
+		var orderedPrestas = resaGroupsPrestas.get(idResaGroup);
 		if (orderedPrestas) {
 			var prestas = orderedPrestas.get('prestas'),
 				prestaTitle,
 				$prestaOpt,
 				quantity;
-	
+
 			for (var idPresta in prestas) {
-				$prestaOpt = $('#prestaSelect').find('option [value=' + idPresta + ']');
+				$prestaOpt = $('#prestaSelect').find('option[value=' + idPresta + ']');
 				prestaTitle = prestasPourCalendrier.get(idPresta).get('title');
 				quantity = prestas[idPresta];
 				this.addPrestaTag(idPresta, prestaTitle, quantity, $prestaOpt);
 			}
-		}*/
+			for () {
+				if ()
+				delete prestas.
+			}
+		}
 	},
-
 
 	// TODO: faire que la recherche des attributs soit moins éparpillée et
 	// que tous les attributs communs ne soient recherchés qu'une fois
 	newAttributes: function(selectNum, idResaGroup) {
 		var	room = $('#roomSelect' + selectNum + ' :selected').val(),
-		idClient = findClient(validateForm.getField('client').val())
-		arrhes = $('input[name=arrhes]').is(':checked');
+			idClient = findClient(validateForm.getField('client').val()),
+			arrhes = $('input[name=arrhes]').is(':checked');
 
 		return {
 			idResaGroup: idResaGroup,
@@ -204,29 +206,29 @@ window.ReservationView = Backbone.View.extend({
 			return;
 		}
 		var i,
-		idPresta,
-		nbPresta,
-		initialStartDate = this.model.get('start'),
-		initialEndDate = this.model.get('end'),
-		idResaGroup = this.collection.nextGroupId(),
-		orderedPrestas = resaGroupsPrestas.at(idResaGroup);
+			idPresta,
+			nbPresta,
+			initialStartDate = this.model.get('start'),
+			initialEndDate = this.model.get('end'),
+			idResaGroup = this.collection.nextGroupId();
+
+		window.orderedPrestas = resaGroupsPrestas.at(idResaGroup);
 
 		if (!orderedPrestas) {
 			orderedPrestas = new ResaGroupPrestas({
 				idResaGroup: idResaGroup
 			});
 			orderedPrestas.set('idResaGroup', idResaGroup);
-			resaGroupsPrestas.add(this.orderedPrestas);
-		}/*
-		console.log(orderedPrestas.get('idResaGroup'));
-console.log(resaGroupsPrestas.at(resaGroupsPrestas.length - 1).get('idResaGroup'));*/
+			resaGroupsPrestas.add(orderedPrestas);
+		}
 
 		$('#prestas').find('[idPresta]').each(function(index, element) {
 			idPresta = $(element).attr('idPresta');
 			nbPresta = $('#nbPresta' + idPresta).text();
 			orderedPrestas.setPresta(idPresta, nbPresta);
+			
 		});
-		//Quand on rentre dans newAttributes $('#roomSelect2') n'existe pas
+
 		this.model.set(this.newAttributes(1, idResaGroup));
 		this.save();
 
@@ -261,6 +263,7 @@ console.log(resaGroupsPrestas.at(resaGroupsPrestas.length - 1).get('idResaGroup'
 						}
 					});		
 
+					orderedPrestas.save();
 					obj = JSON.parse(localStorage.getItem('fichier-backbone-ordered_prestas.json'));
 					updateFile(obj.idFichier, JSON.stringify(resaGroupsPrestas.toJSON()), function(reponse) {	
 						if (!reponse.error) {
@@ -286,6 +289,7 @@ console.log(resaGroupsPrestas.at(resaGroupsPrestas.length - 1).get('idResaGroup'
 				}
 			});
 
+			orderedPrestas.save();
 			obj = JSON.parse(localStorage.getItem('fichier-backbone-ordered_prestas.json'));
 			updateFile(obj.idFichier, JSON.stringify(resaGroupsPrestas.toJSON()), function(reponse) {
 				if (!reponse.error) {
@@ -297,7 +301,7 @@ console.log(resaGroupsPrestas.at(resaGroupsPrestas.length - 1).get('idResaGroup'
 
 	closeDialog: function() {
 		$('#prestas').find('.prestaRow').remove();
-		$('body').removeClass('unselectCanceled');
+		//$('body').removeClass('unselectCanceled');
 		this.$el.dialog('close');
 	},
 
@@ -400,7 +404,7 @@ console.log(resaGroupsPrestas.at(resaGroupsPrestas.length - 1).get('idResaGroup'
 	removeRoomForResa: function(e) {
 		e.preventDefault();
 		var $select = $(e.currentTarget).prev(),
-		idRoom = $select.val();
+			idRoom = $select.val();
 
 		$select.closest('.row-fluid').remove();
 		this.nbRoomSelects--;
@@ -412,8 +416,8 @@ console.log(resaGroupsPrestas.at(resaGroupsPrestas.length - 1).get('idResaGroup'
 
 	addPresta: function(e) {
 		var $prestaOpt = $(e.currentTarget).find('option:selected'),
-		idPresta = $prestaOpt.val(),
-		prestaTitle = $prestaOpt.text();
+			idPresta = $prestaOpt.val(),
+			prestaTitle = $prestaOpt.text();
 		this.addPrestaTag(idPresta, prestaTitle, 1, $prestaOpt);
 	},
 
@@ -427,12 +431,12 @@ console.log(resaGroupsPrestas.at(resaGroupsPrestas.length - 1).get('idResaGroup'
 
 	removePresta: function(e) {
 		var prestaTagId = $(e.currentTarget).attr('idPrestaTag'),
-		$prestaTag = $('#' + prestaTagId),
-		prestaId = $prestaTag.attr('idPresta'),
-		prestaTitle = $prestaTag.text(),
-		$prestaRow = $prestaTag.closest('.row-fluid');
+			$prestaTag = $('#' + prestaTagId),
+			prestaId = $prestaTag.attr('idPresta'),
+			prestaTitle = $prestaTag.text(),
+			$prestaRow = $prestaTag.closest('.row-fluid');
 		$('#prestaSelect').append(
-				$('<option></option>')
+			$('<option></option>')
 				.attr('value', prestaId)
 				.text(prestaTitle)
 		);
@@ -442,15 +446,15 @@ console.log(resaGroupsPrestas.at(resaGroupsPrestas.length - 1).get('idResaGroup'
 //	TODO: supprimer la duplication de code
 	incrPresta: function(e) {
 		var prestaNbId = $(e.currentTarget).attr('idNbPresta'),
-		$prestaNb = $('#' + prestaNbId),
-		prestaNb = parseInt($prestaNb.text());
+			$prestaNb = $('#' + prestaNbId),
+			prestaNb = parseInt($prestaNb.text());
 		$prestaNb.text(prestaNb + 1);
 	},
 
 	decrPresta: function(e) {
 		var prestaNbId = $(e.currentTarget).attr('idNbPresta'),
-		$prestaNb = $('#' + prestaNbId),
-		prestaNb = parseInt($prestaNb.text());
+			$prestaNb = $('#' + prestaNbId),
+			prestaNb = parseInt($prestaNb.text());
 		if (prestaNb > 1) {
 			$prestaNb.text(prestaNb - 1);
 		}
