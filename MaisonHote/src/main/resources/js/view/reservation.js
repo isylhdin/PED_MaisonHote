@@ -177,10 +177,6 @@ window.ReservationView = Backbone.View.extend({
 				quantity = prestas[idPresta];
 				this.addPrestaTag(idPresta, prestaTitle, quantity, $prestaOpt);
 			}
-			for () {
-				if ()
-				delete prestas.
-			}
 		}
 	},
 
@@ -221,12 +217,13 @@ window.ReservationView = Backbone.View.extend({
 			orderedPrestas.set('idResaGroup', idResaGroup);
 			resaGroupsPrestas.add(orderedPrestas);
 		}
+		orderedPrestas.set('prestas', {});
 
+		console.log(orderedPrestas.get('prestas'));
 		$('#prestas').find('[idPresta]').each(function(index, element) {
 			idPresta = $(element).attr('idPresta');
 			nbPresta = $('#nbPresta' + idPresta).text();
 			orderedPrestas.setPresta(idPresta, nbPresta);
-			
 		});
 
 		this.model.set(this.newAttributes(1, idResaGroup));
