@@ -112,11 +112,11 @@ window.ReservationView = Backbone.View.extend({
 
 		this.clearResa();
 
-		if(!isNewModel){
+		if (!isNewModel) {
 			this.openExistingResa(this.model);
 		}
 
-		var arrhes =  this.model.get('arrhes');
+		var arrhes = this.model.get('arrhes');
 		$('input[name=arrhes]').prop('checked', arrhes);
 
 
@@ -125,27 +125,27 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 
-	clearResa: function(){
+	clearResa: function() {
 		this.resetFormClasses();
 		$('#client').css('background-color', '');
-		$('#addRoom').removeAttr("disabled");
+		$('#addRoom').removeAttr('disabled');
 		this.deleteSelection();
 
-		var save =$('#rooms div:first').detach();
+		var save = $('#rooms div:first').detach();
 		$('#rooms').empty().append(save);
 
 		this.renderRoomList();
 		this.renderPrestaList();
 	},
 
-	openExistingResa: function(model){
+	openExistingResa: function(model) {
 		this.resetFormClasses();
 
 		var idClient = model.get('idClient');
 		var client = customersResa.get(idClient);
 		var name = client.attributes.name;
-		var fistname = client.attributes.firstname;
-		var concatenatedName = name + ' ' + fistname;
+		var firstname = client.attributes.firstname;
+		var concatenatedName = name + ' ' + firstname;
 
 		$('#client').val(concatenatedName);
 		$('#selectedClient').html(concatenatedName + ' <i id="deleteSelection" class="icon-remove-sign" data-toggle="tooltip"></i>');
@@ -155,15 +155,31 @@ window.ReservationView = Backbone.View.extend({
 
 		var resaGroup = getAllResaFromGroup(model.get('idResaGroup'));		
 		$('#roomSelect1').val(resaGroup[0]);
-		if(resaGroup.length > 1){
-			for(var i=1; i < resaGroup.length; i++){
+		if (resaGroup.length > 1) {
+			for (var i = 1; i < resaGroup.length; i++) {
 				this.addRoomForResa(null);
-				$('#roomSelect'+ eval(i+1)).val(resaGroup[i].attributes.room);
+				$('#roomSelect' + eval(i + 1)).val(resaGroup[i].attributes.room);
 			}		
 		}
-
+/*
+		var idResaGroup = model.get('idResaGroup'),
+			orderedPrestas = resaGroupsPrestas.getModelByResaGroup(idResaGroup);
+		console.log(idResaGroup);
+		console.log(orderedPrestas.get('prestas'));
+		if (orderedPrestas) {
+			var prestas = orderedPrestas.get('prestas'),
+				prestaTitle,
+				$prestaOpt,
+				quantity;
+	
+			for (var idPresta in prestas) {
+				$prestaOpt = $('#prestaSelect').find('option [value=' + idPresta + ']');
+				prestaTitle = prestasPourCalendrier.get(idPresta).get('title');
+				quantity = prestas[idPresta];
+				this.addPrestaTag(idPresta, prestaTitle, quantity, $prestaOpt);
+			}
+		}*/
 	},
-
 
 
 	// TODO: faire que la recherche des attributs soit moins éparpillée et
@@ -193,22 +209,23 @@ window.ReservationView = Backbone.View.extend({
 		initialStartDate = this.model.get('start'),
 		initialEndDate = this.model.get('end'),
 		idResaGroup = this.collection.nextGroupId(),
-		resaGroupPrestas = resaGroupsPrestas.at(idResaGroup);
+		orderedPrestas = resaGroupsPrestas.at(idResaGroup);
 
-		if (!resaGroupPrestas) {
-			this.resaGroupPrestations = new ResaGroupPrestas({
-				id: idResaGroup
+		if (!orderedPrestas) {
+			orderedPrestas = new ResaGroupPrestas({
+				idResaGroup: idResaGroup
 			});
-			resaGroupsPrestas.add(this.resaGroupPrestations);
-		}
+			orderedPrestas.set('idResaGroup', idResaGroup);
+			resaGroupsPrestas.add(this.orderedPrestas);
+		}/*
+		console.log(orderedPrestas.get('idResaGroup'));
+console.log(resaGroupsPrestas.at(resaGroupsPrestas.length - 1).get('idResaGroup'));*/
 
 		$('#prestas').find('[idPresta]').each(function(index, element) {
 			idPresta = $(element).attr('idPresta');
 			nbPresta = $('#nbPresta' + idPresta).text();
-			this.resaGroupPrestations.set(prestaId, nbPresta);
+			orderedPrestas.setPresta(idPresta, nbPresta);
 		});
-
-
 		//Quand on rentre dans newAttributes $('#roomSelect2') n'existe pas
 		this.model.set(this.newAttributes(1, idResaGroup));
 		this.save();
@@ -353,7 +370,7 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	addRoomForResa: function(e) {
-		if(e != null){
+		if (e != null) {
 			e.preventDefault();
 		}
 
@@ -395,10 +412,14 @@ window.ReservationView = Backbone.View.extend({
 
 	addPresta: function(e) {
 		var $prestaOpt = $(e.currentTarget).find('option:selected'),
-		prestaId = $prestaOpt.val(),
-		prestaTitle = $prestaOpt.text(),
+		idPresta = $prestaOpt.val(),
+		prestaTitle = $prestaOpt.text();
+		this.addPrestaTag(idPresta, prestaTitle, 1, $prestaOpt);
+	},
+
+	addPrestaTag: function(idPresta, prestaTitle, quantity, $prestaOpt) {
 		prestaRow = _.template(tpl.get('PrestaForResaView'), {
-			id: prestaId, title: prestaTitle, nb: 1
+			id: idPresta, title: prestaTitle, nb: quantity
 		});
 		$prestaOpt.remove();
 		$('#prestas').append(prestaRow);

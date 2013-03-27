@@ -16,15 +16,25 @@ var CurrentHost = Backbone.Model.extend({
 
 var ResaGroupPrestas = Backbone.Model.extend({
 	localStorage: new Backbone.LocalStorage('resa-groups-prestas'),
+	//idAttribute: 'idResaGroup',
 
 	defaults: {
-		id: 0
+		idResaGroup: 0,
+		prestas: {}
+	},
+	setPresta: function(idPresta, nbPresta) {		
+		this.attributes.prestas[idPresta] = nbPresta;
 	}
 });
 
 var ResaGroupsPrestas = Backbone.Collection.extend({
 	localStorage: new Backbone.LocalStorage('resa-groups-prestas'),
-	model: ResaGroupPrestas
+	model: ResaGroupPrestas,
+	getModelByResaGroup: function(idResaGroup) {
+        var model = this.detect(function(model) { 
+            return model.get('idResaGroup') == idResaGroup;
+        });
+	}
 });
 
 var Reservation = Backbone.Model.extend({
