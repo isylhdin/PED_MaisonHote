@@ -224,7 +224,6 @@ window.ReservationView = Backbone.View.extend({
 		}
 		orderedPrestas.set('prestas', {});
 
-		console.log(orderedPrestas.get('prestas'));
 		$('#prestas').find('[idPresta]').each(function(index, element) {
 			idPresta = $(element).attr('idPresta');
 			nbPresta = $('#nbPresta' + idPresta).text();
