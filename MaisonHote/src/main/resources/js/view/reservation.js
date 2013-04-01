@@ -8,7 +8,7 @@ window.ReservationView = Backbone.View.extend({
 		'click #removePresta' : 'removePresta',
 		'click #decrPresta' : 'decrPresta',
 		'click #incrPresta' : 'incrPresta',
-		'click #btnFicheSejour' : 'btnFicheSejour',
+		'click #btnFicheSejour' : 'openFicheSejour',
 		'click #client' : 'renderTypeaheadList',
 		'keypress input[name=client]' : 'checkValidClient',
 		'click #deleteSelection' : 'deleteSelection'
@@ -357,9 +357,8 @@ window.ReservationView = Backbone.View.extend({
 		this.model.destroy({ success: this.closeDialog });
 	},
 
-	btnFicheSejour: function() {
+	openFicheSejour: function() {
 		app.navigate('ficheSejour/' + this.model.id, { trigger: true });
-		this.closeDialog();
 	},
 
 	resetFormClasses: function() {
