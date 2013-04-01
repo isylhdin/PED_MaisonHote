@@ -13,7 +13,9 @@ window.CalendarView = Backbone.View.extend({
 	onSubmit: function() {
 		console.log('submit!');
 
-		var obj = JSON.parse(localStorage.getItem('fichier-backbone-resa.json'));
+		var obj = JSON.parse(
+				localStorage.getItem('fichier-backbone-resa.json'));
+
 		updateFile(obj.idFichier, JSON.stringify(reservations.toJSON()),
 				function(reponse) {
 			if (!reponse.error) {

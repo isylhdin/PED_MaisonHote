@@ -1,5 +1,5 @@
 var Chambre = Backbone.Model.extend({
-	localStorage: new Backbone.LocalStorage("chambres-backbone"),
+	localStorage: new Backbone.LocalStorage('chambres-backbone'),
 
 	defaults: {
 		id: null,
@@ -25,7 +25,7 @@ var Chambre = Backbone.Model.extend({
 		}
 
 		if (errors.length) {
-			console.log("champ(s) qui provoque(nt) une erreur : " + errors);
+			console.log('champ(s) qui provoque(nt) une erreur : ' + errors);
 			return errors;
 		}
 	}

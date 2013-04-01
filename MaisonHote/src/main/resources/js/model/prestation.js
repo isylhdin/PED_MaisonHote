@@ -31,7 +31,7 @@ var Prestations = Backbone.Collection.extend({
 	sort_key: 'id', // default sort key
 
 	initialize : function() {
-		console.log('Collection de prestations crée');
+		console.log('Collection de prestations créée');
 
 	},
 
@@ -42,4 +42,4 @@ var Prestations = Backbone.Collection.extend({
 		this.sort_key = fieldName;
 		this.sort();
 	}
-}); 
+});

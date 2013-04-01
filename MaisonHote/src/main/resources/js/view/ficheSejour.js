@@ -18,19 +18,18 @@ window.ficheSejourView = Backbone.View.extend({
 		this.template = _.template(tpl.get('ficheSejourView'));
 		$(this.el).html(this.template(client));
 		var self = this;
-		
-		this.resaGroup.forEach(function(Resa){
-			var idResa = Resa.attributes.id;
-			var resa = jQuery.parseJSON(
-					localStorage.getItem('resas-backbone-' + idResa));
-			
-			var duration = getDuration(resa);
-			var computedPrice = computePriceOverDaysForRoom(resa);
+
+		this.resaGroup.forEach(function(Resa) {
+			var idResa = Resa.get('id'),
+				resa = jQuery.parseJSON(
+					localStorage.getItem('resas-backbone-' + idResa)),
+				idRoom = resa.room,
+				room = jQuery.parseJSON(
+					localStorage.getItem('chambres-backbone-' + idRoom)),
+				duration = getDuration(resa),
+				computedPrice = computePriceOverDaysForRoom(resa);
+
 			self.total += computedPrice;
-			
-			var idRoom = resa.room;
-			var room = jQuery.parseJSON(
-					localStorage.getItem('chambres-backbone-' + idRoom));
 			
 			self.$el.find('#rooms').append(
 				'<p><span style=\'color:#3D6DAB\'>Chambre '+ resa.room +
@@ -44,9 +43,11 @@ window.ficheSejourView = Backbone.View.extend({
 			hasPaidArrhes = jQuery.parseJSON(this.model).arrhes,
 			hasPaidArrhesDisplay = (hasPaidArrhes ? 'oui' : 'non'),
 			color = (hasPaidArrhes ? 'green' : 'red'),
-			b = '<font color=\''+ color + '\'>' + hasPaidArrhesDisplay + '</font>';
+			b = '<font color=\''+ color + '\'>' + hasPaidArrhesDisplay +
+				'</font>';
 
-		this.$('#arrhes').html('<h4> Arrhes payées (' + arrhes + '%)</h4>' + b);
+		this.$('#arrhes').html(
+			'<h4> Arrhes payées (' + arrhes + '%)</h4>' + b);
 
 		if (hasPaidArrhes) {
 			remainingPrice = this.total - ((arrhes * this.total) / 100);

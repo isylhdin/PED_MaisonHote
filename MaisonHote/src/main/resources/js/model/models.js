@@ -77,4 +77,3 @@ var Reservations = Backbone.Collection.extend({
 var Arrhes = Backbone.Model.extend({
 	localStorage: new Backbone.LocalStorage('arrhes-backbone')
 });
-

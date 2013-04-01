@@ -3,7 +3,7 @@ window.ListCustomerView = Backbone.View.extend({
 	idCustomer: null,
 	
 	events: {
-		//"click #btnSearchCustomer"   : "searchCustomer"
+		//'click #btnSearchCustomer' : 'searchCustomer'
 		'click #btnAddCustomer' : 'addCustomer',
 		'click #btnClose' : 'closeModal',
 		'click #btnSave' : 'saveCustomer',
@@ -47,43 +47,43 @@ window.ListCustomerView = Backbone.View.extend({
     createList: function(){
     	var list = '<select id="selectCustomer" size="10">';
         if (customers != null) {
-        	customers.each(function(Customer) {
-        		list += '<option value="' + Customer.get('id') + '">' +
-        			Customer.get('name').toUpperCase() + ' ' +
-        			Customer.get('firstname') + ' (' + Customer.get('city') +
+        	customers.each(function(customer) {
+        		list += '<option value="' + customer.get('id') + '">' +
+        			customer.get('lastName').toUpperCase() + ' ' +
+        			customer.get('firstName') + ' (' + customer.get('city') +
         			')</option>';
         	});
         }
         list += '</select>';
         return list ;
     },   
-    
+
     addCustomer: function() {		
 		this.template = _.template(tpl.get('DataCustomerView'));
 		$('#dataCustomer').before(this.template);
     	
       	// vide les infos du modal
-		$('#inputName').val('');
-		$('#inputFirstname').val('');
-		$('#inputPhone').val('');
-		$('#inputAddress').val('');
-		$('#inputCp').val('');	
-		$('#inputCity').val('');	
-		$('#inputEmail').val('');	
-    	$('#myModal').modal('show');    	
+		$('#lastName').val('');
+		$('#firstName').val('');
+		$('#phone').val('');
+		$('#address').val('');
+		$('#postcode').val('');
+		$('#city').val('');
+		$('#email').val('');
+    	$('#myModal').modal('show');
     },
-    
+
     closeModal: function() {
     	this.reRender();
     	idCustomer = null ;
     	$('#myModal').modal('hide');
     },
-    
+
     saveCustomer: function() {		
 		 this.saveDataCustomer();		 
 		 this.closeModal();    	
     },
-	
+
     getNewId: function() {
     	var id = 0;
 
@@ -97,7 +97,7 @@ window.ListCustomerView = Backbone.View.extend({
     	id += 1;
     	return id;
     },
-    
+
 	saveDataCustomer: function() {		
 		// If it's a new customer we have to create it
 		var msg2show;
@@ -109,28 +109,29 @@ window.ListCustomerView = Backbone.View.extend({
 			msg2show = 'Nouveau client ajouté avec succès.';
 		} else {
 			// we search the customer in the collection				
-			customer = customers.get(idCustomer) ;
+			customer = customers.get(idCustomer);
 			msg2show = 'Client modifié avec succès.'
 		}
 
-		success = true;	
+		success = true;
 
-		window.name = $('#inputName').val();
-		window.firstname = $('#inputFirstname').val();
-		window.address = $('#inputAddress').val();
-		window.cp = $('#inputCp').val();
-		window.city = $('#inputCity').val();
-		window.phone = $('#inputPhone').val();
-		window.mail = $('#inputEmail').val();
+		window.lastName = $('#lastName').val();
+		window.firstName = $('#firstName').val();
+		window.address = $('#address').val();
+		window.postcode = $('#postcode').val();
+		window.city = $('#city').val();
+		window.phone = $('#phone').val();
+		window.email = $('#email').val();
 
 		customer.save({
-			'name': name, 'firstname': firstname, 'address': address,
-			'cp': cp, 'city': city, 'phone': phone, 'mail': mail
+			'lastName': lastName, 'firstName': firstName, 'address': address,
+			'postcode': postcode, 'city': city, 'phone': phone, 'email': email
 		}, { silent: true });
 
-		//update file on server
+		// update file on server
 		var obj = JSON.parse(
 				localStorage.getItem('fichier-backbone-customers.json'));
+
 		updateFile(obj.idFichier, JSON.stringify(customers.toJSON()),
 			function() {});
 		document.getElementById('dataCustomer').innerHTML = msg2show;
@@ -140,20 +141,22 @@ window.ListCustomerView = Backbone.View.extend({
 	showCustomer: function() {		
 		var idCustomers = document.getElementById('selectCustomer').value,
 			customer = JSON.parse(
-				localStorage['customers-backbone-' + idCustomers]);
+				localStorage['customers-backbone-' + idCustomers]),
+			infos;
 
 		// we load data in the div
-		var infos = '<address><strong>' +
-			customer.name.toUpperCase() + ' ' +
-			customer.firstname + '</strong><br/>' +
+		infos = '<address><strong>' +
+			customer.lastName.toUpperCase() + ' ' +
+			customer.firstName + '</strong><br/>' +
 			customer.address + '<br/>' +
-			customer.cp + ' ' + customer.city + '<br/><br/>' +
+			customer.postcode + ' ' + customer.city + '<br/><br/>' +
 			customer.phone + '<br/>' +
-			'<a href="mailto:#">' + customer.mail + '</a><br/></adresse>';
-		document.getElementById("dataCustomer").innerHTML = infos;
+			'<a href="mailto:#">' + customer.email + '</a><br/></adress>';
+
+		document.getElementById('dataCustomer').innerHTML = infos;
 	},
 
-	showModalCustomer : function (){
+	showModalCustomer : function () {
 		if (document.getElementById('selectCustomer').selectedIndex != -1) {
 			idCustomer = document.getElementById('selectCustomer').value;
 			var customer = JSON.parse(
@@ -163,13 +166,14 @@ window.ListCustomerView = Backbone.View.extend({
 			$('#dataCustomer').before(this.template());
 			
 			// we load data in the modal and open it
-			$('#inputName').val(customer.name);
-			$('#inputFirstname').val(customer.firstname);
-			$('#inputPhone').val(customer.phone);
-			$('#inputAddress').val(customer.address);
-			$('#inputCp').val(customer.cp);	
-			$('#inputCity').val(customer.city);	
-			$('#inputEmail').val(customer.mail);			
+			$('#lastName').val(customer.lastName);
+			$('#firstname').val(customer.firstName);
+			$('#phone').val(customer.phone);
+			$('#address').val(customer.address);
+			$('#postcode').val(customer.postcode);
+			$('#city').val(customer.city);
+			$('#email').val(customer.email);
+
 			$('#myModal').modal('show');
 		}
 	},

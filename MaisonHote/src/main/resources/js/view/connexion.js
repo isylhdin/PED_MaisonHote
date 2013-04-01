@@ -18,7 +18,7 @@ window.ConnexionView = Backbone.View.extend({
 	},
 	
 	saveCurrentHost : function (currentHost) {
-		var host = new CurrentHost({'host' : currentHost});
+		var host = new CurrentHost({ 'host' : currentHost });
 		host.save();
 	},
 

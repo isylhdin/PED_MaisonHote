@@ -1,18 +1,22 @@
 var Customer = Backbone.Model.extend({
-	localStorage: new Backbone.LocalStorage("customers-backbone"),
+	localStorage: new Backbone.LocalStorage('customers-backbone'),
 
 	defaults: {
-		id:null,
-		name: '',
-		firstname: '',
+		id: null,
+		lastName: '',
+		firstName: '',
 		phone: '',
 		address: '',
-		cp: '',
+		postcode: '',
 		city: '',
-		mail: ''
+		email: ''
 	},
 
-	initialize: function(){
+	initialize: function() {
+	},
+
+	getFullName: function() {
+		return this.get('firstName') + ' ' + this.get('lastName');
 	}
 
 	// validate: function( attrs ) {
@@ -29,7 +33,7 @@ var Customer = Backbone.Model.extend({
 });
 
 var Customers = Backbone.Collection.extend({
-	localStorage: new Backbone.LocalStorage("customers-backbone"),
+	localStorage: new Backbone.LocalStorage('customers-backbone'),
 	model: Customer,
 	sort_key: 'id', // default sort key
 
@@ -40,9 +44,9 @@ var Customers = Backbone.Collection.extend({
 	comparator: function(item) {
 		return item.get(this.sort_key);
 	},
-	
+
 	sortByField: function(fieldName) {
 		this.sort_key = fieldName;
 		this.sort();
 	}
-}); 
+});

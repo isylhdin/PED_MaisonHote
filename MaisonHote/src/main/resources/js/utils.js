@@ -37,26 +37,25 @@ function getDuration(room) {
 
 /**
  * Retrouve l'id du client qu'on a sélectionné dans la pop-up de resa
- * @param client
+ * @param fullName
  * @returns
  */
-function findClient(client) {
+function findClient(fullName) {
 	var reg = new RegExp('[ ]+', 'g'),
-		tab = client.split(reg),
-		name = tab[0],
-		firstName = tab[1];
-
-	console.log('nom : ' + name + ' prenom = ' + firstName);
+		tab = fullName.split(reg),
+		firstName = tab[0],
+		lastName = tab[1],
+		foundClients;
 
 	// retourne une collection, alors qu'on n'a besoin que d'un seul résultat
 	window.result = customersResa.filter(function(model) {
-		return model.attributes.name == name &&
-			model.attributes.firstname == firstName;
+		return model.get('lastName') === lastName &&
+			model.get('firstName') === firstName;
 	});
 
-	var foundClients = new Customers(result);
-	foundClients.each(function(Client) {
-		result = Client.id;	
+	foundClients = new Customers(result);
+	foundClients.each(function(client) {
+		result = client.id;
 	});
 
 	return result;
@@ -70,8 +69,8 @@ function findClient(client) {
  */
 
 function getAllResaFromGroup(idResaGroup) { 
-	var resaGroup = reservations.filter(function(model) {
-		return model.attributes.idResaGroup === idResaGroup;
+	var resas = reservations.filter(function(resa) {
+		return resa.get('idResaGroup') === idResaGroup;
 	});	
-	return resaGroup;
+	return resas;
 }

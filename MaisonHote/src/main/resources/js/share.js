@@ -11,7 +11,7 @@ function facebookLogin() {
 		// parse XFBML
 		xfbml : true
 	});
-  
+
 	FB.login(function(response) {
 		if (response.authResponse) {
 			postOnWall();
@@ -38,9 +38,10 @@ function postOnWall() {
 	FB.ui(obj, callback);
 }
 
-// Load the SDK Asynchronously
+// Load the SDK asynchronously
 (function(d) {
 	var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+
 	if (d.getElementById(id)) {
 		return;
 	}
@@ -49,7 +50,7 @@ function postOnWall() {
 	js.src = '//connect.facebook.net/en_US/all.js';
 	ref.parentNode.insertBefore(js, ref);
 } (document));
-  
+
 /**
  * TWITTER
  */
