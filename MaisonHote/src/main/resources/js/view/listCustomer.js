@@ -71,6 +71,12 @@ window.ListCustomerView = Backbone.View.extend({
 		$('#city').val('');
 		$('#email').val('');
 
+		this.initValidation();
+
+		$('#myModal').modal('show');
+	},
+
+	initValidation: function() {
 		$('#customer-form').validate({
 			rules: {
 				lastName: {
@@ -90,13 +96,16 @@ window.ListCustomerView = Backbone.View.extend({
 					addClass('success');
 			}
 		});
+		this.resetFormClasses();
+	},
 
-		$('#myModal').modal('show');
-    },
+	resetFormClasses: function() {
+		validateForm.resetForm($('#customer-form'));
+	},
 
 	closeModal: function() {
 		this.reRender();
-		idCustomer = null ;
+		idCustomer = null;
 		$('#myModal').modal('hide');
 	},
 
@@ -198,6 +207,7 @@ window.ListCustomerView = Backbone.View.extend({
 			$('#city').val(customer.city);
 			$('#email').val(customer.email);
 
+			this.initValidation();
 			$('#myModal').modal('show');
 		}
 	},

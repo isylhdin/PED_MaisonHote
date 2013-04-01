@@ -116,7 +116,7 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	clearResa: function() {
-		this.resetFormClasses();
+		//this.resetFormClasses();
 		$('#client').css('background-color', '');
 		$('#addRoom').removeAttr('disabled');
 		this.deleteSelection();
@@ -137,7 +137,7 @@ window.ReservationView = Backbone.View.extend({
 			firstRoom = model.get('room'),
 			room;
 
-		this.resetFormClasses();
+		//this.resetFormClasses();
 
 		$('#client').val(fullName);
 		$('#selectedClient').html(fullName +
@@ -363,11 +363,7 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	resetFormClasses: function() {
-		var form = $('#resa-form');
-		form.validate().resetForm();
-		form.find('.success').removeClass('success');
-		form.find('.error').removeClass('error');
-		form.find('.valid').removeClass('valid');
+		validateForm.resetForm($('#resa-form'));
 	},
 
 	/**

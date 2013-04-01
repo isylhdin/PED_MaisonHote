@@ -26,6 +26,13 @@ window.validateForm = {
 
 		getFieldControlGroup: function($field) {
 			return $field.parents('.control-group');
+		},
+
+		resetForm: function($form) {
+			$form.validate().resetForm();
+			$form.find('.success').removeClass('success');
+			$form.find('.error').removeClass('error');
+			$form.find('.valid').removeClass('valid');
 		}
 }
 
