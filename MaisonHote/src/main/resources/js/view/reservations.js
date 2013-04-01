@@ -148,21 +148,22 @@ window.ReservationsView = Backbone.View.extend({
 			idClient = fcEvent.idClient,
 			content = customersResa.get(idClient);
 		
-		if (typeof(content) !== 'undefined') {
+		if (typeof content !== 'undefined') {
 			content = content.toJSON();
 		} else {
-			content='';
+			content = '';
 		}
 
-		var client = new Customer(content);
+		var client = new Customer(content),
+			phone = client.get('phone');
 		
 		if (view.name === 'basicWeek') {
-			return 'M/Mme ' + client.attributes.name + '\n' +
+			return 'M/Mme ' + client.getFullName() + '\n' +
 				fcEvent.nbPersons +
 				(fcEvent.nbPersons > 1 ? ' personnes' : ' personne') +
-				(fcEvent.phone ? '\n☎ ' + client.attributes.phone : '');
+				(phone ? '\n☎ ' + phone : '');
 		} else if (view.name === 'month') {
-			return 'Chambre ' + fcEvent.room + ' | ' + client.attributes.name;
+			return 'Chambre ' + fcEvent.room + ' | ' + client.getFullName();
 		} else {
 			return fcEvent.title;
 		}
