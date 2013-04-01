@@ -146,7 +146,9 @@ window.ReservationView = Backbone.View.extend({
 			fullName = client.getFullName(),
 			idResaGroup = model.get('idResaGroup'),
 			resas = getAllResaFromGroup(idResaGroup);
-			resaGroupPrestas = resaGroupsPrestas.get(idResaGroup);
+			resaGroupPrestas = resaGroupsPrestas.get(idResaGroup),
+			firstRoom = model.get('room'),
+			room;
 
 		this.resetFormClasses();
 
@@ -158,11 +160,14 @@ window.ReservationView = Backbone.View.extend({
 			'title' : 'Supprimer sélection'
 		});
 
-		$('#roomSelect1').val(resas[0].get('room'));
+		$('#roomSelect1').val(firstRoom);
 		if (resas.length > 1) {
-			for (var i = 1; i < resas.length; i++) {
-				this.addRoomForResa();
-				$('#roomSelect' + (i + 1)).val(resas[i].get('room'));
+			for (var i = 0; i < resas.length; i++) {
+				room = resas[i].get('room');
+				if (room !== firstRoom) {
+					this.addRoomForResa();
+					$('#roomSelect' + (i + 2)).val(room);
+				}
 			}
 		}
 
@@ -223,7 +228,14 @@ window.ReservationView = Backbone.View.extend({
 		} else {
 			idResaGroup = this.model.get('idResaGroup');
 			resas = getAllResaFromGroup(idResaGroup);
-			this.orderedPrestas = resaGroupsPrestas.at(idResaGroup);
+			// findWhere pas dispo dans cette version de Backbone
+			// et resaGroupsPrestas.at(idResaGroup) avec
+			// idAttribute: 'idResaGroup' dans ResaGroupPrestas
+			// ne semble pas marcher
+			this.orderedPrestas = resaGroupsPrestas.where({
+				idResaGroup: idResaGroup
+			})[0];
+			//this.orderedPrestas = resaGroupsPrestas.at(idResaGroup);
 			this.orderedPrestas.set('prestas', {});
 		}
 
@@ -360,7 +372,7 @@ window.ReservationView = Backbone.View.extend({
 
 	btnFicheSejour: function() {
 		app.navigate('ficheSejour/' + this.model.id, { trigger: true });
-		this.$el.dialog('close');
+		this.closeDialog();
 	},
 
 	resetFormClasses: function() {

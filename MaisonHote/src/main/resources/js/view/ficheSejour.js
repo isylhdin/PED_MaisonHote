@@ -3,18 +3,17 @@ window.ficheSejourView = Backbone.View.extend({
 	initialize: function () {
 		var idClient = jQuery.parseJSON(this.model).idClient;
 		this.total = 0;
-		
+
 		window.client = jQuery.parseJSON(
 			localStorage.getItem('customers-backbone-' + idClient));
 		window.idResaGroup = jQuery.parseJSON(this.model).idResaGroup;
-		
 
 		this.resaGroup = getAllResaFromGroup(idResaGroup);
 		this.render();
 
 	},
 
-	render: function () { 	
+	render: function () {
 		this.template = _.template(tpl.get('ficheSejourView'));
 		$(this.el).html(this.template(client));
 		var self = this;
@@ -30,7 +29,7 @@ window.ficheSejourView = Backbone.View.extend({
 				computedPrice = computePriceOverDaysForRoom(resa);
 
 			self.total += computedPrice;
-			
+
 			self.$el.find('#rooms').append(
 				'<p><span style=\'color:#3D6DAB\'>Chambre '+ resa.room +
 				' </span> : ' + duration + ' jours X ' + room.prixParJour +
