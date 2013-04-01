@@ -2,13 +2,13 @@
 var appRouter = Backbone.Router.extend({
 
 	routes: {
-		'': 'home',  //index.html
-		'resa': 'resa',	 //index.html#resa
-		'chambre': 'editChambre', //index.html#chambre
-		'prestation': 'editPrestation', //index.html#prestation
-		'ficheSejour/:id': 'ficheSejour', //index.html#ficheSejour/id
-		'listCustomer': 'listCustomer', //index.html#listCustomer
-		'facturation': 'facturation' //index.html#facturation
+		'' : 'home',  //index.html
+		'resa' : 'resa',	 //index.html#resa
+		'chambre' : 'editChambre', //index.html#chambre
+		'prestation' : 'editPrestation', //index.html#prestation
+		'ficheSejour/:id' : 'ficheSejour', //index.html#ficheSejour/id
+		'listCustomer' : 'listCustomer', //index.html#listCustomer
+		'facturation' : 'facturation' //index.html#facturation
 	},
 
 	initialize: function() {
@@ -113,9 +113,9 @@ var appRouter = Backbone.Router.extend({
 
 	ficheSejour: function(id, params) {
 		console.log('Welcome back sejour!');
-		//console.log(id);
-		var client = localStorage.getItem('resas-backbone-' + id);
-		controller.showView(new ficheSejourView({ model : client }));
+		var resa = jQuery.parseJSON(
+			localStorage.getItem('resas-backbone-' + id));
+		controller.showView(new ficheSejourView({ model: resa }));
 	}
 });
 

@@ -8,44 +8,44 @@
 	<form class="form-horizontal">
       <div class="control-group">
       	<div class="span6">
-        	<label class="control-label" for="labelName">Nom :</label>
-        	<input type="text" name="Nom" id="Nom" value="<%= name %>" disabled="disabled">
-        </div>
-      </div>
-       <div class="control-group">
-      	<div class="span6">
-        	<label class="control-label" for="labelName">Prenom :</label>
-        	<input type="text" name="Prenom" id="Prenom" value="<%= firstname %>" disabled="disabled">
+        	<label class="control-label" for="lastName">Nom :</label>
+        	<input type="text" name="lastName" id="lastName" value="<%= lastName %>" disabled="disabled">
         </div>
       </div>
       <div class="control-group">
       	<div class="span6">
-       		<label class="control-label" for="labelPhoneNumber">Numéro de téléphone :</label>
-       		<input type="text" name="telephone" id="telephone" value="<%= phone %>" disabled="disabled">
+        	<label class="control-label" for="firstName">Prenom :</label>
+        	<input type="text" name="firstName" id="firstName" value="<%= firstName %>" disabled="disabled">
         </div>
       </div>
       <div class="control-group">
       	<div class="span6">
-        	<label class="control-label" for="labelAddress">Adresse :</label>
-        	<input type="text" name="adresse" id="adresse" value="<%= address %>" disabled="disabled">
+       		<label class="control-label" for="phone">Numéro de téléphone :</label>
+       		<input type="text" name="phone" id="phone" value="<%= phone %>" disabled="disabled">
         </div>
       </div>
       <div class="control-group">
       	<div class="span6">
-        	<label class="control-label" for="labelCP">Code Postal :</label>
-        	<input type="text" name="cp" id="cp" value="<%= cp %>" disabled="disabled">
+        	<label class="control-label" for="address">Adresse :</label>
+        	<input type="text" name="address" id="address" value="<%= address %>" disabled="disabled">
         </div>
       </div>
       <div class="control-group">
       	<div class="span6">
-        	<label class="control-label" for="labelCity">Ville :</label>
+        	<label class="control-label" for="postcode">Code Postal :</label>
+        	<input type="text" name="postcode" id="postcode" value="<%= postcode %>" disabled="disabled">
+        </div>
+      </div>
+      <div class="control-group">
+      	<div class="span6">
+        	<label class="control-label" for="city">Ville :</label>
         	<input type="text" name="city" id="city" value="<%= city %>" disabled="disabled">
         </div>
       </div>
       <div class="control-group">
       	<div class="span6">
-        	<label class="control-label" for="labelAddress">Mail :</label>
-       		<input type="text" name="mail" id="mail" value="<%= mail %>" disabled="disabled">
+        	<label class="control-label" for="email">Mail :</label>
+       		<input type="text" name="email" id="email" value="<%= email %>" disabled="disabled">
         </div>
       </div>
 	</form>
@@ -67,14 +67,14 @@
 	<div id="prestations"></div>
 	
 	<hr/>
-	
+
       <div class="row">
       	<div>
-        	<label class="control-label" for="labelRoom"><h3>Total :</h3></label>
+        	<label class="control-label" for="totalPrice"><h3>Total :</h3></label>
         	<input type="text" name="totalPrice" id="totalPrice" disabled="disabled" >
         </div>
         <div>
-        	<label class="control-label" for="labelRoom"><h3>Reste &agrave; payer :</h3></label>
+        	<label class="control-label" for="remainingPrice"><h3>Reste &agrave; payer :</h3></label>
         	<input type="text" name="remainingPrice" id="remainingPrice" disabled="disabled" >
         </div>
       </div>

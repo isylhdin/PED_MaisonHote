@@ -5,9 +5,9 @@
  * @returns le prix à payer pour une chambre
  */
 
-function computePriceOverDaysForRoom(room) {
-	var duration = getDuration(room),
-		idRoom = room.room,
+function computePriceOverDaysForRoom(resa) {
+	var duration = getDuration(resa),
+		idRoom = resa.room,
 		room = jQuery.parseJSON(
 			localStorage.getItem('chambres-backbone-' + idRoom)),
 		pricePerDay = room.prixParJour,
@@ -21,17 +21,18 @@ function computePriceOverDaysForRoom(room) {
  * @param room
  * @returns
  */
-function getDuration(room) {
-	var start = room.start,
-		end = room.end,
+function getDuration(resa) {
+	var duration,
+		start = resa.start,
+		end = resa.end,
 		reg = new RegExp('[-T]+', 'g'),
 		tabStart = start.split(reg),
 		tabEnd = end.split(reg);
 
 	start = tabStart[2];
 	end = tabEnd[2];
+	duration = eval(end - start) + 1;
 
-	var duration = eval(end - start) + 1;
 	return duration;
 }
 
