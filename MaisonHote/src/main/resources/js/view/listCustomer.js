@@ -1,7 +1,7 @@
 window.ListCustomerView = Backbone.View.extend({
-	
+
 	idCustomer: null,
-	
+
 	events: {
 		//'click #btnSearchCustomer' : 'searchCustomer'
 		'click #btnAddCustomer' : 'addCustomer',
@@ -12,20 +12,20 @@ window.ListCustomerView = Backbone.View.extend({
 		'click #btnDeleteCustomer' : 'deleteCustomer'
 	},
 
-    initialize: function() {
-    	idCustomer = null;
-    	customers = new Customers();
+	initialize: function() {
+		idCustomer = null;
+		customers = new Customers();
 		customers.localStorage =
 			new Backbone.LocalStorage('customers-backbone');
 		customers.fetch();
 		this.render();
-    },
+	},
 
-    render: function() {       
-        var customersData = '<div class="span5"><div class="hero-unit">' +
-        	'<table class="table"><tr><td>';
-        customersData += this.createList();
-        customersData +=
+	render: function() {
+		var customersData = '<div class="span5"><div class="hero-unit">' +
+			'<table class="table"><tr><td>';
+		customersData += this.createList();
+		customersData +=
         	'</td><td><a id="btnAddCustomer" role="button" class="btn" ' +
         	'data-toggle="modal"><img src="css/img/add_logo.png" width="30" ' +
         	'border="0"/></a><br/><a id="btnEditCustomer" role="button" ' +
@@ -35,34 +35,34 @@ window.ListCustomerView = Backbone.View.extend({
         	'<img src="css/img/delete_logo.png" width="30" border="0"/></a>' +
         	'</td></tr></table></div></div><div class="span5">' +
         	'<div id="dataCustomer" class="hero-unit"></div>';
-                
-        $(this.el).append(customersData);         
-        return this;
-    },
-    
-    reRender: function(){
-    	$('#selectCustomer').replaceWith(this.createList());    	
-    },
-    
-    createList: function(){
-    	var list = '<select id="selectCustomer" size="10">';
-        if (customers != null) {
-        	customers.each(function(customer) {
-        		list += '<option value="' + customer.get('id') + '">' +
-        			customer.get('lastName').toUpperCase() + ' ' +
-        			customer.get('firstName') + ' (' + customer.get('city') +
-        			')</option>';
-        	});
-        }
-        list += '</select>';
-        return list ;
-    },   
 
-    addCustomer: function() {		
+		$(this.el).append(customersData);
+		return this;
+    },
+
+	reRender: function() {
+		$('#selectCustomer').replaceWith(this.createList());
+	},
+
+	createList: function() {
+		var list = '<select id="selectCustomer" size="10">';
+		if (customers != null) {
+			customers.each(function(customer) {
+				list += '<option value="' + customer.get('id') + '">' +
+					customer.get('lastName').toUpperCase() + ' ' +
+					customer.get('firstName') + ' (' + customer.get('city') +
+					')</option>';
+			});
+		}
+		list += '</select>';
+		return list;
+	},   
+
+    addCustomer: function() {
 		this.template = _.template(tpl.get('DataCustomerView'));
 		$('#dataCustomer').before(this.template);
     	
-      	// vide les infos du modal
+		// vide les infos du modal
 		$('#lastName').val('');
 		$('#firstName').val('');
 		$('#phone').val('');
@@ -70,33 +70,57 @@ window.ListCustomerView = Backbone.View.extend({
 		$('#postcode').val('');
 		$('#city').val('');
 		$('#email').val('');
-    	$('#myModal').modal('show');
+
+		$('#customer-form').validate({
+			rules: {
+				lastName: {
+					required: true
+				},
+				phone: {
+					phone: true
+				}
+			},
+			highlight: function(element) {
+				$(element).closest('.control-group').removeClass('success').
+					addClass('error');
+			},
+			success: function(element) {
+				element.text('OK!').addClass('valid').
+					closest('.control-group').removeClass('error').
+					addClass('success');
+			}
+		});
+
+		$('#myModal').modal('show');
     },
 
-    closeModal: function() {
-    	this.reRender();
-    	idCustomer = null ;
-    	$('#myModal').modal('hide');
-    },
+	closeModal: function() {
+		this.reRender();
+		idCustomer = null ;
+		$('#myModal').modal('hide');
+	},
 
-    saveCustomer: function() {		
-		 this.saveDataCustomer();		 
-		 this.closeModal();    	
-    },
+	saveCustomer: function() {
+		if (!$('#customer-form').validate().form()) {
+			return;
+		}
+		this.saveDataCustomer();
+		this.closeModal();
+	},
 
-    getNewId: function() {
+	getNewId: function() {
     	var id = 0;
 
-    	if (customers != null) {
+		if (customers != null) {
 	    	customers.each(function(Customer) {
-	    		if (Customer.get('id') > id) {
-	    			id = Customer.get('id');
-	    		}
-	    	});
-    	}
-    	id += 1;
-    	return id;
-    },
+				if (Customer.get('id') > id) {
+					id = Customer.get('id');
+				}
+			});
+		}
+		id += 1;
+		return id;
+	},
 
 	saveDataCustomer: function() {		
 		// If it's a new customer we have to create it

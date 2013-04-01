@@ -28,3 +28,17 @@ window.validateForm = {
 			return $field.parents('.control-group');
 		}
 }
+
+jQuery.validator.addMethod('phone', function(value, element) {
+	if (value.length == 0) {
+		return true;
+	}
+	return /^0\d \d\d \d\d \d\d \d\d$/i.test(value);
+}, 'Expected phone number format:<br><i>0X XX XX XX XX</i>');
+
+// Pas pratique, ça affiche le message d'erreur à l'intérieur du
+// champ etc., il faut trouver autre chose pour vérifier que le nb
+// de personnes ne dépasse pas la capacité de la chambre et soit > 0
+// jQuery.validator.addMethod('nbPersons', function(value, element) {
+	// return value > 0;
+// }, 'The number of persons must be positive');

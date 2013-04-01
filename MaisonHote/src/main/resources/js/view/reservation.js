@@ -54,7 +54,6 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	renderRoomList: function() {
-		//console.log("-renderList: " + chambresPourCalendrier.length);
 		var $select = $('#roomSelect1');
 
 		this.nbRooms = chambresPourCalendrier.length;
@@ -68,7 +67,6 @@ window.ReservationView = Backbone.View.extend({
 	},
 
 	renderPrestaList: function() {
-		//console.log("-renderPrestaList " + prestasPourCalendrier.length);
 		var $select = $('#prestaSelect');
 
 		$select.empty().append('<option selected></option>');
@@ -80,17 +78,6 @@ window.ReservationView = Backbone.View.extend({
 
 	initDialog: function() {
 		$('input[name=nbPersons]').spinner({ min: 1 });
-
-		jQuery.validator.addMethod('nbPersons', function(value, element) {
-			return value > 0;
-		}, 'The number of persons must be positive');
-
-		jQuery.validator.addMethod('phone', function(value, element) {
-			if (value.length == 0) {
-				return true;
-			}
-			return /^0\d \d\d \d\d \d\d \d\d$/i.test(value);
-		}, 'Expected phone number format: <i>0X XX XX XX XX</i>');
 
 		$('#resa-form').validate({
 			rules: {
