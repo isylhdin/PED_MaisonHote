@@ -33,12 +33,14 @@ window.ReservationView = Backbone.View.extend({
 				class: 'btn btn-primary'}};
 
 		if (!isNewModel) {
-			_.extend(buttons, {'Delete': {text: 'Delete',
-				click: this.destroy, class: 'btn'}});
+			_.extend(buttons, {
+				'Delete': {text: 'Delete', click: this.destroy, class: 'btn'}
+			});
 			$('#btnFicheSejour').removeAttr('disabled');
 		}
-		_.extend(buttons, {'Cancel': {text: 'Cancel',
-			click: this.closeDialog, class: 'btn'}});
+		_.extend(buttons, {
+			'Cancel': {text: 'Cancel', click: this.closeDialog, class: 'btn'}
+		});
 
 		this.resetFormClasses();
 		this.$el.dialog({
@@ -61,8 +63,7 @@ window.ReservationView = Backbone.View.extend({
 		chambresPourCalendrier.each(function(room) {
 
 			$select.append('<option value="' + room.get('id') +
-					'"> Chambre ' +  room.get('id') + '</option>');
-
+				'"> Chambre ' +  room.get('id') + '</option>');
 		});
 	},
 
@@ -216,9 +217,8 @@ window.ReservationView = Backbone.View.extend({
 			idResaGroup = this.model.get('idResaGroup');
 			resas = getAllResaFromGroup(idResaGroup);
 			// findWhere pas dispo dans cette version de Backbone
-			// et resaGroupsPrestas.at(idResaGroup) avec
-			// idAttribute: 'idResaGroup' dans ResaGroupPrestas
-			// ne semble pas marcher
+			// et resaGroupsPrestas.at(idResaGroup) ne marche pas
+			// (il y a idAttribute: 'idResaGroup' dans models.js)
 			this.orderedPrestas = resaGroupsPrestas.where({
 				idResaGroup: idResaGroup
 			})[0];
@@ -236,6 +236,10 @@ window.ReservationView = Backbone.View.extend({
 			room = $('#roomSelect' + i + ' :selected').val();
 			rooms.push(room);
 		}
+		
+		// TODO: vérifier s'il existe déjà une réservation de cette chambre
+		// chevauchant la durée initialEndDate - initialStartDate, si oui
+		// ne pas enregistrer et afficher un message d'erreur
 
 		resas.forEach(function(resa) {
 			this.model = resa;
@@ -244,7 +248,7 @@ window.ReservationView = Backbone.View.extend({
 				this.model.set(this.newAttributes());
 				this.save();
 				rooms =  _.reject(rooms, function(room) {
-					return room == oldRoom;
+					return room === oldRoom;
 				});
 			} else {
 				this.destroy();

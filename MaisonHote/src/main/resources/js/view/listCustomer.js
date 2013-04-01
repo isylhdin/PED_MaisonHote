@@ -133,7 +133,8 @@ window.ListCustomerView = Backbone.View.extend({
 
 	saveDataCustomer: function() {		
 		// If it's a new customer we have to create it
-		var msg2show;
+		var lastName, firstName, address, postcode, city, phone,
+			msg2show;
 
 		if (!idCustomer) {
 			var newId = this.getNewId();
@@ -148,13 +149,13 @@ window.ListCustomerView = Backbone.View.extend({
 
 		success = true;
 
-		window.lastName = $('#lastName').val();
-		window.firstName = $('#firstName').val();
-		window.address = $('#address').val();
-		window.postcode = $('#postcode').val();
-		window.city = $('#city').val();
-		window.phone = $('#phone').val();
-		window.email = $('#email').val();
+		lastName = $('#lastName').val();
+		firstName = $('#firstName').val();
+		address = $('#address').val();
+		postcode = $('#postcode').val();
+		city = $('#city').val();
+		phone = $('#phone').val();
+		email = $('#email').val();
 
 		customer.save({
 			'lastName': lastName, 'firstName': firstName, 'address': address,
